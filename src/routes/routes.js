@@ -7,8 +7,11 @@ import {
 
 import "../assets/css/index.min.css";
 import Account from "../clients/yawara_user/pages/Account";
+import Theme from "../states/Theme";
 
 export default function Routes() {
+  Theme()
+
   return (
     <Router>
       <Switch>
