@@ -1,0 +1,27 @@
+.modal
+  position: fixed
+  z-index: 999
+  background: rgba(196, 196, 196, 0.44)
+  top: 0
+  bottom: 0
+  left: 0
+  right: 0
+  overflow: hidden
+  @include flex()
+  &-content
+    width: 50%
+    // height: 50%
+    padding: 3rem 2.5rem
+    padding-bottom: 5rem
+    color: $green
+    border-radius: 12px
+    &-close
+      @include flex(row, flex-end)
+      svg
+        cursor: pointer
+        fill: $green
+    h1
+      font-weight: 600
+      margin-top: 1rem
+      font-size: 20px
+      text-align: center

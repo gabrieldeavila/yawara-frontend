@@ -11,7 +11,7 @@
     font-weight: 600
 
 .account-form
-  padding: 4rem
+  padding: 2rem 5rem
   width: 50%
   height: 100%
   box-shadow: -17px 4px 66px 13px rgba(0, 0, 0, 0.25)
@@ -25,14 +25,43 @@
       transform: scale(1.5)
       fill: $green
     &-options
+      @extend .trans-1
       button
+        cursor: pointer
         user-select: none
         border: none
-        padding: 1rem 1.5rem
+        padding: 0.75rem 1.5rem
         background: $ultra_dark_green
         font-weight: 600
+        @extend .trans-1
         &:first-child
           border-radius: 24px 0 0 24px
         &:last-child
           border-radius: 0 24px 24px 0
           filter: drop-shadow(2px 4px 55px rgba(255, 255, 255, 0.25))
+        &:hover
+          background: lighten($ultra_dark_green, 10)
+          @extend .trans-1
+  &-header
+    font-weight: 700
+    margin-top: 2rem
+    color: $green
+    span
+      color: $grey
+      @extend .trans-1
+      &:first-child
+        padding-right: 1.5rem
+      &:last-child
+        padding-left: 1.5rem
+
+  &-main
+    margin-top: 4rem
+  &-forgot
+    @include flex()
+    margin-top: 1rem
+    span
+      color: $green
+      font-size: 12px
+      text-decoration: underline
+      user-select: none
+      cursor: pointer

@@ -8,6 +8,7 @@ import {
 import "../assets/css/index.min.css";
 import Account from "../clients/yawara_user/pages/Account";
 import Theme from "../states/Theme";
+import Explore from "../clients/yawara_user/pages/Explore";
 
 export default function Routes() {
   Theme()
@@ -17,6 +18,9 @@ export default function Routes() {
       <Switch>
         <Route path="/y/account">
           <Account />
+        </Route>
+        <Route path="/explore">
+          <Explore />
         </Route>
       </Switch>
     </Router>

@@ -7,8 +7,11 @@ function useTheme(change = false, returnTheme = false) {
   // 1 = dark
   const [theme, setTheme] = useState(["null", "null"]);
   const [cookies, setCookie] = useCookies(['theme_option']);
+
   const changeCookie = () => {
     setCookie('theme_option', parseInt(cookies.theme_option) === 0 ? 1 : 0)
+    document.documentElement.style.setProperty("--themeColor", parseInt(cookies.theme_option) === 0 ? 'red' : 'orange');
+
   }
 
   useEffect(() => {
