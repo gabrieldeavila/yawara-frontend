@@ -1,0 +1,71 @@
+.navbar
+  position: fixed
+  background: $dark_green
+  width: 100%
+  height: 70px
+  &-container
+    height: 100%
+    padding: 0.75rem 1.5rem
+    @include flex(row, space-between )
+    overflow: hidden
+  &-left
+    width: 20%
+    @include flex(row, start)
+    gap: 2rem
+    &-icon
+      svg
+        fill: $yellow
+        width: 2.5rem
+        height: 2.5rem
+    &-name
+      @include flex(collumn)
+      h1
+        font-weight: 700
+        color: $yellow
+      svg
+        height: 40px
+  &-center
+    @include flex()
+    gap: 2rem
+    &-search
+      height: 100%
+      width: 25rem
+      background: $blue
+      border-radius: 7px
+      @include flex()
+      input
+        width: 80%
+        color: $yellow
+        background: none
+        border: none
+        padding: 0 0 0 1rem
+        outline: none
+        &::placeholder
+          color: #d8c89bc7
+      .search-icon
+        cursor: pointer
+        height: 100%
+        @include flex()
+        width: 20%
+        svg
+          transform: scale(1.6)
+          color: $yellow
+    &-filter
+      .btn-shake
+        border: none
+        height: 100%
+        background: $blue
+  &-right
+    width: 20%
+    @include flex(row, end)
+    &-user
+      width: 40px
+      height: 40px
+      background: $yellow
+      border-radius: 50%
+      overflow: hidden
+      &-img
+        height: 40px
+        width: 40px
+        cursor: pointer
+        object-fit: cover

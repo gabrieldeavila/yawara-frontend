@@ -1,10 +1,16 @@
 import React, { useEffect, useRef } from "react";
 import { IoMdClose } from "react-icons/io";
 
-export default function Modal({ theme, title, children, setModal }) {
-  document.getElementsByTagName('BODY')[0].style.overflow = "hidden";
+export default function Modal({
+  theme,
+  title,
+  children,
+  setModal,
+  titlePosition = "center",
+}) {
+  document.getElementsByTagName("BODY")[0].style.overflow = "hidden";
 
-  const ref = useRef('');
+  const ref = useRef("");
   useEffect(() => {
     /**
      * Alert if clicked on outside of element
@@ -15,11 +21,10 @@ export default function Modal({ theme, title, children, setModal }) {
         setModal(false);
       }
     }
-
     // Bind the event listener
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.getElementsByTagName('BODY')[0].style.overflow = "visible";
+      document.getElementsByTagName("BODY")[0].style.overflow = "visible";
       // Unbind the event listener on clean up
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -31,13 +36,9 @@ export default function Modal({ theme, title, children, setModal }) {
         <div className="modal-content-close">
           <IoMdClose onClick={() => setModal(false)} />
         </div>
-        <h1>
-          {title}
-        </h1>
-        <div className="modal-content-main">
-          {children}
-        </div>
+        <h1 style={{ textAlign: titlePosition }}>{title}</h1>
+        <div className="modal-content-main">{children}</div>
       </div>
     </div>
-  )
+  );
 }

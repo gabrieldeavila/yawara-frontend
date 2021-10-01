@@ -1,0 +1,28 @@
+.btn-shake
+  color: $yellow
+  font-weight: 600
+  border-radius: 7px
+  padding: 1rem
+  position: relative
+  overflow: hidden
+  border: none
+  cursor: pointer
+  @extend .trans-1
+  &::before
+    content: ''
+    border-radius: 7px
+    z-index: -1
+    background: darken($blue, 10)
+    position: absolute
+    top: 90%
+    left: -100%
+    width: 100%
+    @extend .trans-1
+    height: 100%
+    transform: skew(90deg) rotate(180deg)
+  &:hover::before
+    top: 0%
+    left: 0
+    transform: skew(0deg) rotate(0deg)
+  &:hover
+    transform: scale(1.05)

@@ -1,9 +1,5 @@
 import React from "react";
 
 export default function Explore() {
-  return (
-    <div>
-      exploraaaaaar
-    </div>
-  )
+  return <div className="explore">exploraaaazaar</div>;
 }
