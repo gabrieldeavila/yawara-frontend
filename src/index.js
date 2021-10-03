@@ -1,9 +1,10 @@
 import ReactDOM from "react-dom";
 import Routes from "./routes/routes";
-import { CookiesProvider } from "react-cookie";
+import GlobalContext from "./Contexts/GlobalContext";
+
 ReactDOM.render(
-  <CookiesProvider>
+  <GlobalContext>
     <Routes />
-  </CookiesProvider>,
+  </GlobalContext>,
   document.getElementById("root")
 );

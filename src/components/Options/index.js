@@ -7,6 +7,7 @@ import { DangerButton, ButtonsWrapper, SuccessButton } from "../Buttons";
 
 const Content = styled.div`
   user-select: none;
+  padding-bottom: 1.5rem;
   display: flex;
   gap: 1rem;
   flex-direction: column;

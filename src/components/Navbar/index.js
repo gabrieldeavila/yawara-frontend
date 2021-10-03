@@ -1,7 +1,8 @@
 import { ReactComponent as Tail } from "../../assets/img/tail.svg";
 import { GiHamburgerMenu, BiSearchAlt } from "react-icons/all";
+import React, { useContext, useRef, useState } from "react";
+import { Context } from "../../Contexts/GlobalContext";
 import usePosition from "../../states/Position";
-import React, { useRef, useState } from "react";
 import useTheme from "../../states/Theme";
 import TagsFilter from "../TagsFilter";
 import Options from "../Options";
@@ -10,8 +11,9 @@ import Popup from "../Popup";
 export default function Navbar({
   placeholder = "Digite Algo",
   image = "https://mundoconectado.com.br/uploads/chamadas/rickastley.jpg",
-  description = "Nome do Usuário",
+  description = "never gonna give you up",
 }) {
+  const { showModal, setShowModal } = useContext(Context);
   const [showPopup, setShowPopup] = useState(false);
   const popupRef = useRef("");
   const { bottom, left } = usePosition(popupRef);
@@ -25,7 +27,10 @@ export default function Navbar({
     <div className="navbar">
       <div className="navbar-container">
         <div className="navbar-left">
-          <div className="navbar-left-icon">
+          <div
+            onClick={() => setShowModal(!showModal)}
+            className="navbar-left-icon"
+          >
             <GiHamburgerMenu />
           </div>
           <div className="navbar-left-name">

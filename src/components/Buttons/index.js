@@ -35,7 +35,6 @@ export const ButtonsWrapper = styled.div`
   }
   button:hover::after {
     transform: rotate(0deg) skewX(0deg);
-    background: var(--yellow);
   }
   button:hover {
     transform: scale(1.05);
@@ -44,16 +43,22 @@ export const ButtonsWrapper = styled.div`
 
 export const DangerButton = styled(Button)`
   background: var(--light-red);
+  &:hover::after {
+    background: var(--yellow);
+  }
 `;
 
 export const SuccessButton = styled(Button)`
   background: var(--light-green);
+  &:hover::after {
+    background: var(--yellow);
+  }
 `;
 
 export const NormalButton = styled(Button)`
   background: var(--green);
   color: var(--yellow) !important;
-  & :hover::after {
-    background: var(--black) !important;
+  &:hover::after {
+    background: var(--dark-green) !important;
   }
 `;

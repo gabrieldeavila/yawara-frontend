@@ -10,7 +10,27 @@
 .bg-light
   background: $white
 
-.yawara-content
+.yawara
   margin-top: 50px
-  margin-left: 6rem
+  margin-left: 6.9rem
   min-height: 100vh
+
+.yawara-expanded
+  margin-left: 17rem !important
+
+.yawara-content
+  padding-top: 2.5rem
+  padding-left: 1.5rem
+
+.expanded
+  width: 17rem !important
+  .sidebar
+    &-icon
+      @include flex(row, space-around)
+      svg
+        width: 25%
+        @include flex(row, start)
+        transform: scale(3)
+      span
+        width: 65%
+        font-size: 20px

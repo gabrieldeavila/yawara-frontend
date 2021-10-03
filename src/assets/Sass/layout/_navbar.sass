@@ -2,7 +2,9 @@
   position: fixed
   background: $dark_green
   width: 100%
+  z-index: 3
   height: 70px
+  top: 0
   &-container
     height: 100%
     padding: 0.75rem 1.5rem
@@ -13,6 +15,7 @@
     @include flex(row, start)
     gap: 2rem
     &-icon
+      cursor: pointer
       svg
         fill: $yellow
         width: 2.5rem
@@ -28,7 +31,7 @@
     @include flex()
     gap: 2rem
     &-search
-      height: 100%
+      height: 3rem
       width: 25rem
       background: $blue
       border-radius: 7px

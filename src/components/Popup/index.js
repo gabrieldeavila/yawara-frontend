@@ -7,7 +7,6 @@ const Content = styled.div`
   width: ${(props) => props.width};
   height: fit-content;
   padding: 1.5rem;
-  padding-bottom: 3.5rem;
   border-radius: 10px;
 `;
 

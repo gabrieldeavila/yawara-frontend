@@ -1,7 +1,36 @@
 .sidebar
   position: fixed
   background: $green
-  margin-top: 70px
-  z-index: -1
-  width: 6rem
+  margin-top: 20px
+  width: 6.9rem
   height: 100%
+  overflow: auto
+  padding-bottom: 5rem
+  &-content
+  &-icon
+    padding: 0.5rem
+    @include flex(column)
+    transition: all .25s
+    height: 6rem
+    gap: 1rem
+    svg
+      @include flex(column)
+      fill: $yellow
+      width: 100%
+      transform: scale(2)
+    span
+      display: block
+      font-weight: 600
+      color: $yellow
+      text-align: center
+      font-size: 12px
+    &.active
+      background: $blue
+      svg
+        fill: $green
+      span
+        color: $green
+    &.active:hover
+      background: $blue
+    &:hover
+      background: $grass-green
