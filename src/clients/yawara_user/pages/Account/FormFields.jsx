@@ -34,7 +34,7 @@ function FormFields({ action, theme }) {
       validationSchema={Yup.object().shape(formSchema)}
     >
       {({ errors, touched }) => (
-        <Form>
+        <Form autoComplete="off">
           <div className="field floating">
             <Field
               placeholder="Placeholder"

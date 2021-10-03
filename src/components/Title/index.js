@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 const Content = styled.div`
   display: flex;
-
   width: 100%;
   flex-direction: column;
   justify-content: center;
@@ -22,11 +21,23 @@ const Description = styled.div`
   margin-top: 0.5rem;
 `;
 
-export default function Title({ title, description }) {
+const ExtraInfo = styled(Description)`
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 16px;
+  width: 100%;
+`;
+
+export default function Title({ title, description, children, justify }) {
   return (
     <Content>
       <H1>{title}</H1>
-      <Description>{description}</Description>
+      {description ? (
+        <Description>{description}</Description>
+      ) : (
+        <ExtraInfo justify={justify}>{children}</ExtraInfo>
+      )}
     </Content>
   );
 }

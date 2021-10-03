@@ -76,8 +76,8 @@ export default function History({ histories, moreData, hasMore }) {
       loader={<H2>Carregando...</H2>}
       endMessage={<H2>Todas as histórias foram atingidas :/</H2>}
     >
-      {histories.map((his) => (
-        <HistoryWrapper to={`/view/${his.id}`}>
+      {histories.map((his, index) => (
+        <HistoryWrapper key={index} to={`/view/${his.id}`}>
           <H2>{his.title}</H2>
           <Infos>
             <span>Criado por: {his.creator}</span>
