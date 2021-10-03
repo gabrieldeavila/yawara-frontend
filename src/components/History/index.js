@@ -1,10 +1,13 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { AiFillLike, AiFillDislike } from "react-icons/ai";
+import InfiniteScroll from "react-infinite-scroll-component";
 
-const Content = styled.div`
+const InfiniteScrollStyled = styled(InfiniteScroll)`
   display: flex;
   margin: 0 2rem;
   margin-top: 4rem;
+  padding-bottom: 2rem;
   display: flex;
   flex-wrap: wrap;
   gap: 3rem 6rem;
@@ -37,7 +40,14 @@ const Infos = styled.div`
   font-weight: 600;
   color: var(--green);
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: ${(props) =>
+    props.justify ? props.justify : "space-between"};
+  span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
 `;
 
 const ImageWrapper = styled.div`
@@ -53,9 +63,19 @@ const Image = styled.img`
   height: 100%;
 `;
 
-export default function History({ histories }) {
+export default function History({ histories, moreData, hasMore }) {
+  const fetchMoreData = () => {
+    moreData();
+  };
+
   return (
-    <Content>
+    <InfiniteScrollStyled
+      dataLength={histories.length}
+      next={fetchMoreData}
+      hasMore={hasMore}
+      loader={<H2>Carregando...</H2>}
+      endMessage={<H2>Todas as histórias foram atingidas :/</H2>}
+    >
       {histories.map((his) => (
         <HistoryWrapper to={`/view/${his.id}`}>
           <H2>{his.title}</H2>
@@ -66,8 +86,18 @@ export default function History({ histories }) {
           <ImageWrapper>
             <Image src={his.image} />
           </ImageWrapper>
+          <Infos justify="space-evenly">
+            <span>
+              {his.likes}
+              <AiFillLike />
+            </span>
+            <span>
+              {his.dislikes}
+              <AiFillDislike />
+            </span>
+          </Infos>
         </HistoryWrapper>
       ))}
-    </Content>
+    </InfiniteScrollStyled>
   );
 }
