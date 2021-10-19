@@ -27,12 +27,12 @@ export default function Navbar({
     <div className="navbar">
       <div className="navbar-container">
         <div className="navbar-left">
-          <div
+          {/* <div
             onClick={() => setShowModal(!showModal)}
             className="navbar-left-icon"
           >
             <GiHamburgerMenu />
-          </div>
+          </div> */}
           <div className="navbar-left-name">
             <Tail />
             <h1>Yawara</h1>

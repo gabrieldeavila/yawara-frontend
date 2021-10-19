@@ -10,6 +10,9 @@ import Explore from "../clients/yawara_user/pages/Explore";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import View from "../components/View";
+import NewHistory from "../clients/yawara_user/pages/NewHistory";
+import Profile from "../clients/yawara_user/pages/Profile";
+import MyHistories from "../clients/yawara_user/pages/MyHistories";
 
 export default function Routes() {
   const { showModal } = useContext(Context);
@@ -37,6 +40,15 @@ export default function Routes() {
               </Route>
               <Route path="/view/:id">
                 <View />
+              </Route>
+              <Route path="/new-history">
+                <NewHistory />
+              </Route>
+              <Route path="/profile">
+                <Profile />
+              </Route>
+              <Route path="/my-histories">
+                <MyHistories />
               </Route>
             </div>
           </div>
