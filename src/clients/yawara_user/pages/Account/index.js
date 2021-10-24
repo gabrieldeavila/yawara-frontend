@@ -38,7 +38,7 @@ export default function Account() {
           <div className="account-form-top-options">
             <button
               onClick={() => setAccountAction(true)}
-              className={`text-${theme[1]} ${
+              className={`btn-opt-acc text-${theme[1]} ${
                 !accountAction ? "isAccountActive" : ""
               }`}
             >
@@ -46,7 +46,7 @@ export default function Account() {
             </button>
             <button
               onClick={() => setAccountAction(false)}
-              className={`text-${theme[1]} ${
+              className={`btn-opt-acc text-${theme[1]} ${
                 accountAction ? "isAccountActive" : ""
               }`}
             >
@@ -55,11 +55,17 @@ export default function Account() {
           </div>
         </div>
         <div className="account-form-header">
-          <span className={`${accountAction ? "isAccountActive" : ""}`}>
+          <span
+            onClick={() => setAccountAction(true)}
+            className={`${accountAction ? "isAccountActive" : ""}`}
+          >
             Entrar
           </span>
           ou
-          <span className={`${!accountAction ? "isAccountActive" : ""}`}>
+          <span
+            onClick={() => setAccountAction(false)}
+            className={`${!accountAction ? "isAccountActive" : ""}`}
+          >
             Criar Conta
           </span>
         </div>
