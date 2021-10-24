@@ -13,10 +13,17 @@ import View from "../components/View";
 import NewHistory from "../clients/yawara_user/pages/NewHistory";
 import Profile from "../clients/yawara_user/pages/Profile";
 import MyHistories from "../clients/yawara_user/pages/MyHistories";
+import { useEffect } from "react";
 
 export default function Routes() {
   const { showModal } = useContext(Context);
   const [theme] = useTheme(false, true);
+
+  useEffect(() => {
+    document.body.style.background =
+      theme[1] === "dark" ? "var(--black)" : "var(--white)";
+  }, [theme]);
+
   return (
     <Router>
       <ScrollToTop />

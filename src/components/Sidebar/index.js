@@ -5,13 +5,29 @@ import {
   BsBookmarkFill,
   RiCompassFill,
 } from "react-icons/all";
+import useMobile from "../../states/Mobile";
 import { Context } from "../../Contexts/GlobalContext";
+import { useEffect } from "react";
+import useClickOutside from "../../states/ClickOutside";
+import { useRef } from "react";
 
 export default function Sidebar() {
-  const { showModal } = useContext(Context);
+  const mobileRef = useRef(null);
+  const { showSidebar, setShowSidebar } = useContext(Context);
+  const fixedSidebar = useMobile(990, false);
+  const mobileClickOutside = useClickOutside(
+    mobileRef,
+    "control-sidebar-visibility",
+    setShowSidebar
+  );
 
   return (
-    <div className={`trans-1 sidebar ${showModal ? "expanded" : ""}`}>
+    <div
+      ref={mobileRef}
+      className={`trans-1 sidebar ${
+        showSidebar || fixedSidebar ? "show-sidebar" : "hide-sidebar"
+      }`}
+    >
       <div className="sidebar-content">
         <NavLink to="/new-history" className="sidebar-icon">
           <RiSendPlaneFill />

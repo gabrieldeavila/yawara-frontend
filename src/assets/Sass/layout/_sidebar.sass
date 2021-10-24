@@ -1,4 +1,5 @@
 .sidebar
+  z-index: 2
   position: fixed
   background: $green
   margin-top: 20px
@@ -34,3 +35,25 @@
       background: $blue
     &:hover
       background: $grass-green
+
+.show-sidebar
+  animation-name: show_sidebar_animation
+  animation-duration: 0.25s
+  animation-fill-mode: forwards
+
+@keyframes show_sidebar_animation
+  0%
+    transform: translate(-10rem)
+  100%
+    transform: translate(0rem)
+
+.hide-sidebar
+  animation-name: hide_sidebar_animation
+  animation-duration: 0.25s
+  animation-fill-mode: forwards
+
+@keyframes hide_sidebar_animation
+  0%
+    transform: translate(0rem)
+  100%
+    transform: translate(-10rem)
