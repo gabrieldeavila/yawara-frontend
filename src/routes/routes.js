@@ -14,6 +14,7 @@ import NewHistory from "../clients/yawara_user/pages/NewHistory";
 import Profile from "../clients/yawara_user/pages/Profile";
 import MyHistories from "../clients/yawara_user/pages/MyHistories";
 import { useEffect } from "react";
+import FinishRegistration from "../clients/yawara_user/pages/FinishRegistration";
 
 export default function Routes() {
   const { showModal } = useContext(Context);
@@ -32,7 +33,9 @@ export default function Routes() {
         <Route path="/account">
           <Account />
         </Route>
-
+        <Route path="/finish-registration">
+          <FinishRegistration />
+        </Route>
         <>
           <Navbar />
           <Sidebar />

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const Content = styled.div`
+  margin-top: ${(props) => (props.marginTop ? props.marginTop : "")};
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -29,9 +30,15 @@ const ExtraInfo = styled(Description)`
   width: 100%;
 `;
 
-export default function Title({ title, description, children, justify }) {
+export default function Title({
+  title,
+  description,
+  children,
+  justify,
+  marginTop,
+}) {
   return (
-    <Content>
+    <Content marginTop={marginTop}>
       <H1>{title}</H1>
       {description ? (
         <Description>{description}</Description>
