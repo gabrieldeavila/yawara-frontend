@@ -5,8 +5,10 @@ function usePosition(popupRef) {
 
   useEffect(() => {
     function handleResize() {
-      let position = popupRef.current.getBoundingClientRect();
-      setPos({ bottom: position.bottom, left: position.left });
+      if (popupRef.current) {
+        let position = popupRef.current.getBoundingClientRect();
+        setPos({ bottom: position.bottom, left: position.left });
+      }
     }
 
     handleResize();

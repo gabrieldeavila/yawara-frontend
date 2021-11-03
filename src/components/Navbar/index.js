@@ -14,6 +14,8 @@ export default function Navbar({
   image = "https://mundoconectado.com.br/uploads/chamadas/rickastley.jpg",
   description = "never gonna give you up",
 }) {
+  const [searchBarMobile, setSearchBarMobile] = useState(false);
+
   const { showSidebar, setShowSidebar } = useContext(Context);
   const [showPopup, setShowPopup] = useState(false);
   const popupRef = useRef("");
@@ -23,85 +25,113 @@ export default function Navbar({
   const filterRef = useRef("");
   const { bottom: bottomFilter, left: leftFilter } = usePosition(filterRef);
 
-  const showHamburguer = useMobile(990, true);
+  const isMobile = useMobile(990, true);
   const theme = useTheme(false, true);
+
+  const searchBar = (show = true) => {
+    return (
+      <div className="navbar-center">
+        {show && (
+          <>
+            <div className="navbar-center-search">
+              <input
+                autoComplete="off"
+                type="text"
+                id="search"
+                placeholder={placeholder}
+              />
+              <span className="search-icon">
+                <BiSearchAlt onClick={() => console.log("uhum")} />
+              </span>
+            </div>
+
+            <div className="navbar-center-filter">
+              <button
+                ref={filterRef}
+                onClick={(e) => setIsActive(!isActive)}
+                className={`btn-shake ${isActive ? "isBtnSearchActive" : ""}`}
+              >
+                Filtrar Tags
+              </button>
+              {isActive && (
+                <Popup
+                  className="btn-shake"
+                  setPopup={setIsActive}
+                  bottom={bottomFilter - 8}
+                  left={leftFilter}
+                  colorVar={"blue"}
+                  svgMarginLeft="14.6rem"
+                  width="30rem"
+                >
+                  <TagsFilter />
+                </Popup>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    );
+  };
   return (
     <div className="navbar">
       <div className="navbar-container">
-        <div className="navbar-left">
-          {showHamburguer && (
-            <div className="navbar-left-icon control-sidebar-visibility">
-              {!showSidebar ? (
-                <GiHamburgerMenu
-                  onClick={() => setShowSidebar(true)}
-                  className="control-sidebar-visibility"
+        {!searchBarMobile || !isMobile ? (
+          <>
+            <div className="navbar-left">
+              {isMobile && (
+                <div className="navbar-left-icon control-sidebar-visibility">
+                  {!showSidebar ? (
+                    <GiHamburgerMenu
+                      onClick={() => setShowSidebar(true)}
+                      className="control-sidebar-visibility"
+                    />
+                  ) : (
+                    <IoClose />
+                  )}
+                </div>
+              )}
+              <div className="navbar-left-name">
+                <Tail />
+                <h1>Yawara</h1>
+              </div>
+            </div>
+            {searchBar(!isMobile)}
+            <div className="navbar-right">
+              {isMobile && (
+                <BiSearchAlt
+                  className="open-search-bar"
+                  onClick={() => setSearchBarMobile(true)}
                 />
-              ) : (
-                <IoClose />
+              )}
+              <div ref={popupRef} className="navbar-right-user">
+                <img
+                  onClick={(e) => setShowPopup(!showPopup)}
+                  className="navbar-right-user-img"
+                  src={image}
+                  alt={description}
+                />
+              </div>
+              {showPopup && (
+                <Popup
+                  className="navbar-right-user-img"
+                  setPopup={setShowPopup}
+                  bottom={bottom - 4}
+                  left={left}
+                  colorVar={"green"}
+                >
+                  <Options setPopup={setShowPopup} theme={theme} />
+                </Popup>
               )}
             </div>
-          )}
-          <div className="navbar-left-name">
-            <Tail />
-            <h1>Yawara</h1>
+          </>
+        ) : (
+          <div className="navbar-search_bar-mobile">
+            {searchBar()}
+            <div className="navbar-search_bar-mobile-close">
+              <IoClose onClick={() => setSearchBarMobile(false)} />
+            </div>
           </div>
-        </div>
-        <div className="navbar-center">
-          <div className="navbar-center-search">
-            <input
-              autoComplete="off"
-              type="text"
-              id="search"
-              placeholder={placeholder}
-            />
-            <span className="search-icon">
-              <BiSearchAlt onClick={() => console.log("uhum")} />
-            </span>
-          </div>
-          <div className="navbar-center-filter">
-            <button
-              ref={filterRef}
-              onClick={(e) => setIsActive(!isActive)}
-              className={`btn-shake ${isActive ? "isBtnSearchActive" : ""}`}
-            >
-              Filtrar Tags
-            </button>
-            {isActive && (
-              <Popup
-                className="btn-shake"
-                setPopup={setIsActive}
-                bottom={bottomFilter - 8}
-                left={leftFilter}
-                colorVar={"blue"}
-                svgMarginLeft="14.6rem"
-                width="30rem"
-              >
-                <TagsFilter />
-              </Popup>
-            )}
-          </div>
-        </div>
-        <div className="navbar-right">
-          <div ref={popupRef} className="navbar-right-user">
-            <img
-              onClick={(e) => setShowPopup(!showPopup)}
-              className="navbar-right-user-img"
-              src={image}
-              alt={description}
-            />
-          </div>
-          {showPopup && (
-            <Popup
-              className="navbar-right-user-img"
-              setPopup={setShowPopup}
-              bottom={bottom - 4}
-              left={left}
-              colorVar={"green"}
-            >
-              <Options setPopup={setShowPopup} theme={theme} />
-            </Popup>
-          )}
-        </div>
+        )}
       </div>
     </div>
   );
