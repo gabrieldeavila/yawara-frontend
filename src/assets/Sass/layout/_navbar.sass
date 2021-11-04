@@ -75,12 +75,30 @@
         object-fit: cover
 
 @media screen and (max-width: 990px)
-  .navbar-center
-    display: none
-
   .navbar
     &-right, &-left
       width: 50%
     &-left
       h1
         display: none
+  .navbar
+    &-right
+      .open-search-bar
+        margin-right: 1rem
+        fill: $yellow
+        cursor: pointer
+        transform: scale(1.5)
+    &-search_bar-mobile
+      width: 100%
+      display: grid
+      grid-template-columns: repeat(20, 1fr)
+      .navbar-center
+        grid-column: span 19
+      &-close
+        grid-column: span 1
+        display: flex
+        align-items: center
+        justify-content: end
+        cursor: pointer
+        svg
+          fill: $yellow

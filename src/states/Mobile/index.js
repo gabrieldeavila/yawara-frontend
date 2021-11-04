@@ -10,10 +10,6 @@ export default function useMobile(widthMobile, boolean) {
   };
 
   useEffect(() => {
-    console.log(isMobile);
-  }, [isMobile]);
-
-  useEffect(() => {
     //check for the first time
     setIsMobile(checkIfMobile());
 
