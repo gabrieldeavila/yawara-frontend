@@ -14,6 +14,7 @@ export const StyledWrapper = styled.div`
   gap: 1rem;
   margin-top: 1rem;
   padding: 0.5rem 2rem;
+  margin-bottom: 2rem;
 `;
 
 export const Logo = () => {

@@ -15,6 +15,7 @@ import Profile from "../clients/yawara_user/pages/Profile";
 import MyHistories from "../clients/yawara_user/pages/MyHistories";
 import { useEffect } from "react";
 import FinishRegistration from "../clients/yawara_user/pages/FinishRegistration";
+import PasswordReset from "../clients/yawara_user/pages/PasswordReset";
 
 export default function Routes() {
   const { showModal } = useContext(Context);
@@ -35,6 +36,9 @@ export default function Routes() {
         </Route>
         <Route path="/finish-registration">
           <FinishRegistration />
+        </Route>
+        <Route path="/password-reset">
+          <PasswordReset />
         </Route>
         <>
           <Navbar />

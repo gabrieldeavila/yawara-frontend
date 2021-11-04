@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import Title from "../Title";
 import { FaUserAlt, AiFillLike, AiFillDislike } from "react-icons/all";
+import { IoMdTrash } from "react-icons/io";
 import useTitle from "../../states/Title";
 
 const Content = styled.div`
@@ -119,6 +120,16 @@ const Time = styled.span`
   color: var(--green);
 `;
 
+const OptionsWrapper = styled(Wrapper)`
+  cursor: pointer;
+  span {
+    transition: 0.15s ease all;
+  }
+  span:hover {
+    transform: scale(1.15);
+  }
+`;
+
 TimeAgo.addDefaultLocale(pt);
 
 const timeAgo = new TimeAgo("pt-BR");
@@ -161,8 +172,9 @@ export default function View() {
                   />
                 </ImgWrapper>
               </Wrapper>
-              <Wrapper>
+              <OptionsWrapper>
                 <span
+                  className="view-icons"
                   style={{
                     color:
                       yawara.didInteract[1] === 0
@@ -181,6 +193,7 @@ export default function View() {
                   {yawara.likes}
                 </span>
                 <span
+                  className="view-icons"
                   style={{
                     color:
                       yawara.didInteract[1] === 1
@@ -198,7 +211,16 @@ export default function View() {
                   />
                   {yawara.dislikes}
                 </span>
-              </Wrapper>
+                {selected.user_type === "creator" && (
+                  <span className="view-icons">
+                    <IoMdTrash
+                      style={{
+                        fill: "var(--red)",
+                      }}
+                    />
+                  </span>
+                )}
+              </OptionsWrapper>
             </Rest>
           </YawaraWrapper>
         ))}

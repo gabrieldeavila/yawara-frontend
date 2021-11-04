@@ -63,7 +63,12 @@ const Image = styled.img`
   height: 100%;
 `;
 
-export default function History({ histories, moreData, hasMore }) {
+export default function History({
+  histories,
+  moreData,
+  hasMore,
+  shouldDelete,
+}) {
   const fetchMoreData = () => {
     moreData();
   };

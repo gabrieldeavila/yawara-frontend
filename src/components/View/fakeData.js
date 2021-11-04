@@ -2,6 +2,8 @@ export const fakeData = {
   title: "Do nulla ea ex esse.",
   creator: "John Doe",
   creation_date: "11/08/2021",
+  creator_id: 4,
+  user_type: "creator",
   history: [
     {
       id: 0,
