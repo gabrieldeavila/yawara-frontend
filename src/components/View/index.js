@@ -8,6 +8,8 @@ import Title from "../Title";
 import { FaUserAlt, AiFillLike, AiFillDislike } from "react-icons/all";
 import { IoMdTrash } from "react-icons/io";
 import useTitle from "../../states/Title";
+import usePosition from "../../states/Position";
+import { useRef } from "react";
 
 const Content = styled.div`
   margin: 0 2rem;
@@ -134,10 +136,16 @@ TimeAgo.addDefaultLocale(pt);
 
 const timeAgo = new TimeAgo("pt-BR");
 export default function View() {
-  console.log(fakeData);
   const [selected, setSelected] = useState(fakeData);
+  const [yawaraToDelete, setYawaraToDelete] = useState([]);
   let { id } = useParams();
+  console.log("bruh");
   useTitle(selected.title);
+
+  const handleDelete = (e) => {
+    console.log(e);
+  };
+
   return (
     <Content>
       <Title justify="space-between" title={selected.title}>
@@ -212,7 +220,12 @@ export default function View() {
                   {yawara.dislikes}
                 </span>
                 {selected.user_type === "creator" && (
-                  <span className="view-icons">
+                  <span
+                    className="view-icons"
+                    onClick={() => {
+                      handleDelete();
+                    }}
+                  >
                     <IoMdTrash
                       style={{
                         fill: "var(--red)",
