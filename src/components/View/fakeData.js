@@ -4,6 +4,9 @@ export const fakeData = {
   creation_date: "11/08/2021",
   creator_id: 4,
   user_type: "creator",
+  participation: "public",
+  profilePic: null,
+  user_name: "Teste",
   history: [
     {
       id: 0,

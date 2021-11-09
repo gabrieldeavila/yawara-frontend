@@ -66,7 +66,6 @@ function ImageEditorHistory({ defaultImage }) {
     )[0];
 
     if (imgToChange) {
-      textInPtBR.children[0].textContent = "Trocar Imagem";
       imgToChange.children[0].src = yawaTail;
     }
   }, [img]);

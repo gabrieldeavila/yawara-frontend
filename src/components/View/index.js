@@ -7,9 +7,19 @@ import { useState } from "react";
 import Title from "../Title";
 import { FaUserAlt, AiFillLike, AiFillDislike } from "react-icons/all";
 import { IoMdTrash } from "react-icons/io";
+import ImageEditorHistory from "../ImageEditor";
 import useTitle from "../../states/Title";
+import { Link } from "react-router-dom";
+import useTheme from "../../states/Theme/index";
 import usePosition from "../../states/Position";
 import { useRef } from "react";
+import { DangerButton, ButtonsWrapper, SuccessButton } from "../Buttons";
+import Popup from "../Popup";
+
+const StyledButtonsWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 
 const Content = styled.div`
   margin: 0 2rem;
@@ -96,8 +106,8 @@ const InfoWrapper = styled(Wrapper)`
 `;
 
 const ImgWrapper = styled(Wrapper)`
-  width: 508px;
-  height: 310px;
+  width: 50%;
+  height: 25rem;
   border-radius: 14px;
   margin: 1rem 0;
   overflow: hidden;
@@ -132,18 +142,36 @@ const OptionsWrapper = styled(Wrapper)`
   }
 `;
 
+const StyledH4 = styled.h4`
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+`;
+
+const StyledImageEditorHistory = styled(ImageEditorHistory)`
+  height: 20rem;
+`;
+
 TimeAgo.addDefaultLocale(pt);
 
 const timeAgo = new TimeAgo("pt-BR");
 export default function View() {
+  const [showPopup, setShowPopup] = useState(false);
+  const theme = useTheme(false, true)[0][1];
   const [selected, setSelected] = useState(fakeData);
   const [yawaraToDelete, setYawaraToDelete] = useState([]);
+  const [reply, setReply] = useState(false);
+  const [left, setLeft] = useState(0);
+  const [bottom, setBottom] = useState(0);
+  const [modal, setModal] = useState(false);
   let { id } = useParams();
-  console.log("bruh");
   useTitle(selected.title);
 
   const handleDelete = (e) => {
-    console.log(e);
+    const pos = e.target.getBoundingClientRect();
+    setBottom(pos.bottom);
+    setLeft(pos.left);
+    setShowPopup(true);
   };
 
   return (
@@ -163,7 +191,9 @@ export default function View() {
                   <UserIcon />
                 )}
               </Pic>
-              {selected.history.length !== index + 1 && <Border></Border>}
+              {selected.history.length !== index + 1 || reply === true ? (
+                <Border></Border>
+              ) : null}
             </PicWrapper>
             <Rest>
               <Wrapper>
@@ -200,6 +230,7 @@ export default function View() {
                   />
                   {yawara.likes}
                 </span>
+
                 <span
                   className="view-icons"
                   style={{
@@ -219,11 +250,11 @@ export default function View() {
                   />
                   {yawara.dislikes}
                 </span>
-                {selected.user_type === "creator" && (
+                {selected.user_type === "creator" && index !== 0 && (
                   <span
                     className="view-icons"
-                    onClick={() => {
-                      handleDelete();
+                    onClick={(e) => {
+                      handleDelete(e);
                     }}
                   >
                     <IoMdTrash
@@ -237,6 +268,88 @@ export default function View() {
             </Rest>
           </YawaraWrapper>
         ))}
+        {reply && (
+          <>
+            <YawaraWrapper>
+              <PicWrapper>
+                <Pic>
+                  {selected.profilePic ? (
+                    <img src={selected.profilePic} alt={selected.user_name} />
+                  ) : (
+                    <UserIcon />
+                  )}
+                </Pic>
+              </PicWrapper>
+              <Rest>
+                <Wrapper>
+                  <InfoWrapper>
+                    <AuthorName>{selected.userName}</AuthorName>
+                    <Time>agora</Time>
+                  </InfoWrapper>
+                </Wrapper>
+                <StyledImageEditorHistory></StyledImageEditorHistory>
+              </Rest>
+            </YawaraWrapper>
+
+            <StyledButtonsWrapper>
+              <div className="form-button flip" onClick={() => setReply(true)}>
+                <div className={`btn text-${theme}`}>Publicar História</div>
+              </div>
+              <div className="form-button flip" onClick={() => setReply(false)}>
+                <div className={`btn text-${theme}`}>Cancelar</div>
+              </div>
+            </StyledButtonsWrapper>
+          </>
+        )}
+
+        {!reply && (
+          <StyledButtonsWrapper>
+            {(selected.participation === "public" ||
+              selected.user_type === "creator") && (
+              <div className="form-button flip" onClick={() => setReply(true)}>
+                <div className={`btn text-${theme}`}>Continuar História</div>
+              </div>
+            )}
+
+            {selected.user_type === "creator" && (
+              <>
+                <div className="form-button flip">
+                  <button
+                    to="/explore"
+                    className={`btn text-${theme}`}
+                    type="submit"
+                  >
+                    {selected.participation === "public"
+                      ? "Fechar colaboração"
+                      : "Abrir colaboração"}
+                  </button>
+                </div>
+
+                <div className="form-button flip">
+                  <button className={`btn text-${theme}`} type="submit">
+                    Deletar História
+                  </button>
+                </div>
+              </>
+            )}
+          </StyledButtonsWrapper>
+        )}
+        {showPopup && (
+          <Popup
+            bottom={bottom}
+            left={left}
+            colorVar={"green"}
+            width="20rem"
+            svgMarginLeft="12rem"
+            setPopup={setShowPopup}
+          >
+            <StyledH4>Realmente Deseja Excluir?</StyledH4>
+            <ButtonsWrapper theme={theme}>
+              <DangerButton>Sim</DangerButton>
+              <SuccessButton>Não</SuccessButton>
+            </ButtonsWrapper>
+          </Popup>
+        )}
       </Main>
     </Content>
   );
