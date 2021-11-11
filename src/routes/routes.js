@@ -5,6 +5,8 @@ import ScrollToTop from "./scrollToTop";
 import { Context } from "../Contexts/GlobalContext";
 
 import "../assets/css/index.min.css";
+
+//common user 
 import Account from "../clients/yawara_user/pages/Account";
 import Explore from "../clients/yawara_user/pages/Explore";
 import Navbar from "../components/Navbar";
@@ -16,6 +18,9 @@ import MyHistories from "../clients/yawara_user/pages/MyHistories";
 import { useEffect } from "react";
 import FinishRegistration from "../clients/yawara_user/pages/FinishRegistration";
 import PasswordReset from "../clients/yawara_user/pages/PasswordReset";
+
+//admin user
+import AdminAccount from "../clients/Admin/pages/Account"
 
 export default function Routes() {
   const { showModal } = useContext(Context);
@@ -40,6 +45,11 @@ export default function Routes() {
         <Route path="/password-reset">
           <PasswordReset />
         </Route>
+
+        <Route path="/admin-account">
+          <AdminAccount />
+        </Route>
+
         <>
           <Navbar />
           <Sidebar />
