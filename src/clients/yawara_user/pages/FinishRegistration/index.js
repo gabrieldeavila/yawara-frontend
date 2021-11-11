@@ -89,7 +89,7 @@ export default function FinishRegistration() {
 
               <div>
                 <Name>Imagem de Perfil</Name>
-                <ImageEditorHistory defaultImage={fakeImg}></ImageEditorHistory>
+                <ImageEditorHistory></ImageEditorHistory>
               </div>
 
               <div className="tags">
