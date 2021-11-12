@@ -61,7 +61,7 @@
         background: $blue
   &-right
     width: 20%
-    @include flex(row, flex-center)
+    @include flex(row, flex-end)
     &-user
       width: 40px
       height: 40px
@@ -73,6 +73,13 @@
         width: 40px
         cursor: pointer
         object-fit: cover
+    &-admin
+      background: none
+      @include flex()
+      svg
+        fill: $yellow
+        font-size: 1.5rem
+        cursor: pointer
 
 @media screen and (max-width: 990px)
   .navbar

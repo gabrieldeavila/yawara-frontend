@@ -84,17 +84,19 @@ const ModalContent = styled.div`
   margin-top: 3rem;
 `;
 
-export default function Options({ setPopup, theme }) {
+export default function Options({ setPopup, theme, type }) {
   const [theme_option, changeCookie] = theme;
   const [svg, theme_title] = theme_option;
   const [modal, setModal] = useState(false);
 
   return (
     <Content>
-      <SuperLink onClick={() => setPopup(false)} to="/profile">
-        <SuperAiFillSetting theme={theme_title} />
-        <H3 theme={theme_title}>Configurar Perfil</H3>
-      </SuperLink>
+      {type === "client" && (
+        <SuperLink onClick={() => setPopup(false)} to="/profile">
+          <SuperAiFillSetting theme={theme_title} />
+          <H3 theme={theme_title}>Configurar Perfil</H3>
+        </SuperLink>
+      )}
 
       <SuperLink onClick={() => setPopup(false)} to="/profile" to="/account">
         <SuperIoExit theme={theme_title} />
@@ -107,29 +109,33 @@ export default function Options({ setPopup, theme }) {
         <H3 theme={theme_title}>Mudar Tema</H3>
       </ChangeTheme>
 
-      <DeleteAccount onClick={(e) => setModal(true)}>
-        <SuperMdDeleteSweep theme={theme_title} />
-        <H3 theme={theme_title}>Deletar Conta</H3>
-      </DeleteAccount>
-      {modal && (
-        <Modal
-          setModal={setModal}
-          theme={theme_title}
-          titlePosition={"left"}
-          title={"Deletar conta e todas as suas informações?"}
-        >
-          <ModalContent>
-            Você realmente deseja deletar a sua conta e perder todas as suas
-            histórias? Saiba que uma vez realizada essa ação não pode ser
-            revertida!
-            <ButtonsWrapper theme={theme_title}>
-              <DangerButton>Sim, quero deletar</DangerButton>
-              <SuccessButton onClick={() => setModal(false)}>
-                Não, foi um engano
-              </SuccessButton>
-            </ButtonsWrapper>
-          </ModalContent>
-        </Modal>
+      {type === "client" && (
+        <>
+          <DeleteAccount onClick={(e) => setModal(true)}>
+            <SuperMdDeleteSweep theme={theme_title} />
+            <H3 theme={theme_title}>Deletar Conta</H3>
+          </DeleteAccount>
+          {modal && (
+            <Modal
+              setModal={setModal}
+              theme={theme_title}
+              titlePosition={"left"}
+              title={"Deletar conta e todas as suas informações?"}
+            >
+              <ModalContent>
+                Você realmente deseja deletar a sua conta e perder todas as suas
+                histórias? Saiba que uma vez realizada essa ação não pode ser
+                revertida!
+                <ButtonsWrapper theme={theme_title}>
+                  <DangerButton>Sim, quero deletar</DangerButton>
+                  <SuccessButton onClick={() => setModal(false)}>
+                    Não, foi um engano
+                  </SuccessButton>
+                </ButtonsWrapper>
+              </ModalContent>
+            </Modal>
+          )}
+        </>
       )}
     </Content>
   );

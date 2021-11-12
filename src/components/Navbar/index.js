@@ -8,11 +8,13 @@ import TagsFilter from "../TagsFilter";
 import Options from "../Options";
 import Popup from "../Popup";
 import useMobile from "../../states/Mobile";
+import { AiFillSetting } from "react-icons/ai";
 
 export default function Navbar({
   placeholder = "Digite Algo",
-  image = "https://mundoconectado.com.br/uploads/chamadas/rickastley.jpg",
+  image = "https://avatars.githubusercontent.com/u/76487489?v=4",
   description = "never gonna give you up",
+  type,
 }) {
   const [searchBarMobile, setSearchBarMobile] = useState(false);
 
@@ -44,29 +46,30 @@ export default function Navbar({
                 <BiSearchAlt onClick={() => console.log("uhum")} />
               </span>
             </div>
-
-            <div className="navbar-center-filter">
-              <button
-                ref={filterRef}
-                onClick={(e) => setIsActive(!isActive)}
-                className={`btn-shake ${isActive ? "isBtnSearchActive" : ""}`}
-              >
-                Filtrar Tags
-              </button>
-              {isActive && (
-                <Popup
-                  className="btn-shake"
-                  setPopup={setIsActive}
-                  bottom={bottomFilter - 8}
-                  left={leftFilter}
-                  colorVar={"blue"}
-                  svgMarginLeft="14.6rem"
-                  width="30rem"
+            {type === "client" && (
+              <div className="navbar-center-filter">
+                <button
+                  ref={filterRef}
+                  onClick={(e) => setIsActive(!isActive)}
+                  className={`btn-shake ${isActive ? "isBtnSearchActive" : ""}`}
                 >
-                  <TagsFilter />
-                </Popup>
-              )}
-            </div>
+                  Filtrar Tags
+                </button>
+                {isActive && (
+                  <Popup
+                    className="btn-shake"
+                    setPopup={setIsActive}
+                    bottom={bottomFilter - 8}
+                    left={leftFilter}
+                    colorVar={"blue"}
+                    svgMarginLeft="14.6rem"
+                    width="30rem"
+                  >
+                    <TagsFilter />
+                  </Popup>
+                )}
+              </div>
+            )}
           </>
         )}
       </div>
@@ -103,13 +106,24 @@ export default function Navbar({
                   onClick={() => setSearchBarMobile(true)}
                 />
               )}
-              <div ref={popupRef} className="navbar-right-user">
-                <img
-                  onClick={(e) => setShowPopup(!showPopup)}
-                  className="navbar-right-user-img"
-                  src={image}
-                  alt={description}
-                />
+              <div
+                ref={popupRef}
+                className={`navbar-right-user ${
+                  type === "client"
+                    ? "navbar-right-client"
+                    : "navbar-right-admin"
+                }`}
+              >
+                {type === "client" ? (
+                  <img
+                    onClick={(e) => setShowPopup(!showPopup)}
+                    className="navbar-right-user-img"
+                    src={image}
+                    alt={description}
+                  />
+                ) : (
+                  <AiFillSetting onClick={(e) => setShowPopup(!showPopup)} />
+                )}
               </div>
               {showPopup && (
                 <Popup
@@ -119,7 +133,7 @@ export default function Navbar({
                   left={left}
                   colorVar={"green"}
                 >
-                  <Options setPopup={setShowPopup} theme={theme} />
+                  <Options type={type} setPopup={setShowPopup} theme={theme} />
                 </Popup>
               )}
             </div>

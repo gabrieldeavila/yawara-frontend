@@ -1,18 +1,22 @@
-import useTheme from '../../../../states/Theme'
-import { ReactComponent as LadyYawara } from '../../../../assets/img/lady-admin.svg'
-import FormFields from '../../../yawara_user/pages/Account/FormFields'
-import { Formik, Form, Field } from 'formik'
-import { Link } from 'react-router-dom'
-import * as Yup from 'yup'
+import useTheme from "../../../../states/Theme";
+import { ReactComponent as LadyYawara } from "../../../../assets/img/lady-admin.svg";
+import FormFields from "../../../yawara_user/pages/Account/FormFields";
+import { Formik, Form, Field } from "formik";
+import { Link } from "react-router-dom";
+import * as Yup from "yup";
 
 export default function AdminAccount() {
-  const [theme] = useTheme(false, true)
+  const [theme] = useTheme(false, true);
 
   return (
     <div className="account">
       <div className="bg-green account-greeting">
-        <h2 className={`trans-1 text-${theme[1]}`}>
-          Acesse a Conta de Administrador
+        <h2
+          style={{ textAlign: "center" }}
+          className={`trans-1 text-${theme[1]}`}
+        >
+          Acesse a Conta de <br />
+          Administrador
         </h2>
         <div className="account-lady_yawara">
           <LadyYawara />
@@ -27,5 +31,5 @@ export default function AdminAccount() {
         </div>
       </div>
     </div>
-  )
+  );
 }
