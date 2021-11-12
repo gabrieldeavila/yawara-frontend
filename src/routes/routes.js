@@ -25,10 +25,10 @@ import FinishRegistration from "../clients/yawara_user/pages/FinishRegistration"
 import PasswordReset from "../clients/yawara_user/pages/PasswordReset";
 
 //admin user
-import AdminAccount from "../clients/admin/pages/Account";
-import TagsManagement from "../clients/admin/pages/TagsManagement";
-import KeepUsers from "../clients/admin/pages/KeepUsers";
-import SelectUser from "../clients/admin/pages/SelectUser";
+import AdminAccount from "../clients/Admin/pages/Account";
+import TagsManagement from "../clients/Admin/pages/TagsManagement";
+import KeepUsers from "../clients/Admin/pages/KeepUsers";
+import SelectUser from "../clients/Admin/pages/SelectUser";
 
 export default function Routes(props) {
   const { showModal } = useContext(Context);
