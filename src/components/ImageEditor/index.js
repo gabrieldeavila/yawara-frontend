@@ -14,7 +14,8 @@ const ImageReceive = styled.section`
   background: ${(props) => (props.isProfile ? "" : "#c4c4c4")};
   outline: 4px dashed var(--green);
   height: 366px;
-  width: ${(props) => (props.isProfile ? "100%" : "50%")};
+  width: ${(props) =>
+    props.isProfile ? "100%" : props.width ? `${props.width}%` : "50%"};
   box-shadow: 0px 4px 87px rgba(0, 0, 0, 0.25);
   border-radius: 14px;
   display: flex;
@@ -51,7 +52,7 @@ const ProfPic = styled.img`
   width: 10rem;
 `;
 
-function ImageEditorHistory({ defaultImage }) {
+function ImageEditorHistory({ defaultImage, width }) {
   const [message, setMessage] = useState("Joga a sua foto ou clica aqui 👀");
   const [img, setImg] = useState(null);
 
@@ -125,7 +126,10 @@ function ImageEditorHistory({ defaultImage }) {
           }}
         >
           {({ getRootProps, getInputProps }) => (
-            <ImageReceive isProfile={defaultImage ? true : false}>
+            <ImageReceive
+              width={width ?? false}
+              isProfile={defaultImage ? true : false}
+            >
               <div {...getRootProps()}>
                 <input {...getInputProps()} />
                 {defaultImage ? <ProfPic src={defaultImage} /> : <Icon />}

@@ -4,7 +4,7 @@ export const Wrapper = styled.div`
   padding: 0 2rem;
   padding-bottom: 3rem;
 `;
-
+//return a positive number
 export const Name = styled.div`
   user-select: none;
   color: var(--green);

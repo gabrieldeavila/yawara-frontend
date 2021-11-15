@@ -17,7 +17,7 @@ export default function MyHistories() {
     },
   ]);
 
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
 
   const fetchMoreData = () => {
     console.log("tem que fetchar mais data");

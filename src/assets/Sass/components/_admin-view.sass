@@ -1,0 +1,23 @@
+.admin-view
+  &-header
+    @include flex(row, space-between)
+    &-user
+      @include flex()
+      gap: 1rem
+      &_img
+        width: 4.5rem
+        height: 4.5rem
+        object-fit: cover
+        border-radius: 50%
+      &_name
+        font-size: 1.45rem
+        font-weight: bold
+        color: $green
+
+  &-sub_header
+    margin-top: 1rem
+    @include flex(row, space-between)
+    p
+      font-size: 1rem
+      font-weight: 500
+      color: $green

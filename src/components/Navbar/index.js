@@ -8,7 +8,7 @@ import TagsFilter from "../TagsFilter";
 import Options from "../Options";
 import Popup from "../Popup";
 import useMobile from "../../states/Mobile";
-import { AiFillSetting } from "react-icons/ai";
+import { AiFillSetting, AiOutlineClose } from "react-icons/ai";
 
 export default function Navbar({
   placeholder = "Digite Algo",
@@ -121,8 +121,10 @@ export default function Navbar({
                     src={image}
                     alt={description}
                   />
-                ) : (
+                ) : !showPopup ? (
                   <AiFillSetting onClick={(e) => setShowPopup(!showPopup)} />
+                ) : (
+                  <AiOutlineClose />
                 )}
               </div>
               {showPopup && (

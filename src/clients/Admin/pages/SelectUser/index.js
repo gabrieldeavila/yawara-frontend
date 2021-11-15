@@ -1,6 +1,7 @@
 import Title from "../../../../components/Title";
 import useTitle from "../../../../states/Title";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const StyledContainer = styled.div`
   display: flex;
@@ -48,10 +49,14 @@ export default function SelectUser() {
       />
       <StyledContainer>
         {data.map((item) => (
-          <div className="select-user-details" key={item.id}>
+          <Link
+            to={`/admin/view/${item.id}`}
+            className="select-user-details"
+            key={item.id}
+          >
             <img src={item.profile_pic} alt={item.user} />
             <h4>{item.user}</h4>
-          </div>
+          </Link>
         ))}
       </StyledContainer>
     </div>

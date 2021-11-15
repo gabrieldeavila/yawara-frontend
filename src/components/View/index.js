@@ -9,10 +9,7 @@ import { FaUserAlt, AiFillLike, AiFillDislike } from "react-icons/all";
 import { IoMdTrash } from "react-icons/io";
 import ImageEditorHistory from "../ImageEditor";
 import useTitle from "../../states/Title";
-import { Link } from "react-router-dom";
 import useTheme from "../../states/Theme/index";
-import usePosition from "../../states/Position";
-import { useRef } from "react";
 import { DangerButton, ButtonsWrapper, SuccessButton } from "../Buttons";
 import Popup from "../Popup";
 
@@ -106,7 +103,7 @@ const InfoWrapper = styled(Wrapper)`
 `;
 
 const ImgWrapper = styled(Wrapper)`
-  width: 50%;
+  width: 80%;
   height: 25rem;
   border-radius: 14px;
   margin: 1rem 0;
@@ -150,6 +147,9 @@ const StyledH4 = styled.h4`
 
 const StyledImageEditorHistory = styled(ImageEditorHistory)`
   height: 20rem;
+  section {
+    width: 60%;
+  }
 `;
 
 TimeAgo.addDefaultLocale(pt);
@@ -159,11 +159,9 @@ export default function View() {
   const [showPopup, setShowPopup] = useState(false);
   const theme = useTheme(false, true)[0][1];
   const [selected, setSelected] = useState(fakeData);
-  const [yawaraToDelete, setYawaraToDelete] = useState([]);
   const [reply, setReply] = useState(false);
   const [left, setLeft] = useState(0);
   const [bottom, setBottom] = useState(0);
-  const [modal, setModal] = useState(false);
   let { id } = useParams();
   useTitle(selected.title);
 
@@ -287,7 +285,7 @@ export default function View() {
                     <Time>agora</Time>
                   </InfoWrapper>
                 </Wrapper>
-                <StyledImageEditorHistory></StyledImageEditorHistory>
+                <StyledImageEditorHistory width={80}></StyledImageEditorHistory>
               </Rest>
             </YawaraWrapper>
 

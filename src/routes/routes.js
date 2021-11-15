@@ -29,6 +29,7 @@ import AdminAccount from "../clients/Admin/pages/Account";
 import TagsManagement from "../clients/Admin/pages/TagsManagement";
 import KeepUsers from "../clients/Admin/pages/KeepUsers";
 import SelectUser from "../clients/Admin/pages/SelectUser";
+import ViewUser from "../clients/Admin/pages/ViewUser";
 
 export default function Routes(props) {
   const { showModal } = useContext(Context);
@@ -75,7 +76,11 @@ export default function Routes(props) {
                   <KeepUsers />
                 </Route>
 
-                <Route path="/admin/select-user">
+                <Route path="/admin/view/:id">
+                  <ViewUser />
+                </Route>
+
+                <Route exact path="/admin/select-user">
                   <SelectUser />
                 </Route>
               </div>
