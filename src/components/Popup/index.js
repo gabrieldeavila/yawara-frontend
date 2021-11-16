@@ -21,8 +21,12 @@ const Wrapper = styled.div`
   position: fixed;
   top: calc(${(props) => props.bottom}px);
   left: calc(${(props) => props.left}px - 12rem);
-  @media max-width 900px {
-    display: none;
+  @media (max-width: 800px) {
+    ${Content} {
+      width: 100vw;
+      bottom: 0;
+      left: 0;
+    }
   }
 `
 
