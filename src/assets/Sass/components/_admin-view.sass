@@ -21,3 +21,47 @@
       font-size: 1rem
       font-weight: 500
       color: $green
+  &-content
+    h2
+      font-weight: bold
+      color: $green
+      margin-top: 1rem
+    &-histories-wrapper
+      margin: 2rem 0
+      @include flex(row, space-around)
+      gap: 2rem
+      .history
+         width: 25rem
+         &-header
+          margin-bottom: 1rem
+          p, h3
+             color: $green
+             text-align: center
+          h3
+            font-weight: bold
+         &-buttons
+            @include flex(row, space-between)
+            margin-top: 1rem
+            span
+              color: $green
+              font-weight: bold
+            &-delete
+              fill: $light_red
+              filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.25))
+              transform: scale(1.5)
+              &:hover
+                transform: scale(2)
+                cursor: pointer
+         &-image
+            height: 15rem
+            img
+              border-radius: 1rem
+              filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))
+              width: 100%
+              height: 100%
+              object-fit: cover
+
+.modal-view-history
+  p
+    margin-top: 1rem
+    text-align: center
