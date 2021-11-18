@@ -19,25 +19,32 @@ const SvgIcon = styled(TiArrowSortedUp)`
   fill: ${(props) => `var(--${props.colorvar})`};
 `
 
+const CloseWrapper = styled.div`
+  margin-bottom: 4rem;
+`
+
 const Wrapper = styled.div`
   position: fixed;
   top: calc(${(props) => props.bottom}px);
   left: calc(${(props) => props.left}px - 12rem);
+  flex-direction: column;
+  display: flex;
   @media (max-width: 990px) {
     top: 0;
     left: 0;
+    bottom: 0;
+    right: 0;
+    background: ${(props) => `var(--${props.colorvar})`};
+    display: flex;
+    align-items: center;
+    justify-content: center;
     ${Content} {
-      width: 100vw;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       transform: scale(1.5);
-      height: 100vh;
       border-radius: 0;
-    }
-    .close-icon {
-      margin-bottom: 4rem;
     }
     ${SvgIcon} {
       display: none;
@@ -45,10 +52,16 @@ const Wrapper = styled.div`
   }
 `
 
+const StyledIoClose = styled(IoClose)`
+  fill: var(--${(props) => props.fill});
+  cursor: pointer;
+`
+
 function Popup({
   bottom,
   left,
   colorVar,
+  colorClose = 'black',
   setPopup,
   children,
   className,
@@ -56,8 +69,8 @@ function Popup({
   svgMarginLeft = '12.65rem',
 }) {
   const ref = useRef('')
-
   const isMobile = useMobile(990, true)
+
   if (isMobile)
     document.getElementsByTagName('BODY')[0].style.overflow = 'hidden'
 
@@ -86,14 +99,16 @@ function Popup({
   }, [ref])
 
   return (
-    <Wrapper ref={ref} bottom={bottom} left={left}>
+    <Wrapper ref={ref} colorvar={colorVar} bottom={bottom} left={left}>
       <SvgIcon left={svgMarginLeft} colorvar={colorVar} />
-      <Content width={width} colorvar={colorVar}>
-        {isMobile && (
+      {isMobile && (
+        <CloseWrapper width={width} colorvar={colorVar}>
           <div className="close-icon">
-            <IoClose onClick={() => setPopup(false)} />
+            <StyledIoClose fill={colorClose} onClick={() => setPopup(false)} />
           </div>
-        )}
+        </CloseWrapper>
+      )}
+      <Content width={width} colorvar={colorVar}>
         {children}
       </Content>
     </Wrapper>

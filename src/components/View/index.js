@@ -21,6 +21,8 @@ const StyledButtonsWrapper = styled.div`
 const Content = styled.div`
   margin: 0 2rem;
   padding-bottom: 4rem;
+  display: flex;
+  flex-wrap: wrap;
 `
 
 const Main = styled.main`
@@ -28,6 +30,10 @@ const Main = styled.main`
   display: flex;
   flex-direction: column;
   gap: 2rem;
+
+  @media (max-width: 990px) {
+    padding: 0;
+  }
 `
 
 const YawaraWrapper = styled.div`
@@ -103,8 +109,8 @@ const InfoWrapper = styled(Wrapper)`
 `
 
 const ImgWrapper = styled(Wrapper)`
-  width: 80%;
-  height: 25rem;
+  width: 35rem;
+  height: 35rem;
   border-radius: 14px;
   margin: 1rem 0;
   overflow: hidden;
@@ -113,6 +119,10 @@ const ImgWrapper = styled(Wrapper)`
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  @media (max-width: 990px) {
+    width: 25rem;
+    height: 25rem;
   }
 `
 
