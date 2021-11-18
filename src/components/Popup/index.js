@@ -1,6 +1,8 @@
 import styled from 'styled-components'
 import { TiArrowSortedUp } from 'react-icons/ti'
 import { useEffect, useRef } from 'react'
+import useMobile from '../../states/Mobile'
+import { IoClose } from 'react-icons/all'
 
 const Content = styled.div`
   background: ${(props) => `var(--${props.colorvar})`};
@@ -21,11 +23,24 @@ const Wrapper = styled.div`
   position: fixed;
   top: calc(${(props) => props.bottom}px);
   left: calc(${(props) => props.left}px - 12rem);
-  @media (max-width: 800px) {
+  @media (max-width: 990px) {
+    top: 0;
+    left: 0;
     ${Content} {
       width: 100vw;
-      bottom: 0;
-      left: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transform: scale(1.5);
+      height: 100vh;
+      border-radius: 0;
+    }
+    .close-icon {
+      margin-bottom: 4rem;
+    }
+    ${SvgIcon} {
+      display: none;
     }
   }
 `
@@ -41,6 +56,11 @@ function Popup({
   svgMarginLeft = '12.65rem',
 }) {
   const ref = useRef('')
+
+  const isMobile = useMobile(990, true)
+  if (isMobile)
+    document.getElementsByTagName('BODY')[0].style.overflow = 'hidden'
+
   useEffect(() => {
     /**
      * Alert if clicked on outside of element
@@ -59,6 +79,9 @@ function Popup({
       // Unbind the event listener on clean up
       document.removeEventListener('mousedown', handleClickOutside)
       document.addEventListener('scroll', handleClickOutside)
+
+      if (isMobile)
+        document.getElementsByTagName('BODY')[0].style.overflow = 'visible'
     }
   }, [ref])
 
@@ -66,6 +89,11 @@ function Popup({
     <Wrapper ref={ref} bottom={bottom} left={left}>
       <SvgIcon left={svgMarginLeft} colorvar={colorVar} />
       <Content width={width} colorvar={colorVar}>
+        {isMobile && (
+          <div className="close-icon">
+            <IoClose onClick={() => setPopup(false)} />
+          </div>
+        )}
         {children}
       </Content>
     </Wrapper>
