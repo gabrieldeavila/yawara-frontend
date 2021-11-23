@@ -16,6 +16,17 @@ import Popup from '../Popup'
 const StyledButtonsWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  @media (max-width: 425px) {
+    & .form-button {
+      width: 100%;
+
+      & .btn {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
 `
 
 const Content = styled.div`
@@ -30,7 +41,7 @@ const Main = styled.main`
   display: flex;
   flex-direction: column;
   gap: 2rem;
-
+  width: 100%;
   @media (max-width: 990px) {
     padding: 0;
   }
@@ -44,10 +55,16 @@ const YawaraWrapper = styled.div`
 const Rest = styled.div`
   margin-top: 23px;
   grid-column: span 8;
+  @media (max-width: 425px) {
+    grid-column: span 9;
+  }
 `
 
 const PicWrapper = styled.div`
   grid-column: span 1;
+  @media (max-width: 425px) {
+    display: none;
+  }
 `
 
 const Border = styled.div`
@@ -106,6 +123,9 @@ const Wrapper = styled.div`
 const InfoWrapper = styled(Wrapper)`
   justify-content: space-between;
   width: 100%;
+  @media (max-width: 425px) {
+    grid-area: name;
+  }
 `
 
 const ImgWrapper = styled(Wrapper)`
@@ -124,6 +144,9 @@ const ImgWrapper = styled(Wrapper)`
     width: 25rem;
     height: 25rem;
   }
+  @media (max-width: 990px) {
+    grid-area: image;
+  }
 `
 
 const UserIcon = styled(FaUserAlt)`
@@ -137,6 +160,11 @@ const AuthorName = styled.span`
 
 const Time = styled.span`
   color: var(--green);
+  @media (max-width: 990px) {
+    .mobile-time {
+      margin-bottom: 2rem;
+    }
+  }
 `
 
 const OptionsWrapper = styled(Wrapper)`
@@ -294,7 +322,9 @@ export default function View() {
                 <Wrapper>
                   <InfoWrapper>
                     <AuthorName>{selected.userName}</AuthorName>
-                    <Time>agora</Time>
+                    <Time>
+                      <span className="mobile-time">agora</span>
+                    </Time>
                   </InfoWrapper>
                 </Wrapper>
                 <StyledImageEditorHistory width={80}></StyledImageEditorHistory>
@@ -349,6 +379,7 @@ export default function View() {
             bottom={bottom}
             left={left}
             colorVar={'green'}
+            colorClose="white"
             width="20rem"
             svgMarginLeft="12rem"
             setPopup={setShowPopup}

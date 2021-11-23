@@ -9,6 +9,7 @@
   overflow: auto
   user-select: none
   &-content
+    margin-top: 3rem
   &-icon
     padding: 0.5rem
     @include flex(column)
@@ -57,3 +58,7 @@
     transform: translate(0rem)
   100%
     transform: translate(-10rem)
+
+@media screen and (max-width: 425px) 
+  .sidebar-content
+    margin-top: 3rem

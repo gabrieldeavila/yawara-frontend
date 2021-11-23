@@ -31,6 +31,7 @@ const Wrapper = styled.div`
   display: flex;
   @media (max-width: 990px) {
     top: 0;
+    z-index: 9;
     left: 0;
     bottom: 0;
     right: 0;
@@ -93,8 +94,7 @@ function Popup({
       document.removeEventListener('mousedown', handleClickOutside)
       document.addEventListener('scroll', handleClickOutside)
 
-      if (isMobile)
-        document.getElementsByTagName('BODY')[0].style.overflow = 'visible'
+      document.getElementsByTagName('BODY')[0].style.overflow = 'visible'
     }
   }, [ref])
 
