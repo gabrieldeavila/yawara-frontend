@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Formik, Form, Field } from 'formik'
-import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import _ from 'lodash'
 import * as Yup from 'yup'
+import { HiDesktopComputer } from 'react-icons/hi'
 
 function FormFields({ action, theme }) {
   const required = 'É necessário preencher este campo'
+  const history = useHistory()
   const [formSchema, setFormSchema] = useState({
     email: Yup.string()
       .email('É necessário preencher com um email válido')
@@ -39,7 +41,13 @@ function FormFields({ action, theme }) {
       }}
       validationSchema={Yup.object().shape(formSchema)}
       onSubmit={(values) => {
-        console.log(values)
+        if (window.location.pathname.split('/')[1] === 'admin') {
+          history.push('tags-management')
+        } else if (action === 'Entrar') {
+          history.push('/explore')
+        } else {
+          history.push('/finish-register')
+        }
       }}
     >
       {({ errors, touched }) => (

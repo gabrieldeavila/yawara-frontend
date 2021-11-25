@@ -379,7 +379,7 @@ export default function View() {
             bottom={bottom}
             left={left}
             colorVar={'green'}
-            colorClose="white"
+            colorClose={theme}
             width="20rem"
             svgMarginLeft="12rem"
             setPopup={setShowPopup}

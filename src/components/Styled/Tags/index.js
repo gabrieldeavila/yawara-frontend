@@ -34,11 +34,11 @@ export const TagsToSelect = styled.div`
 export const Label = styled.label`
   display: flex;
   align-items: center;
-  cursor: pointer;
+  position: relative;
   user-select: none;
   gap: 0.5rem;
   width: 10rem;
-  position: relative;
+  cursor: pointer;
   input {
     display: none;
   }

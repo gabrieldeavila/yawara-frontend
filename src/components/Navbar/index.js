@@ -59,7 +59,7 @@ export default function Navbar({
                   <Popup
                     className="btn-shake"
                     setPopup={setIsActive}
-                    bottom={bottomFilter - 8}
+                    bottom={bottomFilter}
                     left={leftFilter}
                     colorVar={'blue'}
                     colorClose="green"
@@ -137,7 +137,6 @@ export default function Navbar({
                   colorClose={theme[0][1] === 'light' ? 'white' : 'dark'}
                   colorVar={'green'}
                 >
-                  {console.log(theme[0][1])}
                   <Options type={type} setPopup={setShowPopup} theme={theme} />
                 </Popup>
               )}
