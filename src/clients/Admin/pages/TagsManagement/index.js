@@ -15,6 +15,15 @@ import styled from 'styled-components'
 
 const Wrapper = styled.div`
   margin: 0 2rem;
+  .input-search-tags {
+    display: flex;
+    color: var(--green);
+    background: none;
+    border: none;
+    outline: none;
+    font-weight: 600;
+    font-size: 15px;
+  }
 `
 
 const StyledTagsToSelect = styled(TagsToSelect)`
@@ -43,6 +52,20 @@ export default function TagsManagement() {
     [7, 'Polkadot', false],
     [8, 'Curve Finance', false],
   ])
+
+  const onTagChange = (e, tag) => {
+    let newTag = tag.map((v) => v)
+    newTag[1] = e.target.value
+    newTag[4] = 'changed'
+    setTags(
+      tags.map((tag_n) => {
+        if (tag_n[0] === newTag[0]) {
+          return newTag
+        }
+        return tag_n
+      }),
+    )
+  }
 
   useTitle('Gerenciar Tags')
   return (
@@ -100,7 +123,11 @@ export default function TagsManagement() {
                         />
                       </StyledIcon>
                     </CheckSpan>
-                    <span>{tag[1]}</span>
+                    <input
+                      className="input-search-tags"
+                      onChange={(e) => onTagChange(e, tag)}
+                      value={tag[1]}
+                    />
                   </Label>
                 ))}
               </StyledTagsToSelect>
