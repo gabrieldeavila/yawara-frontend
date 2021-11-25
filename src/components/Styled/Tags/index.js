@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const CheckSpan = styled.span`
   width: 12px;
@@ -12,12 +12,12 @@ export const CheckSpan = styled.span`
     transform: scale(0);
     stroke: ${(props) =>
       props.dontChange
-        ? "var(--blue)"
-        : props.theme === "light"
-        ? "var(--white)"
-        : "var(--black)"};
+        ? 'var(--blue)'
+        : props.theme === 'light'
+        ? 'var(--white)'
+        : 'var(--black)'};
   }
-`;
+`
 
 export const TagsToSelect = styled.div`
   margin-top: 2rem;
@@ -29,7 +29,7 @@ export const TagsToSelect = styled.div`
     font-weight: 600;
     color: var(--green);
   }
-`;
+`
 
 export const Label = styled.label`
   display: flex;
@@ -37,6 +37,7 @@ export const Label = styled.label`
   cursor: pointer;
   user-select: none;
   gap: 0.5rem;
+  width: 10rem;
   position: relative;
   input {
     display: none;
@@ -47,10 +48,11 @@ export const Label = styled.label`
   input:focus + ${CheckSpan} {
     box-shadow: 0 0 0 3px pink;
   }
-`;
+`
 
 export const Icon = styled.svg`
   fill: none;
   stroke: white;
   stroke-width: 2px;
-`;
+  width: 10rem;
+`
