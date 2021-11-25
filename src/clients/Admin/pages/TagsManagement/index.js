@@ -1,66 +1,70 @@
-import Title from "../../../../components/Title";
-import useTitle from "../../../../states/Title";
-import { useState } from "react";
+import Title from '../../../../components/Title'
+import useTitle from '../../../../states/Title'
+import { useState } from 'react'
 import {
   CheckSpan,
   TagsToSelect,
   Label,
   Icon,
-} from "../../../../components/Styled/Tags";
-import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
-import useTheme from "../../../../states/Theme";
-import { Name } from "../../../../components/Forms";
-import styled from "styled-components";
+} from '../../../../components/Styled/Tags'
+import { Formik, Form, Field } from 'formik'
+import * as Yup from 'yup'
+import useTheme from '../../../../states/Theme'
+import { Name } from '../../../../components/Forms'
+import styled from 'styled-components'
+
+const Wrapper = styled.div`
+  margin: 0 2rem;
+`
 
 const StyledTagsToSelect = styled(TagsToSelect)`
   display: grid;
   margin-top: 0;
   grid-template-columns: repeat(4, 1fr);
-`;
+`
 
 const StyledIcon = styled(Icon)`
   path {
     stroke: var(--red);
     stroke-width: 0;
   }
-`;
+`
 
 export default function TagsManagement() {
-  const [theme] = useTheme(false, true);
+  const [theme] = useTheme(false, true)
   const [tags, setTags] = useState([
-    [0, "Animais", false],
-    [1, "Felinos", false],
-    [2, "Cães", false],
-    [3, "Árvores", false],
-    [4, "Criptmoedas", false],
-    [5, "Bitcoin", false],
-    [6, "Polkamarkets", false],
-    [7, "Polkadot", false],
-    [8, "Curve Finance", false],
-  ]);
+    [0, 'Animais', false],
+    [1, 'Felinos', false],
+    [2, 'Cães', false],
+    [3, 'Árvores', false],
+    [4, 'Criptmoedas', false],
+    [5, 'Bitcoin', false],
+    [6, 'Polkamarkets', false],
+    [7, 'Polkadot', false],
+    [8, 'Curve Finance', false],
+  ])
 
-  useTitle("Gerenciar Tags");
+  useTitle('Gerenciar Tags')
   return (
-    <div>
+    <Wrapper>
       <Title
-        title={"Gerenciar Tags"}
-        description={"Crie, edite ou exclua tags de pesquisa"}
+        title={'Gerenciar Tags'}
+        description={'Crie, edite ou exclua tags de pesquisa'}
       />
       <Formik
         initialValues={{
-          new_tag: "",
+          new_tag: '',
           tags: [],
         }}
         validationSchema={Yup.object().shape({
-          new_tag: Yup.string().required("Você precisa preencher este campo"),
+          new_tag: Yup.string().required('Você precisa preencher este campo'),
           tags: Yup.array().min(
             1,
-            "Select atleast one option of your interest"
+            'Select atleast one option of your interest',
           ),
         })}
         onSubmit={(values) => {
-          console.log(values);
+          console.log(values)
         }}
       >
         {({ errors, touched }) => (
@@ -77,14 +81,14 @@ export default function TagsManagement() {
                       className="input"
                       value={tag[0]}
                       onChange={() => {
-                        let newTag = tag.map((t) => t);
-                        newTag[2] = !tag[2];
+                        let newTag = tag.map((t) => t)
+                        newTag[2] = !tag[2]
 
                         let newTags = tags.map((t, i) => {
-                          if (i === index) return newTag;
-                          return t;
-                        });
-                        setTags(newTags);
+                          if (i === index) return newTag
+                          return t
+                        })
+                        setTags(newTags)
                       }}
                       checked={tag[2]}
                     />
@@ -128,14 +132,14 @@ export default function TagsManagement() {
             </div>
             <div className="form-button form-button-multiple flip">
               <button
-                className={`btn text-${theme[1] === "dark" ? "dark" : "light"}`}
+                className={`btn text-${theme[1] === 'dark' ? 'dark' : 'light'}`}
                 type="submit"
               >
                 Adicionar Tag
               </button>
               <button
                 className={`btn btn-danger text-${
-                  theme[1] === "dark" ? "dark" : "light"
+                  theme[1] === 'dark' ? 'dark' : 'light'
                 }`}
                 type="submit"
               >
@@ -143,7 +147,7 @@ export default function TagsManagement() {
               </button>
 
               <button
-                className={`btn text-${theme[1] === "dark" ? "dark" : "light"}`}
+                className={`btn text-${theme[1] === 'dark' ? 'dark' : 'light'}`}
                 type="submit"
               >
                 Salvar Alterações
@@ -152,6 +156,6 @@ export default function TagsManagement() {
           </Form>
         )}
       </Formik>
-    </div>
-  );
+    </Wrapper>
+  )
 }
