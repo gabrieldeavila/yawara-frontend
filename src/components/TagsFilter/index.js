@@ -6,6 +6,8 @@ import { CheckSpan, TagsToSelect, Label, Icon } from "../Styled/Tags";
 
 const Div = styled.div`
   margin-bottom: 1.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const H3 = styled.div`
@@ -15,11 +17,16 @@ const H3 = styled.div`
   color: var(--yellow);
 `;
 
+const StyledLabel = styled(Label)`
+  width: 5rem;
+  text-overflow: ellipsis;
+`;
+
 export default function TagsFilter() {
   const tagsTeste = [
     { name: "Animais", id: 1, checked: true },
-    { name: "Animais", id: 2, checked: true },
-    { name: "Animais", id: 3, checked: false },
+    { name: "Menor", id: 2, checked: true },
+    { name: "Extremamente Grande", id: 3, checked: false },
     { name: "Animais", id: 4, checked: true },
     { name: "Animais", id: 5, checked: true },
     { name: "Animais", id: 6, checked: false },
@@ -47,7 +54,7 @@ export default function TagsFilter() {
       <H3>Tags:</H3>
       <TagsToSelect>
         {Object.keys(tags).map((tag, index) => (
-          <Label key={index} htmlFor={index}>
+          <StyledLabel key={index} htmlFor={index}>
             <input
               id={index}
               type="checkbox"
@@ -60,7 +67,7 @@ export default function TagsFilter() {
               </Icon>
             </CheckSpan>
             <span>{tags[tag].name}</span>
-          </Label>
+          </StyledLabel>
         ))}
       </TagsToSelect>
     </Div>

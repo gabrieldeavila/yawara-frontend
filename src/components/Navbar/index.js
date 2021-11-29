@@ -1,34 +1,49 @@
-import { ReactComponent as Tail } from '../../assets/img/tail.svg'
-import { GiHamburgerMenu, BiSearchAlt, IoClose } from 'react-icons/all'
-import React, { useContext, useRef, useState } from 'react'
-import { Context } from '../../Contexts/GlobalContext'
-import usePosition from '../../states/Position'
-import useTheme from '../../states/Theme'
-import TagsFilter from '../TagsFilter'
-import Options from '../Options'
-import Popup from '../Popup'
-import useMobile from '../../states/Mobile'
-import { AiFillSetting, AiOutlineClose } from 'react-icons/ai'
+import { ReactComponent as Tail } from "../../assets/img/tail.svg";
+import { GiHamburgerMenu, BiSearchAlt, IoClose } from "react-icons/all";
+import React, { useContext, useRef, useState } from "react";
+import { Context } from "../../Contexts/GlobalContext";
+import usePosition from "../../states/Position";
+import useTheme from "../../states/Theme";
+import TagsFilter from "../TagsFilter";
+import Options from "../Options";
+import Popup from "../Popup";
+import useMobile from "../../states/Mobile";
+import { AiFillSetting, AiOutlineClose } from "react-icons/ai";
+import { useHistory } from "react-router";
 
 export default function Navbar({
-  placeholder = 'Digite Algo',
-  image = 'https://avatars.githubusercontent.com/u/76487489?v=4',
-  description = 'never gonna give you up',
+  placeholder = "Digite Algo",
+  image = "https://avatars.githubusercontent.com/u/76487489?v=4",
+  description = "never gonna give you up",
   type,
 }) {
-  const [searchBarMobile, setSearchBarMobile] = useState(false)
+  const [searchBarMobile, setSearchBarMobile] = useState(false);
 
-  const { showSidebar, setShowSidebar } = useContext(Context)
-  const [showPopup, setShowPopup] = useState(false)
-  const popupRef = useRef('')
-  const { bottom, left } = usePosition(popupRef)
+  const { showSidebar, setShowSidebar } = useContext(Context);
+  const [showPopup, setShowPopup] = useState(false);
+  const popupRef = useRef("");
+  const { bottom, left } = usePosition(popupRef);
 
-  const [isActive, setIsActive] = useState(false)
-  const filterRef = useRef('')
-  const { bottom: bottomFilter, left: leftFilter } = usePosition(filterRef)
+  const [isActive, setIsActive] = useState(false);
+  const filterRef = useRef("");
+  const { bottom: bottomFilter, left: leftFilter } = usePosition(filterRef);
 
-  const isMobile = useMobile(990, true)
-  const theme = useTheme(false, true)
+  const isMobile = useMobile(990, true);
+  const theme = useTheme(false, true);
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const history = useHistory();
+
+  const handleSearch = (e) => {
+    // depois tem q realizar a pesquisa de tags quando usuário clicar no ícone de pesquisa
+    let tags = [
+      { name: "Animais", id: 5 },
+      { name: "Animais", id: 4 },
+    ];
+
+    if (searchTerm) history.push(`/search/${searchTerm}`);
+  };
 
   const searchBar = (show = true) => {
     return (
@@ -40,18 +55,21 @@ export default function Navbar({
                 autoComplete="off"
                 type="text"
                 id="search"
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyPress={(e) => e.which === 13 && handleSearch()}
+                value={searchTerm}
                 placeholder={placeholder}
               />
               <span className="search-icon">
-                <BiSearchAlt onClick={() => console.log('uhum')} />
+                <BiSearchAlt onClick={handleSearch} />
               </span>
             </div>
-            {type === 'client' && (
+            {type === "client" && (
               <div className="navbar-center-filter">
                 <button
                   ref={filterRef}
                   onClick={(e) => setIsActive(!isActive)}
-                  className={`btn-shake ${isActive ? 'isBtnSearchActive' : ''}`}
+                  className={`btn-shake ${isActive ? "isBtnSearchActive" : ""}`}
                 >
                   Filtrar Tags
                 </button>
@@ -61,7 +79,7 @@ export default function Navbar({
                     setPopup={setIsActive}
                     bottom={bottomFilter}
                     left={leftFilter}
-                    colorVar={'blue'}
+                    colorVar={"blue"}
                     colorClose="green"
                     svgMarginLeft="14.6rem"
                     width="30rem"
@@ -74,8 +92,8 @@ export default function Navbar({
           </>
         )}
       </div>
-    )
-  }
+    );
+  };
   return (
     <div className="navbar">
       <div className="navbar-container">
@@ -110,12 +128,12 @@ export default function Navbar({
               <div
                 ref={popupRef}
                 className={`navbar-right-user ${
-                  type === 'client'
-                    ? 'navbar-right-client'
-                    : 'navbar-right-admin'
+                  type === "client"
+                    ? "navbar-right-client"
+                    : "navbar-right-admin"
                 }`}
               >
-                {type === 'client' ? (
+                {type === "client" ? (
                   <img
                     onClick={(e) => setShowPopup(!showPopup)}
                     className="navbar-right-user-img"
@@ -132,10 +150,10 @@ export default function Navbar({
                 <Popup
                   className="navbar-right-user-img"
                   setPopup={setShowPopup}
-                  bottom={bottom - 4}
+                  bottom={bottom}
                   left={left}
-                  colorClose={theme[0][1] === 'light' ? 'white' : 'dark'}
-                  colorVar={'green'}
+                  colorClose={theme[0][1] === "light" ? "white" : "dark"}
+                  colorVar={"green"}
                 >
                   <Options type={type} setPopup={setShowPopup} theme={theme} />
                 </Popup>
@@ -152,5 +170,5 @@ export default function Navbar({
         )}
       </div>
     </div>
-  )
+  );
 }

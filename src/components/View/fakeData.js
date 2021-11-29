@@ -23,8 +23,7 @@ export const fakeData = {
       id: 1,
       image: "https://t2.tudocdn.net/560491?w=1200",
       author: "Hannah Doe",
-      profilePic:
-        "https://scontent.fcxj12-1.fna.fbcdn.net/v/t1.6435-9/118615198_112032313956323_8652224965155108185_n.png?_nc_cat=101&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=_d-7_1ENGSsAX-AtUK0&_nc_ht=scontent.fcxj12-1.fna&oh=88e3b43665715da9ed574609f0a3f0c7&oe=617F69DF",
+      profilePic: null,
       time: [2021, 9, 3, 18, 44, 44],
       likes: 45,
       dislikes: 1,

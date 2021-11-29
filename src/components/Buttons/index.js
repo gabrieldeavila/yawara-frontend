@@ -11,6 +11,7 @@ const Button = styled.button`
 export const ButtonsWrapper = styled.div`
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
   justify-content: center;
   margin-top: 3rem;
   button {

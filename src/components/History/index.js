@@ -34,6 +34,7 @@ const H2 = styled.h2`
   text-align: center;
   font-weight: 600;
   color: var(--green);
+  width: 36rem;
 `;
 
 const Infos = styled.div`
