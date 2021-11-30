@@ -9,6 +9,7 @@ import { useEffect } from 'react'
 import yawaTail from '../../assets/img/tail.svg'
 import useTheme from '../../states/Theme'
 import { useDropzone } from 'react-dropzone'
+import { useCallback } from 'react'
 
 const ImageReceive = styled.section`
   background: ${(props) => (props.isProfile ? '' : '#c4c4c4')};
@@ -126,6 +127,11 @@ function ImageEditorHistory({ defaultImage, width }) {
     console.log(base64)
   }
 
+  const onDrop = useCallback((acceptedFiles) => {
+    console.log(acceptedFiles)
+    createImageBlob(acceptedFiles)
+  }, [])
+
   const {
     acceptedFiles,
     fileRejections,
@@ -137,33 +143,12 @@ function ImageEditorHistory({ defaultImage, width }) {
   } = useDropzone({
     accept: 'image/jpeg, image/png',
     maxFiles: 1,
+    onDrop,
   })
 
   return (
     <Container>
       {!img ? (
-        // <Dropzone
-        //   onDragEnter={() => setMessage('Pode jogar aqui 🧐')}
-        //   onDragLeave={() => setMessage('Joga a sua foto ou clica aqui 👀')}
-        //   onDrop={(acceptedFiles) => {
-        //     console.log(acceptedFiles)
-        //     setMessage('Ae 😆 jogou!   ')
-        //     createImageBlob(acceptedFiles)
-        //   }}
-        // >
-        //   {({ getRootProps, getInputProps }) => (
-        //     <ImageReceive
-        //       width={width ?? false}
-        //       isProfile={defaultImage ? true : false}
-        //     >
-        //       <div {...getRootProps()}>
-        //         <input {...getInputProps()} />
-        //         {defaultImage ? <ProfPic src={defaultImage} /> : <Icon />}
-        //         <p style={{ margin: '1rem' }}>{message}</p>
-        //       </div>
-        //     </ImageReceive>
-        //   )}
-        // </Dropzone>
         <ImageEditorContainer>
           <div {...getRootProps()}>
             <input {...getInputProps()} />
@@ -175,9 +160,9 @@ function ImageEditorHistory({ defaultImage, width }) {
                 <input {...getInputProps()} />
                 {defaultImage ? <ProfPic src={defaultImage} /> : <Icon />}
                 <p style={{ margin: '1rem' }}>
-                  {isDragAccept && <>All files will be accepted</>}
-                  {isDragReject && <>Some files will be rejected</>}
-                  {!isDragActive && <>Drop some files here ...</>}
+                  {isDragAccept && <>Pode jogar aqui 🧐</>}
+                  {isDragReject && <>Opa, parece que não é JPG ou PNG!</>}
+                  {!isDragActive && <>Joga a sua foto ou clica aqui 👀</>}
                 </p>
               </div>
             </ImageReceive>
