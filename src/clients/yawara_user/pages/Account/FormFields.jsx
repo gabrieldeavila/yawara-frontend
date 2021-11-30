@@ -93,6 +93,7 @@ function FormFields({ action, theme }) {
               <div>{errors.password}</div>
             ) : null}
           </div>
+
           {action === 'Criar Conta' && (
             <>
               <div className="field floating">
