@@ -27,6 +27,12 @@ const HistoryWrapper = styled(Link)`
     box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);
     transform: scale(1.05);
   }
+  @media (max-width: 800px) {
+    & {
+      width: 100%;
+      padding: 0;
+    }
+  }
 `;
 
 const H2 = styled.h2`
@@ -34,7 +40,6 @@ const H2 = styled.h2`
   text-align: center;
   font-weight: 600;
   color: var(--green);
-  width: 36rem;
 `;
 
 const Infos = styled.div`
@@ -48,6 +53,11 @@ const Infos = styled.div`
     display: flex;
     align-items: center;
     gap: 0.3rem;
+  }
+  @media (max-width: 800px) {
+    .header_info {
+      display: none;
+    }
   }
 `;
 
@@ -86,8 +96,8 @@ export default function History({
         <HistoryWrapper key={index} to={`/view/${his.id}`}>
           <H2>{his.title}</H2>
           <Infos>
-            <span>Criado por: {his.creator}</span>
-            <span>{his.creation_date}</span>
+            <span className="header_info">Criado por: {his.creator}</span>
+            <span className="header_info">{his.creation_date}</span>
           </Infos>
           <ImageWrapper>
             <Image src={his.image} />

@@ -1,23 +1,23 @@
-import { useParams } from 'react-router'
-import TimeAgo from 'javascript-time-ago'
-import pt from 'javascript-time-ago/locale/pt.json'
-import { fakeData } from './fakeData'
-import styled from 'styled-components'
-import { useState } from 'react'
-import Title from '../Title'
-import { FaUserAlt, AiFillLike, AiFillDislike } from 'react-icons/all'
-import { IoMdTrash } from 'react-icons/io'
-import ImageEditorHistory from '../ImageEditor'
-import useTitle from '../../states/Title'
-import useTheme from '../../states/Theme/index'
-import { DangerButton, ButtonsWrapper, SuccessButton } from '../Buttons'
-import Popup from '../Popup'
+import { useParams } from "react-router";
+import TimeAgo from "javascript-time-ago";
+import pt from "javascript-time-ago/locale/pt.json";
+import { fakeData } from "./fakeData";
+import styled from "styled-components";
+import { useState } from "react";
+import Title from "../Title";
+import { FaUserAlt, AiFillLike, AiFillDislike } from "react-icons/all";
+import { IoMdTrash } from "react-icons/io";
+import ImageEditorHistory from "../ImageEditor";
+import useTitle from "../../states/Title";
+import useTheme from "../../states/Theme/index";
+import { DangerButton, ButtonsWrapper, SuccessButton } from "../Buttons";
+import Popup from "../Popup";
 
 const StyledButtonsWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  @media (max-width: 425px) {
+  @media (max-width: 426px) {
     & .form-button {
       width: 100%;
 
@@ -27,14 +27,14 @@ const StyledButtonsWrapper = styled.div`
       }
     }
   }
-`
+`;
 
 const Content = styled.div`
   margin: 0 2rem;
   padding-bottom: 4rem;
   display: flex;
   flex-wrap: wrap;
-`
+`;
 
 const Main = styled.main`
   padding: 0 5.5rem;
@@ -45,27 +45,27 @@ const Main = styled.main`
   @media (max-width: 990px) {
     padding: 0;
   }
-`
+`;
 
 const YawaraWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(9, 1fr);
-`
+`;
 
 const Rest = styled.div`
   margin-top: 23px;
   grid-column: span 8;
-  @media (max-width: 425px) {
+  @media (max-width: 430px) {
     grid-column: span 9;
   }
-`
+`;
 
 const PicWrapper = styled.div`
   grid-column: span 1;
-  @media (max-width: 425px) {
+  @media (max-width: 430px) {
     display: none;
   }
-`
+`;
 
 const Border = styled.div`
   width: 5px;
@@ -73,7 +73,7 @@ const Border = styled.div`
   margin-left: 2rem;
   background: var(--blue);
   box-shadow: 1px 0px 15px 0px #00000087;
-`
+`;
 
 const Pic = styled.div`
   width: 66px;
@@ -97,7 +97,7 @@ const Pic = styled.div`
     width: 50%;
     height: 50%;
   }
-`
+`;
 
 const Wrapper = styled.div`
   display: flex;
@@ -118,15 +118,15 @@ const Wrapper = styled.div`
     fill: var(--green);
     transform: scale(1.25);
   }
-`
+`;
 
 const InfoWrapper = styled(Wrapper)`
   justify-content: space-between;
   width: 100%;
-  @media (max-width: 425px) {
+  @media (max-width: 430px) {
     grid-area: name;
   }
-`
+`;
 
 const ImgWrapper = styled(Wrapper)`
   width: 35rem;
@@ -147,16 +147,16 @@ const ImgWrapper = styled(Wrapper)`
   @media (max-width: 990px) {
     grid-area: image;
   }
-`
+`;
 
 const UserIcon = styled(FaUserAlt)`
   fill: var(--green);
-`
+`;
 
 const AuthorName = styled.span`
   color: var(--green);
   font-weight: 600;
-`
+`;
 
 const Time = styled.span`
   color: var(--green);
@@ -165,7 +165,7 @@ const Time = styled.span`
       margin-bottom: 2rem;
     }
   }
-`
+`;
 
 const OptionsWrapper = styled(Wrapper)`
   cursor: pointer;
@@ -175,42 +175,42 @@ const OptionsWrapper = styled(Wrapper)`
   span:hover {
     transform: scale(1.15);
   }
-`
+`;
 
 const StyledH4 = styled.h4`
   font-weight: 700;
   font-size: 14px;
   text-align: center;
   color: ${(props) =>
-    props.theme === 'dark' ? 'var(--black)' : 'var(--white)'};
-`
+    props.theme === "dark" ? "var(--black)" : "var(--white)"};
+`;
 
 const StyledImageEditorHistory = styled(ImageEditorHistory)`
   height: 20rem;
   section {
     width: 60%;
   }
-`
+`;
 
-TimeAgo.addDefaultLocale(pt)
+TimeAgo.addDefaultLocale(pt);
 
-const timeAgo = new TimeAgo('pt-BR')
+const timeAgo = new TimeAgo("pt-BR");
 export default function View() {
-  const [showPopup, setShowPopup] = useState(false)
-  const theme = useTheme(false, true)[0][1]
-  const [selected, setSelected] = useState(fakeData)
-  const [reply, setReply] = useState(false)
-  const [left, setLeft] = useState(0)
-  const [bottom, setBottom] = useState(0)
-  let { id } = useParams()
-  useTitle(selected.title)
+  const [showPopup, setShowPopup] = useState(false);
+  const theme = useTheme(false, true)[0][1];
+  const [selected, setSelected] = useState(fakeData);
+  const [reply, setReply] = useState(false);
+  const [left, setLeft] = useState(0);
+  const [bottom, setBottom] = useState(0);
+  let { id } = useParams();
+  useTitle(selected.title);
 
   const handleDelete = (e) => {
-    const pos = e.target.getBoundingClientRect()
-    setBottom(pos.bottom)
-    setLeft(pos.left)
-    setShowPopup(true)
-  }
+    const pos = e.target.getBoundingClientRect();
+    setBottom(pos.bottom);
+    setLeft(pos.left);
+    setShowPopup(true);
+  };
 
   return (
     <Content>
@@ -254,16 +254,16 @@ export default function View() {
                   style={{
                     color:
                       yawara.didInteract[1] === 0
-                        ? 'var(--blue-xs)'
-                        : 'var(--green)',
+                        ? "var(--blue-xs)"
+                        : "var(--green)",
                   }}
                 >
                   <AiFillLike
                     style={{
                       fill:
                         yawara.didInteract[1] === 0
-                          ? 'var(--blue-xs)'
-                          : 'var(--green)',
+                          ? "var(--blue-xs)"
+                          : "var(--green)",
                     }}
                   />
                   {yawara.likes}
@@ -274,30 +274,30 @@ export default function View() {
                   style={{
                     color:
                       yawara.didInteract[1] === 1
-                        ? 'var(--red-xs)'
-                        : 'var(--green)',
+                        ? "var(--red-xs)"
+                        : "var(--green)",
                   }}
                 >
                   <AiFillDislike
                     style={{
                       fill:
                         yawara.didInteract[1] === 1
-                          ? 'var(--red-xs)'
-                          : 'var(--green)',
+                          ? "var(--red-xs)"
+                          : "var(--green)",
                     }}
                   />
                   {yawara.dislikes}
                 </span>
-                {selected.user_type === 'creator' && index !== 0 && (
+                {selected.user_type === "creator" && index !== 0 && (
                   <span
                     className="view-icons"
                     onClick={(e) => {
-                      handleDelete(e)
+                      handleDelete(e);
                     }}
                   >
                     <IoMdTrash
                       style={{
-                        fill: 'var(--red)',
+                        fill: "var(--red)",
                       }}
                     />
                   </span>
@@ -344,14 +344,14 @@ export default function View() {
 
         {!reply && (
           <StyledButtonsWrapper>
-            {(selected.participation === 'public' ||
-              selected.user_type === 'creator') && (
+            {(selected.participation === "public" ||
+              selected.user_type === "creator") && (
               <div className="form-button flip" onClick={() => setReply(true)}>
                 <div className={`btn text-${theme}`}>Continuar História</div>
               </div>
             )}
 
-            {selected.user_type === 'creator' && (
+            {selected.user_type === "creator" && (
               <>
                 <div className="form-button flip">
                   <button
@@ -359,9 +359,9 @@ export default function View() {
                     className={`btn text-${theme}`}
                     type="submit"
                   >
-                    {selected.participation === 'public'
-                      ? 'Fechar colaboração'
-                      : 'Abrir colaboração'}
+                    {selected.participation === "public"
+                      ? "Fechar colaboração"
+                      : "Abrir colaboração"}
                   </button>
                 </div>
 
@@ -378,7 +378,7 @@ export default function View() {
           <Popup
             bottom={bottom}
             left={left}
-            colorVar={'green'}
+            colorVar={"green"}
             colorClose={theme}
             width="20rem"
             svgMarginLeft="12rem"
@@ -393,5 +393,5 @@ export default function View() {
         )}
       </Main>
     </Content>
-  )
+  );
 }
