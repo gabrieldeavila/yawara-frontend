@@ -4,11 +4,12 @@ import 'tui-image-editor/dist/tui-image-editor.css'
 import 'tui-color-picker/dist/tui-color-picker.css'
 import { RiImageAddFill } from 'react-icons/ri'
 import styled from 'styled-components'
-import Dropzone from 'react-dropzone'
 import { useState, memo } from 'react'
 import { useEffect } from 'react'
 import yawaTail from '../../assets/img/tail.svg'
 import useTheme from '../../states/Theme'
+import { useDropzone } from 'react-dropzone'
+import { useCallback } from 'react'
 
 const ImageReceive = styled.section`
   background: ${(props) => (props.isProfile ? '' : '#c4c4c4')};
@@ -53,6 +54,15 @@ const Icon = styled(RiImageAddFill)`
 
 const ProfPic = styled.img`
   width: 10rem;
+`
+
+const ImageEditorContainer = styled.div`
+  width: 100%;
+  div:first-child {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
 `
 
 function ImageEditorHistory({ defaultImage, width }) {
@@ -117,18 +127,31 @@ function ImageEditorHistory({ defaultImage, width }) {
     console.log(base64)
   }
 
+  const onDrop = useCallback((acceptedFiles) => {
+    console.log(acceptedFiles)
+    createImageBlob(acceptedFiles)
+  }, [])
+
+  const {
+    acceptedFiles,
+    fileRejections,
+    getRootProps,
+    getInputProps,
+    isDragAccept,
+    isDragReject,
+    isDragActive,
+  } = useDropzone({
+    accept: 'image/jpeg, image/png',
+    maxFiles: 1,
+    onDrop,
+  })
+
   return (
     <Container>
       {!img ? (
-        <Dropzone
-          onDragEnter={() => setMessage('Pode jogar aqui 🧐')}
-          onDragLeave={() => setMessage('Joga a sua foto ou clica aqui 👀')}
-          onDrop={(acceptedFiles) => {
-            setMessage('Ae 😆 jogou!   ')
-            createImageBlob(acceptedFiles)
-          }}
-        >
-          {({ getRootProps, getInputProps }) => (
+        <ImageEditorContainer>
+          <div {...getRootProps()}>
+            <input {...getInputProps()} />
             <ImageReceive
               width={width ?? false}
               isProfile={defaultImage ? true : false}
@@ -136,11 +159,15 @@ function ImageEditorHistory({ defaultImage, width }) {
               <div {...getRootProps()}>
                 <input {...getInputProps()} />
                 {defaultImage ? <ProfPic src={defaultImage} /> : <Icon />}
-                <p style={{ margin: '1rem' }}>{message}</p>
+                <p style={{ margin: '1rem' }}>
+                  {isDragAccept && <>Pode jogar aqui 🧐</>}
+                  {isDragReject && <>Opa, parece que não é JPG ou PNG!</>}
+                  {!isDragActive && <>Joga a sua foto ou clica aqui 👀</>}
+                </p>
               </div>
             </ImageReceive>
-          )}
-        </Dropzone>
+          </div>
+        </ImageEditorContainer>
       ) : (
         <div
           className={`tui-theme trans-1 ${

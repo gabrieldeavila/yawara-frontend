@@ -1,48 +1,66 @@
-import styled from "styled-components";
-import { useState } from "react";
-import { Logo, StyledWrapper } from "../../../../components/Decoration";
-import Title from "../../../../components/Title";
-import { Formik, Form, Field } from "formik";
-import { Link } from "react-router-dom";
-import { Wrapper, Name } from "../../../../components/Forms";
-import * as Yup from "yup";
-import ImageEditorHistory from "../../../../components/ImageEditor";
-import { fakeImg } from "../Profile/fakeImg";
+import styled from 'styled-components'
+import { useState } from 'react'
+import { Logo, StyledWrapper } from '../../../../components/Decoration'
+import Title from '../../../../components/Title'
+import { Formik, Form, Field } from 'formik'
+import { Link } from 'react-router-dom'
+import { Wrapper, Name } from '../../../../components/Forms'
+import * as Yup from 'yup'
+import ImageEditorHistory from '../../../../components/ImageEditor'
+import _ from 'lodash'
 import {
   CheckSpan,
   TagsToSelect,
   Label,
   Icon,
-} from "../../../../components/Styled/Tags";
-import useTheme from "../../../../states/Theme";
+} from '../../../../components/Styled/Tags'
+import useTheme from '../../../../states/Theme'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.min.css'
 
 const StyledTagsToSelect = styled(TagsToSelect)`
   display: grid;
   margin-top: 0;
   grid-template-columns: repeat(4, 1fr);
-`;
+`
 
 const StyledForm = styled(Form)`
   width: 100%;
-`;
+`
 
 export default function FinishRegistration() {
-  const required = "É necessário preencher este campo";
+  const required = 'É necessário preencher este campo'
   const [tags, setTags] = useState([
-    [0, "Animais", true],
-    [1, "Felinos", false],
-    [2, "Cães", true],
-    [3, "Árvores", false],
-    [4, "Criptmoedas", false],
-    [5, "Bitcoin", false],
-    [6, "Polkamarkets", false],
-    [7, "Polkadot", false],
-    [8, "Curve Finance", false],
-  ]);
-  const [theme] = useTheme(false, true);
+    [0, 'Animais'],
+    [1, 'Felinos'],
+    [2, 'Cães'],
+    [3, 'Árvores'],
+    [4, 'Criptmoedas'],
+    [5, 'Bitcoin'],
+    [6, 'Polkamarkets'],
+    [7, 'Polkadot'],
+    [8, 'Curve Finance'],
+  ])
+
+  const [theme] = useTheme(false, true)
+
+  const showError = (label) => {
+    toast.error(label, {
+      className:
+        theme[1] === 'light' ? 'toast-theme--light' : 'toast-theme--dark',
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    })
+  }
 
   return (
     <>
+      <ToastContainer />
       <Logo />
       <StyledWrapper items="start" justify="start" direction="column">
         <Title
@@ -52,16 +70,24 @@ export default function FinishRegistration() {
         />
         <Formik
           initialValues={{
-            firstName: "",
-            lastName: "",
-            email: "",
+            nickname: '',
           }}
           validationSchema={Yup.object().shape({
-            email: Yup.string()
-              .email("É necessário preencher com um email válido")
+            nickname: Yup.string()
+              .min(2, '2 caracteres é o mínimo')
+              .max(60, '60 caracteres é o máximo')
               .required(required),
-            password: Yup.string().min(4, "Senha pequena").required(required),
           })}
+          onSubmit={(values) => {
+            // verificar se tem, ao menos, uma tag
+            const selectedTags = _.filter(tags, function (o) {
+              return o[2]
+            })
+
+            if (selectedTags.length < 1)
+              showError('Selecione pelo menos uma tag!')
+            return
+          }}
         >
           {({ errors, touched }) => (
             <StyledForm autoComplete="off">
@@ -69,21 +95,21 @@ export default function FinishRegistration() {
                 <Field
                   placeholder="Placeholder"
                   className="floating__input"
-                  name="email"
-                  type="email"
-                  id="email"
+                  name="nickname"
+                  type="text"
+                  id="nickname"
                 />
                 <label
-                  htmlFor="email"
+                  htmlFor="nickname"
                   className="floating__label"
-                  data-content="Email"
+                  data-content="APELIDO"
                 >
                   <span className="hidden--visually"></span>
                 </label>
               </div>
               <div className="form-error">
-                {errors.email && touched.email ? (
-                  <div>{errors.email}</div>
+                {errors.nickname && touched.nickname ? (
+                  <div>{errors.nickname}</div>
                 ) : null}
               </div>
 
@@ -104,14 +130,14 @@ export default function FinishRegistration() {
                         className="input"
                         value={tag[0]}
                         onChange={() => {
-                          let newTag = tag.map((t) => t);
-                          newTag[2] = !tag[2];
+                          let newTag = tag.map((t) => t)
+                          newTag[2] = !tag[2]
 
                           let newTags = tags.map((t, i) => {
-                            if (i === index) return newTag;
-                            return t;
-                          });
-                          setTags(newTags);
+                            if (i === index) return newTag
+                            return t
+                          })
+                          setTags(newTags)
                         }}
                         checked={tag[2]}
                       />
@@ -133,18 +159,14 @@ export default function FinishRegistration() {
               </div>
 
               <div className="form-button flip">
-                <Link
-                  to="/explore"
-                  className={`btn text-${theme[1]}`}
-                  type="submit"
-                >
+                <button className={`btn text-${theme[1]}`} type="submit">
                   Finalizar Cadastro
-                </Link>
+                </button>
               </div>
             </StyledForm>
           )}
         </Formik>
       </StyledWrapper>
     </>
-  );
+  )
 }
