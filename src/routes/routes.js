@@ -29,6 +29,7 @@ import Search from "../clients/yawara_user/pages/Search";
 import AdminAccount from "../clients/Admin/pages/Account";
 import TagsManagement from "../clients/Admin/pages/TagsManagement";
 import KeepUsers from "../clients/Admin/pages/KeepUsers";
+import AdminSearch from "../clients/Admin/pages/Search";
 import SelectUser from "../clients/Admin/pages/SelectUser";
 import ViewUser from "../clients/Admin/pages/ViewUser";
 
@@ -75,6 +76,10 @@ export default function Routes(props) {
 
                 <Route path="/admin/keep-users">
                   <KeepUsers />
+                </Route>
+
+                <Route path="/admin/search/:search_term">
+                  <AdminSearch />
                 </Route>
 
                 <Route path="/admin/view/:id">

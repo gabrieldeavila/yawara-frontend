@@ -37,12 +37,10 @@ export default function Navbar({
 
   const handleSearch = (e) => {
     // depois tem q realizar a pesquisa de tags quando usuário clicar no ícone de pesquisa
-    let tags = [
-      { name: "Animais", id: 5 },
-      { name: "Animais", id: 4 },
-    ];
-
-    if (searchTerm) history.push(`/search/${searchTerm}`);
+    if (searchTerm) {
+      if (type === "client") history.push(`/search/${searchTerm}`);
+      else history.push(`/admin/search/${searchTerm}`);
+    }
   };
 
   const searchBar = (show = true) => {
