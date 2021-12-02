@@ -14,11 +14,10 @@ import {
   Label,
   Icon,
 } from "../../../../components/Styled/Tags";
-const StyledTagsToSelect = styled(TagsToSelect)`
-  display: grid;
-  margin-top: 0;
-  grid-template-columns: repeat(4, 1fr);
-`;
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+import _ from "lodash";
+
 export default function Profile() {
   useTitle("Perfil");
 
@@ -34,27 +33,62 @@ export default function Profile() {
     [6, "Polkamarkets", false],
     [7, "Polkadot", false],
     [8, "Curve Finance", false],
+    [8, "Cachorros", false],
   ]);
+
+  const [nickname, setNickname] = useState("Rick Astley");
+  const [password_, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+
   return (
     <Wrapper>
+      <ToastContainer />
+
       <Title title="Configurar Perfil" description="Altere suas preferências" />
       <Formik
         initialValues={{
-          nickName: "",
+          nickName: nickname,
         }}
         validationSchema={Yup.object().shape({
           nickName: Yup.string().required("Você deve ter um apelido!"),
-          tags: Yup.array().min(
-            1,
-            "Select atleast one option of your interest"
-          ),
-          password: Yup.string().min(
-            4,
-            "Senha deve ter mínimo de 4 caracteres"
-          ),
         })}
         onSubmit={(values) => {
-          console.log(values);
+          console.log(values, password_, passwordConfirm);
+          let selected_tags = _.filter(tags, function (o) {
+            return o[2];
+          });
+
+          if (selected_tags.length === 0) {
+            toast.error("Você deve selecionar ao menos uma tag!", {
+              className:
+                theme[1] === "light"
+                  ? "toast-theme--light"
+                  : "toast-theme--dark",
+            });
+          } else if (password_.length < 4 && password_.length > 0) {
+            toast.error("Senha não pode ter menos que 4 caracteres!", {
+              className:
+                theme[1] === "light"
+                  ? "toast-theme--light"
+                  : "toast-theme--dark",
+            });
+          } else if (password_ !== passwordConfirm) {
+            toast.error("Senhas não conferem!", {
+              className:
+                theme[1] === "light"
+                  ? "toast-theme--light"
+                  : "toast-theme--dark",
+            });
+          } else {
+            setPassword("");
+            setPasswordConfirm("");
+            toast.success("Perfil atualizado com sucesso!", {
+              className:
+                theme[1] === "light"
+                  ? "toast-theme--light"
+                  : "toast-theme--dark",
+            });
+          }
         }}
       >
         {({ errors, touched }) => (
@@ -75,7 +109,7 @@ export default function Profile() {
                 <span className="hidden--visually"></span>
               </label>
               <div className="form-error">
-                {errors.nickName && touched.nickName ? (
+                {errors.nickName && nickname === "" ? (
                   <div>{errors.nickName}</div>
                 ) : null}
               </div>
@@ -93,6 +127,8 @@ export default function Profile() {
                 name="password"
                 type="password"
                 id="password"
+                value={password_}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <label
                 htmlFor="password"
@@ -107,9 +143,29 @@ export default function Profile() {
                 ) : null}
               </div>
             </div>
+            {password_.length > 0 && (
+              <div className="field floating">
+                <Field
+                  placeholder="Placeholder"
+                  className="floating__input"
+                  name="password-confirm"
+                  type="password"
+                  id="password-confirm"
+                  value={passwordConfirm}
+                  onChange={(e) => setPasswordConfirm(e.target.value)}
+                />
+                <label
+                  htmlFor="password-confirm"
+                  className="floating__label"
+                  data-content="CONFIRMAÇÃO DE SENHA"
+                >
+                  <span className="hidden--visually"></span>
+                </label>
+              </div>
+            )}
             <div>
               <Name>Tags Preferidas</Name>
-              <StyledTagsToSelect>
+              <TagsToSelect>
                 {tags.map((tag, index) => (
                   <Label key={index} htmlFor={index}>
                     <Field
@@ -138,7 +194,7 @@ export default function Profile() {
                     <span>{tag[1]}</span>
                   </Label>
                 ))}
-              </StyledTagsToSelect>
+              </TagsToSelect>
             </div>
 
             <div className="form-button flip">

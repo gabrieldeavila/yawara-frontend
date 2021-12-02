@@ -1,7 +1,7 @@
-import styled from 'styled-components'
-import { Link } from 'react-router-dom'
-import { AiFillLike, AiFillDislike } from 'react-icons/ai'
-import InfiniteScroll from 'react-infinite-scroll-component'
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { AiFillLike, AiFillDislike } from "react-icons/ai";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const InfiniteScrollStyled = styled(InfiniteScroll)`
   display: flex;
@@ -13,7 +13,7 @@ const InfiniteScrollStyled = styled(InfiniteScroll)`
   gap: 3rem 6rem;
   justify-content: center;
   align-items: center;
-`
+`;
 
 const HistoryWrapper = styled(Link)`
   display: flex;
@@ -33,14 +33,15 @@ const HistoryWrapper = styled(Link)`
       padding: 0;
     }
   }
-`
+`;
 
 const H2 = styled.h2`
   font-size: 18px;
   text-align: center;
   font-weight: 600;
   color: var(--green);
-`
+  width: 36rem;
+`;
 
 const Infos = styled.div`
   font-weight: 600;
@@ -48,7 +49,7 @@ const Infos = styled.div`
   display: flex;
   align-items: center;
   justify-content: ${(props) =>
-    props.justify ? props.justify : 'space-between'};
+    props.justify ? props.justify : "space-between"};
   span {
     display: flex;
     align-items: center;
@@ -59,20 +60,20 @@ const Infos = styled.div`
       display: none;
     }
   }
-`
+`;
 
 const ImageWrapper = styled.div`
   width: 100%;
   height: 20rem;
   border-radius: 14px;
   overflow: hidden;
-`
+`;
 
 const Image = styled.img`
   object-fit: cover;
   width: 100%;
   height: 100%;
-`
+`;
 
 export default function History({
   histories,
@@ -81,8 +82,8 @@ export default function History({
   shouldDelete,
 }) {
   const fetchMoreData = () => {
-    moreData()
-  }
+    moreData();
+  };
 
   return (
     <InfiniteScrollStyled
@@ -115,5 +116,5 @@ export default function History({
         </HistoryWrapper>
       ))}
     </InfiniteScrollStyled>
-  )
+  );
 }
