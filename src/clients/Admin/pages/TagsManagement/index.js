@@ -29,7 +29,11 @@ const Wrapper = styled.div`
   }
 `;
 
-const StyledTagsToSelect = styled(TagsToSelect)``;
+const StyledTagsToSelect = styled(TagsToSelect)`
+  ${Label} {
+    overflow: hidden;
+  }
+`;
 
 const StyledIcon = styled(Icon)`
   path {
@@ -148,7 +152,7 @@ export default function TagsManagement() {
           new_tag: Yup.string().required("Você precisa preencher este campo"),
         })}
         onSubmit={(values) => {
-          setTags([...tags, [tags.length, values.new_tag, false]]);
+          setTags([...tags, [Math.random() * 10, values.new_tag, false]]);
           // fazer envio para o banco e colocar toast
           toast.success(`Tag Adicionada: ${values.new_tag}`, {
             className:
