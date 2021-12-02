@@ -13,6 +13,11 @@ const InfiniteScrollStyled = styled(InfiniteScroll)`
   gap: 3rem 6rem;
   justify-content: center;
   align-items: center;
+  @media (max-width: 800px) {
+    & {
+      overflow: visible !important;
+    }
+  }
 `;
 
 const HistoryWrapper = styled(Link)`
@@ -30,7 +35,6 @@ const HistoryWrapper = styled(Link)`
   @media (max-width: 800px) {
     & {
       width: 100%;
-      padding: 0;
     }
   }
 `;
@@ -41,6 +45,12 @@ const H2 = styled.h2`
   font-weight: 600;
   color: var(--green);
   width: 36rem;
+  @media (max-width: 900px) {
+    & {
+      width: 100%;
+      padding: 0;
+    }
+  }
 `;
 
 const Infos = styled.div`
