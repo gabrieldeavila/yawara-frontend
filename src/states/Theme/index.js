@@ -12,9 +12,7 @@ function useTheme(change = false, returnTheme = false) {
   ]);
 
   const changeCookie = () => {
-    setCookie("theme_option", parseInt(cookies.theme_option) === 0 ? 1 : 0, {
-      path: "/",
-    });
+    setCookie("theme_option", parseInt(cookies.theme_option) === 0 ? 1 : 0, {});
   };
 
   useEffect(() => {

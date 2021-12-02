@@ -1,20 +1,20 @@
-import Title from '../../../../components/Title'
-import useTitle from '../../../../states/Title'
-import { useState } from 'react'
+import Title from "../../../../components/Title";
+import useTitle from "../../../../states/Title";
+import { useState } from "react";
 import {
   CheckSpan,
   TagsToSelect,
   Label,
   Icon,
-} from '../../../../components/Styled/Tags'
-import { Formik, Form, Field } from 'formik'
-import * as Yup from 'yup'
-import useTheme from '../../../../states/Theme'
-import { Name } from '../../../../components/Forms'
-import styled from 'styled-components'
-import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.min.css'
-import _ from 'lodash'
+} from "../../../../components/Styled/Tags";
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
+import useTheme from "../../../../states/Theme";
+import { Name } from "../../../../components/Forms";
+import styled from "styled-components";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+import _ from "lodash";
 
 const Wrapper = styled.div`
   margin: 0 2rem;
@@ -27,122 +27,140 @@ const Wrapper = styled.div`
     font-weight: 600;
     font-size: 15px;
   }
-`
+`;
 
-const StyledTagsToSelect = styled(TagsToSelect)``
+const StyledTagsToSelect = styled(TagsToSelect)``;
 
 const StyledIcon = styled(Icon)`
   path {
     stroke: var(--red);
     stroke-width: 0;
   }
-`
+`;
 
 export default function TagsManagement() {
-  const [theme] = useTheme(false, true)
+  const [theme] = useTheme(false, true);
   const [tags, setTags] = useState([
-    [0, 'Animais', false],
-    [1, 'Felinos', false],
-    [2, 'Cães', false],
-    [3, 'Árvores', false],
-    [4, 'Criptmoedas', false],
-    [5, 'Bitcoin', false],
-    [6, 'Polkamarkets', false],
-    [7, 'Polkadot', false],
-    [8, 'Curve Finance', false],
-  ])
+    [0, "Animais", false],
+    [1, "Felinos", false],
+    [2, "Cães", false],
+    [3, "Árvores", false],
+    [4, "Criptmoedas", false],
+    [5, "Bitcoin", false],
+    [6, "Polkamarkets", false],
+    [7, "Polkadot", false],
+    [8, "Curve Finance", false],
+    [9, "Cachorros", false],
+  ]);
 
   const onTagChange = (e, tag) => {
-    let newTag = tag.map((v) => v)
-    newTag[1] = e.target.value
-    newTag[4] = 'changed'
+    let newTag = tag.map((v) => v);
+    newTag[1] = e.target.value;
+    newTag[4] = "changed";
     setTags(
       tags.map((tag_n) => {
         if (tag_n[0] === newTag[0]) {
-          return newTag
+          return newTag;
         }
-        return tag_n
-      }),
-    )
-  }
+        return tag_n;
+      })
+    );
+  };
 
   const deleteTags = () => {
     let keep_tags = _.filter(tags, function (o) {
-      return o[2] === false
-    })
-    setTags(keep_tags)
-    toast.success(`Tags removidas!`, {
-      className:
-        theme[1] === 'light' ? 'toast-theme--light' : 'toast-theme--dark',
-      position: 'top-right',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    })
-  }
+      return o[2] === false;
+    });
+    if (keep_tags.length === tags.length) {
+      toast.warn("Não há tags para deletar", {
+        className:
+          theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
+      });
+    } else if (keep_tags.length === 0) {
+      toast.error("Não é possível deletar todas as tags", {
+        className:
+          theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
+        position: "top-right",
+      });
+    } else {
+      toast.success(`${tags.length - keep_tags.length} tag(s) removida(s)!`, {
+        className:
+          theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setTags(keep_tags);
+    }
+  };
 
   const saveTags = () => {
     let changed_tags = _.filter(tags, function (o) {
-      return o[4] === 'changed'
-    })
+      return o[4] === "changed";
+    });
 
     let filter_tags = tags.map((tag) => {
       if (tag.length === 5) {
-        let new_tag = [tag[0], tag[1], tag[2]]
-        return new_tag
+        let new_tag = [tag[0], tag[1], tag[2]];
+        return new_tag;
       }
-      return tag
-    })
+      return tag;
+    });
 
-    setTags(filter_tags)
+    setTags(filter_tags);
+    if (changed_tags.length > 0)
+      toast.success(`${changed_tags.length} tag(s) alterada(s)!`, {
+        className:
+          theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    else
+      toast.warn(`Nenhuma tag alterada!`, {
+        className:
+          theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
+      });
+    console.log(changed_tags);
+  };
 
-    toast.success(`${changed_tags.length} tag(s) alteradas!`, {
-      className:
-        theme[1] === 'light' ? 'toast-theme--light' : 'toast-theme--dark',
-      position: 'top-right',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    })
-
-    console.log(changed_tags)
-  }
-
-  useTitle('Gerenciar Tags')
+  useTitle("Gerenciar Tags");
   return (
     <Wrapper>
       <ToastContainer />
       <Title
-        title={'Gerenciar Tags'}
-        description={'Crie, edite ou exclua tags de pesquisa'}
+        title={"Gerenciar Tags"}
+        description={"Crie, edite ou exclua tags de pesquisa"}
       />
       <Formik
         initialValues={{
-          new_tag: '',
+          new_tag: "",
         }}
         validationSchema={Yup.object().shape({
-          new_tag: Yup.string().required('Você precisa preencher este campo'),
+          new_tag: Yup.string().required("Você precisa preencher este campo"),
         })}
         onSubmit={(values) => {
-          setTags([...tags, [tags.length, values.new_tag, false]])
+          setTags([...tags, [tags.length, values.new_tag, false]]);
           // fazer envio para o banco e colocar toast
           toast.success(`Tag Adicionada: ${values.new_tag}`, {
             className:
-              theme[1] === 'light' ? 'toast-theme--light' : 'toast-theme--dark',
-            position: 'top-right',
+              theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
+            position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-          })
+          });
         }}
       >
         {({ errors, touched }) => (
@@ -159,14 +177,14 @@ export default function TagsManagement() {
                       className="input"
                       value={tag[0]}
                       onChange={() => {
-                        let newTag = tag.map((t) => t)
-                        newTag[2] = !tag[2]
+                        let newTag = tag.map((t) => t);
+                        newTag[2] = !tag[2];
 
                         let newTags = tags.map((t, i) => {
-                          if (i === index) return newTag
-                          return t
-                        })
-                        setTags(newTags)
+                          if (i === index) return newTag;
+                          return t;
+                        });
+                        setTags(newTags);
                       }}
                       checked={tag[2]}
                     />
@@ -214,14 +232,14 @@ export default function TagsManagement() {
             </div>
             <div className="form-button form-button-multiple flip">
               <button
-                className={`btn text-${theme[1] === 'dark' ? 'dark' : 'light'}`}
+                className={`btn text-${theme[1] === "dark" ? "dark" : "light"}`}
                 type="submit"
               >
                 Adicionar Tag
               </button>
               <div
                 className={`btn btn-danger text-${
-                  theme[1] === 'dark' ? 'dark' : 'light'
+                  theme[1] === "dark" ? "dark" : "light"
                 }`}
                 type="nothing"
                 onClick={deleteTags}
@@ -230,7 +248,7 @@ export default function TagsManagement() {
               </div>
 
               <div
-                className={`btn text-${theme[1] === 'dark' ? 'dark' : 'light'}`}
+                className={`btn text-${theme[1] === "dark" ? "dark" : "light"}`}
                 type="nothing"
                 onClick={saveTags}
               >
@@ -241,5 +259,5 @@ export default function TagsManagement() {
         )}
       </Formik>
     </Wrapper>
-  )
+  );
 }
