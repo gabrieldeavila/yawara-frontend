@@ -12,6 +12,9 @@ import * as Yup from 'yup'
 import useTheme from '../../../../states/Theme'
 import { Name } from '../../../../components/Forms'
 import styled from 'styled-components'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.min.css'
+import _ from 'lodash'
 
 const Wrapper = styled.div`
   margin: 0 2rem;
@@ -26,11 +29,7 @@ const Wrapper = styled.div`
   }
 `
 
-const StyledTagsToSelect = styled(TagsToSelect)`
-  display: grid;
-  margin-top: 0;
-  grid-template-columns: repeat(4, 1fr);
-`
+const StyledTagsToSelect = styled(TagsToSelect)``
 
 const StyledIcon = styled(Icon)`
   path {
@@ -67,9 +66,58 @@ export default function TagsManagement() {
     )
   }
 
+  const deleteTags = () => {
+    let keep_tags = _.filter(tags, function (o) {
+      return o[2] === false
+    })
+    setTags(keep_tags)
+    toast.success(`Tags removidas!`, {
+      className:
+        theme[1] === 'light' ? 'toast-theme--light' : 'toast-theme--dark',
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    })
+  }
+
+  const saveTags = () => {
+    let changed_tags = _.filter(tags, function (o) {
+      return o[4] === 'changed'
+    })
+
+    let filter_tags = tags.map((tag) => {
+      if (tag.length === 5) {
+        let new_tag = [tag[0], tag[1], tag[2]]
+        return new_tag
+      }
+      return tag
+    })
+
+    setTags(filter_tags)
+
+    toast.success(`${changed_tags.length} tag(s) alteradas!`, {
+      className:
+        theme[1] === 'light' ? 'toast-theme--light' : 'toast-theme--dark',
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    })
+
+    console.log(changed_tags)
+  }
+
   useTitle('Gerenciar Tags')
   return (
     <Wrapper>
+      <ToastContainer />
       <Title
         title={'Gerenciar Tags'}
         description={'Crie, edite ou exclua tags de pesquisa'}
@@ -77,17 +125,24 @@ export default function TagsManagement() {
       <Formik
         initialValues={{
           new_tag: '',
-          tags: [],
         }}
         validationSchema={Yup.object().shape({
           new_tag: Yup.string().required('Você precisa preencher este campo'),
-          tags: Yup.array().min(
-            1,
-            'Select atleast one option of your interest',
-          ),
         })}
         onSubmit={(values) => {
-          console.log(values)
+          setTags([...tags, [tags.length, values.new_tag, false]])
+          // fazer envio para o banco e colocar toast
+          toast.success(`Tag Adicionada: ${values.new_tag}`, {
+            className:
+              theme[1] === 'light' ? 'toast-theme--light' : 'toast-theme--dark',
+            position: 'top-right',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
         }}
       >
         {({ errors, touched }) => (
@@ -164,21 +219,23 @@ export default function TagsManagement() {
               >
                 Adicionar Tag
               </button>
-              <button
+              <div
                 className={`btn btn-danger text-${
                   theme[1] === 'dark' ? 'dark' : 'light'
                 }`}
-                type="submit"
+                type="nothing"
+                onClick={deleteTags}
               >
                 Deletar Tags
-              </button>
+              </div>
 
-              <button
+              <div
                 className={`btn text-${theme[1] === 'dark' ? 'dark' : 'light'}`}
-                type="submit"
+                type="nothing"
+                onClick={saveTags}
               >
                 Salvar Alterações
-              </button>
+              </div>
             </div>
           </Form>
         )}

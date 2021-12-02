@@ -101,14 +101,18 @@ function Popup({
   return (
     <Wrapper ref={ref} colorvar={colorVar} bottom={bottom} left={left}>
       <SvgIcon left={svgMarginLeft} colorvar={colorVar} />
-      {isMobile && (
-        <CloseWrapper width={width} colorvar={colorVar}>
-          <div className="close-icon">
-            <StyledIoClose fill={colorClose} onClick={() => setPopup(false)} />
-          </div>
-        </CloseWrapper>
-      )}
+
       <Content width={width} colorvar={colorVar}>
+        {isMobile && (
+          <CloseWrapper width={width} colorvar={colorVar}>
+            <div className="close-icon">
+              <StyledIoClose
+                fill={colorClose}
+                onClick={() => setPopup(false)}
+              />
+            </div>
+          </CloseWrapper>
+        )}
         {children}
       </Content>
     </Wrapper>

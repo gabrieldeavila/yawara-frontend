@@ -8,6 +8,7 @@ import { Wrapper, Name } from '../../../../components/Forms'
 import * as Yup from 'yup'
 import ImageEditorHistory from '../../../../components/ImageEditor'
 import _ from 'lodash'
+import { useHistory } from 'react-router-dom'
 import {
   CheckSpan,
   TagsToSelect,
@@ -18,17 +19,15 @@ import useTheme from '../../../../states/Theme'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
 
-const StyledTagsToSelect = styled(TagsToSelect)`
-  display: grid;
-  margin-top: 0;
-  grid-template-columns: repeat(4, 1fr);
-`
+const StyledTagsToSelect = styled(TagsToSelect)``
 
 const StyledForm = styled(Form)`
   width: 100%;
 `
 
 export default function FinishRegistration() {
+  const history = useHistory()
+
   const required = 'É necessário preencher este campo'
   const [tags, setTags] = useState([
     [0, 'Animais'],
@@ -84,9 +83,11 @@ export default function FinishRegistration() {
               return o[2]
             })
 
-            if (selectedTags.length < 1)
+            if (selectedTags.length < 1) {
               showError('Selecione pelo menos uma tag!')
-            return
+            } else {
+              history.push('/explore')
+            }
           }}
         >
           {({ errors, touched }) => (

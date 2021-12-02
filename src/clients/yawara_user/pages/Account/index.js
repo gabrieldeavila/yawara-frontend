@@ -1,31 +1,31 @@
-import React, { useEffect, useState } from "react";
-import useTheme from "../../../../states/Theme";
-import useTitle from "../../../../states/Title";
-import { ReactComponent as LadyYawara } from "../../../../assets/img/lady-yawara.svg";
-import FormFields from "./FormFields";
-import ModalAcc from "./ModalAcc";
+import React, { useEffect, useState } from 'react'
+import useTheme from '../../../../states/Theme'
+import useTitle from '../../../../states/Title'
+import { ReactComponent as LadyYawara } from '../../../../assets/img/lady-yawara.svg'
+import FormFields from './FormFields'
+import ModalAcc from './ModalAcc'
 
 export default function Account() {
   // accountAction: true = user actions is "Entrar, otherwise it is going to be "Criar Conta";
-  const [accountAction, setAccountAction] = useState(true);
-  const [theme] = useTheme(false, true);
+  const [accountAction, setAccountAction] = useState(true)
+  const [theme] = useTheme(false, true)
 
-  const [title, setTitle] = useState("");
-  const [modal, setModal] = useState(false);
+  const [title, setTitle] = useState('')
+  const [modal, setModal] = useState(false)
 
   useEffect(() => {
-    let action;
-    action = accountAction ? "Entrar" : "Criar Conta";
-    setTitle(action);
-  }, [accountAction]);
+    let action
+    action = accountAction ? 'Entrar' : 'Criar Conta'
+    setTitle(action)
+  }, [accountAction])
 
-  useTitle(title);
+  useTitle(title)
 
   return (
     <div className="account">
       <div className="bg-green account-greeting">
         <h2 className={`trans-1 text-${theme[1]}`}>
-          {accountAction ? "Acesse sua Yawa!" : "Crie sua Yawa!"}
+          {accountAction ? 'Acesse sua Yawa!' : 'Crie sua Yawa!'}
         </h2>
         <div className="account-lady_yawara">
           <LadyYawara />
@@ -39,7 +39,7 @@ export default function Account() {
             <button
               onClick={() => setAccountAction(true)}
               className={`btn-opt-acc text-${theme[1]} ${
-                !accountAction ? "isAccountActive" : ""
+                !accountAction ? 'isAccountActive' : ''
               }`}
             >
               Entrar
@@ -47,7 +47,7 @@ export default function Account() {
             <button
               onClick={() => setAccountAction(false)}
               className={`btn-opt-acc text-${theme[1]} ${
-                accountAction ? "isAccountActive" : ""
+                accountAction ? 'isAccountActive' : ''
               }`}
             >
               Criar Conta
@@ -57,21 +57,21 @@ export default function Account() {
         <div className="account-form-header">
           <span
             onClick={() => setAccountAction(true)}
-            className={`${accountAction ? "isAccountActive" : ""}`}
+            className={`${accountAction ? 'isAccountActive' : ''}`}
           >
             Entrar
           </span>
           ou
           <span
             onClick={() => setAccountAction(false)}
-            className={`${!accountAction ? "isAccountActive" : ""}`}
+            className={`${!accountAction ? 'isAccountActive' : ''}`}
           >
             Criar Conta
           </span>
         </div>
         <div className="account-form-main">
           <FormFields action={title} theme={`${theme[1]}`} />
-          {title === "Entrar" && (
+          {title === 'Entrar' && (
             <div className="account-form-forgot">
               <span onClick={() => setModal(true)}>Esqueci minha senha</span>
             </div>
@@ -80,5 +80,5 @@ export default function Account() {
       </div>
       {modal && <ModalAcc setModal={setModal} theme={theme[1]} />}
     </div>
-  );
+  )
 }

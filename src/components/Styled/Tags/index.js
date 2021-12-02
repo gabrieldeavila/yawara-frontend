@@ -24,6 +24,7 @@ export const TagsToSelect = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 1rem 5rem;
+  justify-content: space-around;
 
   span {
     font-weight: 600;
