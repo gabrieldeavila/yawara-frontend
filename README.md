@@ -12,5 +12,5 @@ npm start
 
 Esse projeto pode ser acessado aqui: [Yawara](https://yawara-frontend.vercel.app/).
 E suas páginas principais são:
-[Administrador](http://localhost:3000/admin/account) e
-[Usuário Normal](http://localhost:3000/account)
+[Administrador](https://yawara-frontend.vercel.app/admin/account) e
+[Usuário Normal](https://yawara-frontend.vercel.app/account)
