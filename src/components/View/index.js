@@ -450,7 +450,7 @@ export default function View() {
             bottom={bottom}
             left={left}
             colorVar={"green"}
-            colorClose={theme}
+            colorClose={theme === "light" ? "white" : "black"}
             width="20rem"
             svgMarginLeft="12rem"
             setPopup={setShowPopup}
