@@ -13,11 +13,7 @@ const InfiniteScrollStyled = styled(InfiniteScroll)`
   gap: 3rem 6rem;
   justify-content: center;
   align-items: center;
-  @media (max-width: 800px) {
-    & {
-      overflow: visible !important;
-    }
-  }
+  overflow: visible !important;
 `;
 
 const HistoryWrapper = styled(Link)`

@@ -4,10 +4,11 @@ import FormFields from "../../../yawara_user/pages/Account/FormFields";
 import { Formik, Form, Field } from "formik";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
+import useTitle from "../../../../states/Title";
 
 export default function AdminAccount() {
   const [theme] = useTheme(false, true);
-
+  useTitle("Entrar");
   return (
     <div className="account">
       <div className="bg-green account-greeting">

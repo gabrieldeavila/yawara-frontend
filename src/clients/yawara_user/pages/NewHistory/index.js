@@ -10,9 +10,12 @@ import {
   Icon,
 } from "../../../../components/Styled/Tags";
 import useTheme from "../../../../states/Theme";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import useTitle from "../../../../states/Title";
 import { Name, Wrapper } from "../../../../components/Forms";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+import _ from "lodash";
 
 const StyledTagsToSelect = styled(TagsToSelect)`
   margin-top: 0;
@@ -33,23 +36,29 @@ const Select = styled.select`
 
 export default function NewHistory() {
   const [tags, setTags] = useState([
-    [0, "Animais", true],
+    [0, "Animais", false],
     [1, "Felinos", false],
-    [2, "Cães", true],
+    [2, "Cães", false],
     [3, "Árvores", false],
     [4, "Criptmoedas", false],
     [5, "Bitcoin", false],
     [6, "Polkamarkets", false],
     [7, "Polkadot", false],
     [8, "Curve Finance", false],
+    [9, "Cachorros", false],
   ]);
 
   const required = "É necessário preencher este campo";
   const [theme] = useTheme(false, true);
 
+  const [returnImage, setReturnImage] = useState(null);
+  const [imageField, setImageField] = useState();
+
   useTitle("Nova História");
   return (
     <Wrapper>
+      <ToastContainer />
+
       <Title
         title="Nova História"
         description="Crie uma nova história e compartilhe imagens com outras pessoas"
@@ -57,17 +66,32 @@ export default function NewHistory() {
       <Formik
         initialValues={{
           name: "",
-          tags: [],
         }}
         validationSchema={Yup.object().shape({
-          name: Yup.string().required(required),
-          tags: Yup.array().min(
-            1,
-            "Select atleast one option of your interest"
-          ),
+          name: Yup.string()
+            .required(required)
+            .min(4, "Muito curto")
+            .max(40, "Muito longo"),
         })}
         onSubmit={(values) => {
-          console.log(values);
+          let selected_tags = _.filter(tags, function (o) {
+            return o[2];
+          });
+
+          if (selected_tags.length === 0) {
+            toast.error("É necessário selecionar ao menos uma tag", {
+              className:
+                theme[1] === "light"
+                  ? "toast-theme--light"
+                  : "toast-theme--dark",
+            });
+            return;
+          }
+
+          toast.success("História criada", {
+            className:
+              theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
+          });
         }}
       >
         {({ errors, touched }) => (
@@ -93,7 +117,10 @@ export default function NewHistory() {
             </div>
             <div className="field floating">
               <Name>Imagem</Name>
-              <ImageEditorHistory></ImageEditorHistory>
+              <ImageEditorHistory
+                setImageField={setImageField}
+                returnImage={returnImage}
+              ></ImageEditorHistory>
               <div className="form-error">
                 {errors.tags && touched.tags ? <div>{errors.tags}</div> : null}
               </div>
