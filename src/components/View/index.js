@@ -389,7 +389,7 @@ export default function View() {
               </Rest>
             </YawaraWrapper>
 
-            <StyledButtonsWrapper>
+            <StyledButtonsWrapper theme={theme}>
               <div className="form-button flip" onClick={() => setReply(true)}>
                 <div className={`btn text-${theme}`}>Publicar História</div>
               </div>
@@ -492,7 +492,7 @@ export default function View() {
           >
             <ModalContent>
               <p>Uma vez que essa ação é realizada, não pode ser desfeita.</p>
-              <ButtonsWrapper>
+              <ButtonsWrapper theme={theme}>
                 <DangerButton onClick={() => history.push("/explore")}>
                   Sim, quero deletar
                 </DangerButton>
