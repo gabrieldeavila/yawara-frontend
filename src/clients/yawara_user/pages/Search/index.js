@@ -2,9 +2,12 @@ import { useParams } from "react-router";
 import React, { useState } from "react";
 import { ImQuotesLeft, ImQuotesRight } from "react-icons/all";
 import History from "../../../../components/History";
+import useTitle from "../../../../states/Title";
 
+// função para pesquisar histórias
 export default function Search() {
   const { search_term } = useParams();
+  // por enquanto as histórias e tags estão fixas
   const tags = ["alguma tag", "outra tag", "gatos", "Animais"];
   const [histories, setHistories] = useState([
     {
@@ -35,6 +38,8 @@ export default function Search() {
       setHasMore(false);
     }
   };
+
+  useTitle(`Resultados para "${search_term}"`);
 
   return (
     <div className="search">

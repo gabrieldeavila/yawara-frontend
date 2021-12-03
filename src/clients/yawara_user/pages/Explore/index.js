@@ -6,7 +6,9 @@ import useTitle from "../../../../states/Title";
 
 const DivExplore = styled.div``;
 
+// função para mostrar novas histórias para o usuário
 export default function Explore() {
+  // dados estão fixos
   const [hasMore, setHasMore] = useState(true);
   const [histories, setHistories] = useState([
     {

@@ -4,7 +4,7 @@ import { ImQuotesLeft, ImQuotesRight } from "react-icons/all";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import SearchUser from "../../../../components/SearchUser";
-import Title from "../../../../components/Title";
+import useTitle from "../../../../states/Title";
 
 const InfiniteScrollStyled = styled(InfiniteScroll)`
   margin-top: 2rem;
@@ -68,6 +68,9 @@ export default function AdminSearch() {
       setHasMore(false);
     }
   };
+
+  useTitle(`Resultados para "${search_term}"`);
+
   return (
     <div className="search">
       <h3>
