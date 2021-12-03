@@ -468,7 +468,7 @@ export default function View() {
                   setSelected({ ...selected, history: keepHistories });
                   toast.success("Imagem excluída com sucesso da história!", {
                     className:
-                      theme[1] === "light"
+                      theme === "light"
                         ? "toast-theme--light"
                         : "toast-theme--dark",
                   });
