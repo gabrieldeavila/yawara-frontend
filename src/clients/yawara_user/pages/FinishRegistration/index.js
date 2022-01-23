@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import { Logo, StyledWrapper } from "../../../../components/Decoration";
 import Title from "../../../../components/Title";
 import { Formik, Form, Field } from "formik";
@@ -8,6 +8,7 @@ import { Wrapper, Name } from "../../../../components/Forms";
 import * as Yup from "yup";
 import ImageEditorHistory from "../../../../components/ImageEditor";
 import _ from "lodash";
+import { Context } from "../../../../Contexts/GlobalContext";
 import { useHistory } from "react-router-dom";
 import {
   CheckSpan,
@@ -18,6 +19,7 @@ import {
 import useTheme from "../../../../states/Theme";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import axios from "axios";
 
 const StyledTagsToSelect = styled(TagsToSelect)``;
 
@@ -26,23 +28,41 @@ const StyledForm = styled(Form)`
 `;
 
 export default function FinishRegistration() {
+  const imageRef = useRef();
   const history = useHistory();
+  const [tags, setTags] = useState([]);
+
+  useEffect(async () => {
+    await axios({
+      method: "get",
+      url: "http://127.0.0.1:8000/api/isLogged",
+      headers: { Authorization: `Bearer ${bearerToken}` },
+    })
+      .then((response) => {
+        if (!_.isNull(response.data.success.nickname)) history.push("/profile");
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+
+    await axios({
+      method: "get",
+      url: "http://127.0.0.1:8000/api/tags",
+      headers: { Authorization: `Bearer ${bearerToken}` },
+    })
+      .then((response) => {
+        setTags(response.data.tags);
+      })
+      .catch((err) => {
+        if (err.response.status) {
+          history.push("/account");
+        }
+      });
+  }, []);
+
+  const { bearerToken, setReload, reload } = useContext(Context);
 
   const required = "É necessário preencher este campo";
-  const [tags, setTags] = useState([
-    [0, "Animais"],
-    [1, "Felinos"],
-    [2, "Cães"],
-    [3, "Árvores"],
-    [4, "Criptmoedas"],
-    [5, "Bitcoin"],
-    [6, "Polkamarkets"],
-    [7, "Polkadot"],
-    [8, "Curve Finance"],
-    [9, "Cachorros"],
-    [10, "Pássaros"],
-    [11, "Peixes"],
-  ]);
 
   const [theme] = useTheme(false, true);
 
@@ -67,7 +87,7 @@ export default function FinishRegistration() {
       <StyledWrapper items="start" justify="start" direction="column">
         <Title
           title="Configurar Perfil"
-          description="Últimos passos para completar a criação de conta "
+          description="Últimos passos para completar a criação da sua conta "
           marginTop="1.5rem"
         />
         <Formik
@@ -80,17 +100,35 @@ export default function FinishRegistration() {
               .max(60, "60 caracteres é o máximo")
               .required(required),
           })}
-          onSubmit={(values) => {
+          onSubmit={async (values) => {
             // verificar se tem, ao menos, uma tag
             const selectedTags = _.filter(tags, function (o) {
-              return o[2];
+              return o.checked;
             });
 
-            if (selectedTags.length < 1) {
-              showError("Selecione pelo menos uma tag!");
-            } else {
-              history.push("/explore");
-            }
+            values = {
+              ...values,
+              tags: selectedTags,
+              img: imageRef.current.returnImage(),
+            };
+
+            await axios({
+              method: "post",
+              url: "http://127.0.0.1:8000/api/finish-registration",
+              data: values,
+              headers: { Authorization: `Bearer ${bearerToken}` },
+            })
+              .then(function (response) {
+                if (response.data.success) {
+                  setReload("atualizou");
+                  history.push("/explore");
+                }
+              })
+              .catch((err) => {
+                console.log(err.response);
+              });
+
+            // history.push("/explore");
           }}
         >
           {({ errors, touched }) => (
@@ -119,7 +157,7 @@ export default function FinishRegistration() {
 
               <div>
                 <Name>Imagem de Perfil</Name>
-                <ImageEditorHistory></ImageEditorHistory>
+                <ImageEditorHistory ref={imageRef}></ImageEditorHistory>
               </div>
 
               <div className="tags">
@@ -132,10 +170,11 @@ export default function FinishRegistration() {
                         id={index}
                         name="tags"
                         className="input"
-                        value={tag[0]}
+                        value={tag.name}
                         onChange={() => {
-                          let newTag = tag.map((t) => t);
-                          newTag[2] = !tag[2];
+                          let newTag = { ...tag };
+
+                          newTag.checked = !tag.checked;
 
                           let newTags = tags.map((t, i) => {
                             if (i === index) return newTag;
@@ -143,14 +182,14 @@ export default function FinishRegistration() {
                           });
                           setTags(newTags);
                         }}
-                        checked={tag[2]}
+                        checked={tag.checked ?? false}
                       />
                       <CheckSpan dontChange={true} theme={theme[1]}>
                         <Icon viewBox="0 0 24 24">
                           <polyline points="20 6 9 17 4 12" />
                         </Icon>
                       </CheckSpan>
-                      <span>{tag[1]}</span>
+                      <span>{tag.name}</span>
                     </Label>
                   ))}
                 </StyledTagsToSelect>
