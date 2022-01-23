@@ -1,6 +1,6 @@
 import { ReactComponent as Tail } from "../../assets/img/tail.svg";
 import { GiHamburgerMenu, BiSearchAlt, IoClose } from "react-icons/all";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
 import { Context } from "../../Contexts/GlobalContext";
 import usePosition from "../../states/Position";
 import useTheme from "../../states/Theme";
@@ -13,9 +13,10 @@ import { useHistory } from "react-router";
 
 export default function Navbar({
   placeholder = "Digite Algo",
-  image = "https://avatars.githubusercontent.com/u/76487489?v=4",
-  description = "never gonna give you up",
+  image,
+  description,
   type,
+  ...props
 }) {
   const [searchBarMobile, setSearchBarMobile] = useState(false);
 

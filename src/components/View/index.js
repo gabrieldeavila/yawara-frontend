@@ -205,7 +205,7 @@ const StyledImageEditorHistory = styled(ImageEditorHistory)`
   }
 `;
 
-TimeAgo.addDefaultLocale(pt);
+TimeAgo.addLocale(pt);
 
 const timeAgo = new TimeAgo("pt-BR");
 export default function View() {
@@ -233,8 +233,6 @@ export default function View() {
   };
 
   const handleInteraction = (what, hist) => {
-    console.log(hist);
-
     if (hist.didInteract[1] === 0 && what === "like") {
       hist.didInteract = [false];
       hist.likes -= 1;
@@ -293,6 +291,7 @@ export default function View() {
               <Wrapper>
                 <InfoWrapper>
                   <AuthorName>{yawara.author}</AuthorName>
+
                   <Time>{timeAgo.format(new Date(...yawara.time))}</Time>
                 </InfoWrapper>
               </Wrapper>

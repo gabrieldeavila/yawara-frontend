@@ -5,10 +5,15 @@ import {
   Route,
   useParams,
 } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import useTheme from "../states/Theme";
 import ScrollToTop from "./scrollToTop";
 import { Context } from "../Contexts/GlobalContext";
+import Loading from "../components/Placeholders/loading";
+import { loadProgressBar } from "axios-progress-bar";
+import "axios-progress-bar/dist/nprogress.css";
+import axios from "axios";
 
 import "../assets/css/index.min.css";
 
@@ -33,96 +38,117 @@ import AdminSearch from "../clients/Admin/pages/Search";
 import SelectUser from "../clients/Admin/pages/SelectUser";
 import ViewUser from "../clients/Admin/pages/ViewUser";
 
+import Client from "./client";
+
 export default function Routes(props) {
-  const { showModal } = useContext(Context);
+  const { showModal, setUser, setSearchImage } = useContext(Context);
   const [theme] = useTheme(false, true);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     document.body.style.background =
       theme[1] === "dark" ? "var(--black)" : "var(--white)";
   }, [theme]);
 
+  useEffect(async () => {
+    await axios({
+      method: "get",
+      url: "http://127.0.0.1:8000/api/isLogged",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("bearerToken")}`,
+      },
+    })
+      .then((response) => {
+        setIsReady(true);
+        setUser(response.data.success);
+        setSearchImage(true);
+      })
+      .catch(() => {
+        if (window.location.pathname.split("/")[1] === "password-reset") {
+          return;
+        } else if (
+          window.location.pathname !== "/account" &&
+          window.location.pathname.split("/")[1] !== "admin"
+        ) {
+          window.location.href = "/account";
+        } else if (
+          window.location.pathname !== "/admin/account" &&
+          window.location.pathname !== "/account"
+        ) {
+          window.location.href = "/admin/account";
+        } else {
+          setIsReady(true);
+        }
+      });
+  }, []);
+
   return (
     <Router>
+      {loadProgressBar()}
       <ScrollToTop />
-
       <Switch>
-        <Route path="/account">
-          <Account />
-        </Route>
-        <Route path="/finish-register">
-          <FinishRegistration />
-        </Route>
-        <Route path="/password-reset">
+        <Route path="/password-reset/:token">
           <PasswordReset />
         </Route>
 
-        <Route path="/admin/account">
-          <AdminAccount />
-        </Route>
-        {window.location.pathname.split("/")[1] === "admin" ? (
+        {isReady ? (
           <>
-            <Navbar type="admin" />
-            <Sidebar type="admin" />
-            <div
-              className={`yawara trans-1 ${
-                theme[1] === "dark" ? "bg-dark" : "bg-white"
-              } ${showModal ? "yawara-expanded" : ""}`}
-            >
-              <div className="yawara-content">
-                <Route path="/admin/tags-management">
-                  <TagsManagement />
-                </Route>
+            <Route path="/account">
+              <Account />
+            </Route>
 
-                <Route path="/admin/keep-users">
-                  <KeepUsers />
-                </Route>
+            <Route path="/finish-register">
+              <FinishRegistration />
+            </Route>
 
-                <Route path="/admin/search/:search_term">
-                  <AdminSearch />
-                </Route>
+            <Route path="/admin/account">
+              <AdminAccount />
+            </Route>
+            {[
+              window.location.pathname !== "/admin/account" &&
+                window.location.pathname !== "/account",
+            ][0] && (
+              <>
+                {window.location.pathname.split("/")[1] === "admin" ? (
+                  <>
+                    <Navbar type="admin" />
+                    <Sidebar type="admin" />
+                    <div
+                      className={`yawara trans-1 ${
+                        theme[1] === "dark" ? "bg-dark" : "bg-white"
+                      } ${showModal ? "yawara-expanded" : ""}`}
+                    >
+                      <div className="yawara-content">
+                        <Route path="/admin/tags-management">
+                          <TagsManagement />
+                        </Route>
 
-                <Route path="/admin/view/:id">
-                  <ViewUser />
-                </Route>
+                        <Route path="/admin/keep-users">
+                          <KeepUsers />
+                        </Route>
 
-                <Route exact path="/admin/select-user">
-                  <SelectUser />
-                </Route>
-              </div>
-            </div>
+                        <Route path="/admin/search/:search_term">
+                          <AdminSearch />
+                        </Route>
+
+                        <Route path="/admin/view/:id">
+                          <ViewUser />
+                        </Route>
+
+                        <Route exact path="/admin/select-user">
+                          <SelectUser />
+                        </Route>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <Client></Client>
+                )}
+              </>
+            )}
           </>
         ) : (
-          <>
-            <Navbar type="client" />
-            <Sidebar type="client" />
-            <div
-              className={`yawara trans-1 ${
-                theme[1] === "dark" ? "bg-dark" : "bg-white"
-              } ${showModal ? "yawara-expanded" : ""}`}
-            >
-              <div className="yawara-content">
-                <Route path="/explore">
-                  <Explore />
-                </Route>
-                <Route path="/view/:id">
-                  <View />
-                </Route>
-                <Route path="/search/:search_term">
-                  <Search />
-                </Route>
-                <Route path="/new-history">
-                  <NewHistory />
-                </Route>
-                <Route path="/profile">
-                  <Profile />
-                </Route>
-                <Route path="/my-histories">
-                  <MyHistories />
-                </Route>
-              </div>
-            </div>
-          </>
+          <Loading />
         )}
       </Switch>
     </Router>

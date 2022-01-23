@@ -3,11 +3,17 @@ import { Link } from "react-router-dom";
 import { AiFillLike, AiFillDislike } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
 
+import TimeAgo from "javascript-time-ago";
+import pt from "javascript-time-ago/locale/pt.json";
+import { useContext } from "react";
+import { Context } from "../../Contexts/GlobalContext";
+import { HistoriesPlaceholder } from "../Placeholders";
+
 const InfiniteScrollStyled = styled(InfiniteScroll)`
   display: flex;
   margin: 0 2rem;
   margin-top: 4rem;
-  padding-bottom: 2rem;
+  padding-bottom: 20rem;
   display: flex;
   flex-wrap: wrap;
   gap: 3rem 6rem;
@@ -81,12 +87,18 @@ const Image = styled.img`
   height: 100%;
 `;
 
+TimeAgo.addLocale(pt);
+
+const timeAgo = new TimeAgo("pt-BR");
+
 export default function History({
   histories,
   moreData,
   hasMore,
   shouldDelete,
 }) {
+  const { defaultURL } = useContext(Context);
+
   const fetchMoreData = () => {
     moreData();
   };
@@ -96,18 +108,29 @@ export default function History({
       dataLength={histories.length}
       next={fetchMoreData}
       hasMore={hasMore}
-      loader={<H2>Carregando...</H2>}
-      endMessage={<H2>Todas as histórias foram atingidas :/</H2>}
+      loader={
+        <H2>
+          <HistoriesPlaceholder />
+        </H2>
+      }
+      endMessage={
+        <H2>
+          {histories.length > 0
+            ? "Todas as histórias foram atingidas 😞"
+            : "Nenhuma história para mostrar 🥲 "}
+        </H2>
+      }
+      scrollThreshold={0.0}
     >
       {histories.map((his, index) => (
         <HistoryWrapper key={index} to={`/view/${his.id}`}>
-          <H2>{his.title}</H2>
+          <H2>{his.name}</H2>
           <Infos>
-            <span className="header_info">Criado por: {his.creator}</span>
-            <span className="header_info">{his.creation_date}</span>
+            <span className="header_info">Criado por: {his.nickname}</span>
+            <span className="header_info">{his.time_ago}</span>
           </Infos>
           <ImageWrapper>
-            <Image src={his.image} />
+            <Image src={`${defaultURL}storage/${his.path}`} />
           </ImageWrapper>
           <Infos justify="space-evenly">
             <span>

@@ -1,9 +1,9 @@
-import styled from 'styled-components'
-import { Link } from 'react-router-dom'
-import { AiFillSetting, IoExit, MdDeleteSweep } from 'react-icons/all'
-import Modal from '../Modal'
-import { useState } from 'react'
-import { DangerButton, ButtonsWrapper, SuccessButton } from '../Buttons'
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { AiFillSetting, IoExit, MdDeleteSweep } from "react-icons/all";
+import Modal from "../Modal";
+import { useState } from "react";
+import { DangerButton, ButtonsWrapper, SuccessButton } from "../Buttons";
 
 const Content = styled.div`
   user-select: none;
@@ -11,29 +11,29 @@ const Content = styled.div`
   display: flex;
   gap: 1rem;
   flex-direction: column;
-`
+`;
 
 const H3 = styled.div`
   font-weight: 600;
   color: ${(props) =>
-    props.theme === 'light' ? `var(--white)` : `var(--black)`};
+    props.theme === "light" ? `var(--white)` : `var(--black)`};
   cursor: pointer;
-`
+`;
 
 const SuperAiFillSetting = styled(AiFillSetting)`
   fill: ${(props) =>
-    props.theme === 'light' ? `var(--white)` : `var(--black)`};
-`
+    props.theme === "light" ? `var(--white)` : `var(--black)`};
+`;
 
 const SuperIoExit = styled(IoExit)`
   fill: ${(props) =>
-    props.theme === 'light' ? `var(--white)` : `var(--black)`};
-`
+    props.theme === "light" ? `var(--white)` : `var(--black)`};
+`;
 
 const SuperMdDeleteSweep = styled(MdDeleteSweep)`
   fill: ${(props) =>
-    props.theme === 'light' ? `var(--white)` : `var(--black)`};
-`
+    props.theme === "light" ? `var(--white)` : `var(--black)`};
+`;
 
 const SuperLink = styled(Link)`
   display: flex;
@@ -45,7 +45,9 @@ const SuperLink = styled(Link)`
   ${SuperAiFillSetting}, ${SuperIoExit}, ${H3} {
     transition: all 0.25s ease;
   }
-`
+`;
+
+const Exit = styled(SuperLink)``;
 
 const ChangeTheme = styled.div`
   display: flex;
@@ -62,9 +64,9 @@ const ChangeTheme = styled.div`
   }
   svg {
     fill: ${(props) =>
-      props.theme === 'light' ? `var(--white)` : `var(--black)`};
+      props.theme === "light" ? `var(--white)` : `var(--black)`};
   }
-`
+`;
 
 const DeleteAccount = styled.div`
   cursor: pointer;
@@ -78,33 +80,36 @@ const DeleteAccount = styled.div`
   ${SuperMdDeleteSweep}, ${H3} {
     transition: all 0.25s ease;
   }
-`
+`;
 
 const ModalContent = styled.div`
   margin-top: 3rem;
-`
+`;
 
 export default function Options({ setPopup, theme, type }) {
-  const [theme_option, changeCookie] = theme
-  const [svg, theme_title] = theme_option
-  const [modal, setModal] = useState(false)
+  const [theme_option, changeCookie] = theme;
+  const [svg, theme_title] = theme_option;
+  const [modal, setModal] = useState(false);
 
   return (
     <Content>
-      {type === 'client' && (
+      {type === "client" && (
         <SuperLink onClick={() => setPopup(false)} to="/profile">
           <SuperAiFillSetting theme={theme_title} />
           <H3 theme={theme_title}>Configurar Perfil</H3>
         </SuperLink>
       )}
 
-      <SuperLink
-        onClick={() => setPopup(false)}
-        to={type === 'client' ? '/account' : '/admin/account'}
+      <Exit
+        // onClick={() => setPopup(false)}
+        onClick={() =>
+          (window.location.href =
+            type === "client" ? "/account" : "/admin/account")
+        }
       >
         <SuperIoExit theme={theme_title} />
         <H3 theme={theme_title}>Sair</H3>
-      </SuperLink>
+      </Exit>
 
       <ChangeTheme theme={theme_title} onClick={() => changeCookie()}>
         {svg}
@@ -112,7 +117,7 @@ export default function Options({ setPopup, theme, type }) {
         <H3 theme={theme_title}>Mudar Tema</H3>
       </ChangeTheme>
 
-      {type === 'client' && (
+      {type === "client" && (
         <>
           <DeleteAccount onClick={(e) => setModal(true)}>
             <SuperMdDeleteSweep theme={theme_title} />
@@ -122,8 +127,8 @@ export default function Options({ setPopup, theme, type }) {
             <Modal
               setModal={setModal}
               theme={theme_title}
-              titlePosition={'left'}
-              title={'Deletar conta e todas as suas informações?'}
+              titlePosition={"left"}
+              title={"Deletar conta e todas as suas informações?"}
             >
               <ModalContent>
                 Você realmente deseja deletar a sua conta e perder todas as suas
@@ -141,5 +146,5 @@ export default function Options({ setPopup, theme, type }) {
         </>
       )}
     </Content>
-  )
+  );
 }

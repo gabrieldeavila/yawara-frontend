@@ -12,6 +12,7 @@ import { useDropzone } from "react-dropzone";
 import { useCallback } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import { forwardRef, useRef, useImperativeHandle } from "react";
 
 const ImageReceive = styled.section`
   background: ${(props) => (props.isProfile ? "" : "#c4c4c4")};
@@ -68,20 +69,23 @@ const ImageEditorContainer = styled.div`
   }
 `;
 
-function ImageEditorHistory({
-  defaultImage,
-  width,
-  returnImage: imageToReturn,
-  setImageField,
-}) {
+const ImageEditorHistory = forwardRef((props, ref) => {
+  const {
+    defaultImage,
+    width,
+    returnImage: imageToReturn,
+    setImageField,
+  } = props;
   const [message, setMessage] = useState("Joga a sua foto ou clica aqui 👀");
   const [img, setImg] = useState(null);
 
-  const returnImage = () => {
-    let canvas = document.getElementsByClassName("lower-canvas")[0];
-    let base64 = canvas.toDataURL("image/jpeg", 1.0);
-    return base64;
-  };
+  useImperativeHandle(ref, () => ({
+    returnImage: () => {
+      let canvas = document?.getElementsByClassName("lower-canvas")[0];
+      let base64 = canvas?.toDataURL("image/jpeg", 1.0);
+      return base64;
+    },
+  }));
 
   const [theme] = useTheme(false, true);
   useEffect(() => {
@@ -187,6 +191,6 @@ function ImageEditorHistory({
       )}
     </Container>
   );
-}
+});
 
 export default memo(ImageEditorHistory);
