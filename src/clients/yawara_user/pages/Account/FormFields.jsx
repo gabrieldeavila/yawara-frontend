@@ -1,55 +1,48 @@
-import React, { useEffect, useState } from 'react'
-import { Formik, Form, Field } from 'formik'
-import { useHistory } from 'react-router-dom'
-import _ from 'lodash'
-import * as Yup from 'yup'
-import { HiDesktopComputer } from 'react-icons/hi'
+import React, { useEffect, useState } from "react";
+import { Formik, Form, Field } from "formik";
+import { useHistory } from "react-router-dom";
+import _ from "lodash";
+import * as Yup from "yup";
 
-function FormFields({ action, theme }) {
-  const required = 'É necessário preencher este campo'
-  const history = useHistory()
+function FormFields({ action, theme, onSave }) {
+  const required = "É necessário preencher este campo";
+  const history = useHistory();
   const [formSchema, setFormSchema] = useState({
     email: Yup.string()
-      .email('É necessário preencher com um email válido')
+      .email("É necessário preencher com um email válido")
       .required(required),
-    password: Yup.string().min(4, 'Senha pequena').required(required),
-  })
+    password: Yup.string().min(4, "Senha pequena").required(required),
+  });
 
   useEffect(() => {
-    if (action === 'Criar Conta') {
+    if (action === "Criar Conta" || action === "Criando conta...") {
       setFormSchema({
         ...formSchema,
         passwordConfirmation: Yup.string()
-          .oneOf([Yup.ref('password'), null], 'Senhas não são iguais')
-          .min(4, 'Senha pequena')
+          .oneOf([Yup.ref("password"), null], "Senhas não são iguais")
+          .min(4, "Senha pequena")
           .required(required),
-      })
+      });
     } else {
-      if (_.has(formSchema, 'passwordConfirmation')) {
+      if (_.has(formSchema, "passwordConfirmation")) {
         setFormSchema({
           email: formSchema.email,
           password: formSchema.password,
-        })
+        });
       }
     }
-  }, [action])
+  }, [action]);
 
   return (
     <Formik
       initialValues={{
-        password: '',
-        email: '',
-        passwordConfirmation: '',
+        password: "",
+        email: "",
+        passwordConfirmation: "",
       }}
       validationSchema={Yup.object().shape(formSchema)}
       onSubmit={(values) => {
-        if (window.location.pathname.split('/')[1] === 'admin') {
-          history.push('tags-management')
-        } else if (action === 'Entrar') {
-          history.push('/explore')
-        } else {
-          history.push('/finish-register')
-        }
+        onSave(values);
       }}
     >
       {({ errors, touched }) => (
@@ -96,7 +89,7 @@ function FormFields({ action, theme }) {
             ) : null}
           </div>
 
-          {action === 'Criar Conta' && (
+          {action === "Criar Conta" && (
             <>
               <div className="field floating">
                 <Field
@@ -130,7 +123,7 @@ function FormFields({ action, theme }) {
         </Form>
       )}
     </Formik>
-  )
+  );
 }
 
-export default FormFields
+export default FormFields;
