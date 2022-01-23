@@ -5,12 +5,38 @@ import { Formik, Form, Field } from "formik";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import useTitle from "../../../../states/Title";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import { Context } from "../../../../Contexts/GlobalContext";
+import { useContext } from "react";
+import { useHistory } from "react-router-dom";
 
 export default function AdminAccount() {
+  const history = useHistory();
+
   const [theme] = useTheme(false, true);
+
+  const { setBearerToken, reload, setReload } = useContext(Context);
+
+  const onSave = async (values) => {
+    await axios
+      .post("http://127.0.0.1:8000/api/admin-login", values, {})
+      .then((response) => {
+        setBearerToken(response.data.data.token);
+        window.location.href = "/admin/tags-management";
+        // setReload(!reload);
+      })
+      .catch((error) => {
+        toast.error(`${error.response.data.data.error} 😖`, {
+          className:
+            theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
+        });
+      });
+  };
   useTitle("Entrar");
   return (
     <div className="account">
+      <ToastContainer />
       <div className="bg-green account-greeting">
         <h2
           style={{ textAlign: "center" }}
@@ -28,7 +54,7 @@ export default function AdminAccount() {
           <div className="account-form-theme">{theme[0]}</div>
         </div>
         <div className="account-form-main">
-          <FormFields action="Entrar" theme={`${theme[1]}`} />
+          <FormFields onSave={onSave} action="Entrar" theme={`${theme[1]}`} />
         </div>
       </div>
     </div>
