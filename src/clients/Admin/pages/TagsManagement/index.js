@@ -1,12 +1,13 @@
 import Title from "../../../../components/Title";
 import useTitle from "../../../../states/Title";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import {
   CheckSpan,
   TagsToSelect,
   Label,
   Icon,
 } from "../../../../components/Styled/Tags";
+import { Context } from "../../../../Contexts/GlobalContext";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import useTheme from "../../../../states/Theme";
@@ -15,6 +16,10 @@ import styled from "styled-components";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import _ from "lodash";
+import axios from "axios";
+import ReactPlaceholder from "react-placeholder";
+import { TagsButtonsPlaceholder } from "../../../../components/Placeholders";
+import "react-placeholder/lib/reactPlaceholder.css";
 
 const Wrapper = styled.div`
   margin: 0 2rem;
@@ -43,27 +48,36 @@ const StyledIcon = styled(Icon)`
 `;
 
 export default function TagsManagement() {
+  const { bearerToken } = useContext(Context);
+
   const [theme] = useTheme(false, true);
-  const [tags, setTags] = useState([
-    [0, "Animais", false],
-    [1, "Felinos", false],
-    [2, "Cães", false],
-    [3, "Árvores", false],
-    [4, "Criptmoedas", false],
-    [5, "Bitcoin", false],
-    [6, "Polkamarkets", false],
-    [7, "Polkadot", false],
-    [8, "Curve Finance", false],
-    [9, "Cachorros", false],
-  ]);
+  const [tags, setTags] = useState([]);
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(async () => {
+    await axios({
+      method: "get",
+      url: "http://127.0.0.1:8000/api/admin/tags",
+      headers: { Authorization: `Bearer ${bearerToken}` },
+    })
+      .then(function (response) {
+        setTags(response.data.tags);
+        setIsReady(true);
+      })
+      .catch((error) => {
+        console.log(error.response, error, bearerToken, "a");
+      });
+  }, []);
 
   const onTagChange = (e, tag) => {
-    let newTag = tag.map((v) => v);
-    newTag[1] = e.target.value;
-    newTag[4] = "changed";
+    let newTag = { ...tag };
+
+    newTag.name = e.target.value;
+    newTag.changed = true;
+
     setTags(
       tags.map((tag_n) => {
-        if (tag_n[0] === newTag[0]) {
+        if (tag_n.id === newTag.id) {
           return newTag;
         }
         return tag_n;
@@ -71,69 +85,86 @@ export default function TagsManagement() {
     );
   };
 
-  const deleteTags = () => {
-    let keep_tags = _.filter(tags, function (o) {
-      return o[2] === false;
+  const deleteTags = async () => {
+    let delete_tags = _.filter(tags, function (o) {
+      return o.selected === true;
     });
-    if (keep_tags.length === tags.length) {
+    let keep_tags = _.filter(tags, function (o) {
+      return o.selected !== true;
+    });
+
+    if (delete_tags.length === 0) {
       toast.warn("Não há tags para deletar", {
         className:
           theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
       });
-    } else if (keep_tags.length === 0) {
+    } else if (delete_tags.length === tags.length) {
       toast.error("Não é possível deletar todas as tags", {
         className:
           theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
         position: "top-right",
       });
     } else {
-      toast.success(`${tags.length - keep_tags.length} tag(s) removida(s)!`, {
-        className:
-          theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      setTags(keep_tags);
+      // selecionando apenas o id
+      delete_tags = delete_tags.map((tag) => tag.id);
+
+      await axios({
+        method: "delete",
+        url: "http://127.0.0.1:8000/api/admin/tags",
+        data: delete_tags,
+        headers: { Authorization: `Bearer ${bearerToken}` },
+      })
+        .then(function (response) {
+          toast.success(response.data.success, {
+            className:
+              theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
+          });
+          setTags(keep_tags);
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
     }
   };
 
-  const saveTags = () => {
+  const saveTags = async () => {
     let changed_tags = _.filter(tags, function (o) {
-      return o[4] === "changed";
+      return o.changed === true;
     });
 
-    let filter_tags = tags.map((tag) => {
-      if (tag.length === 5) {
-        let new_tag = [tag[0], tag[1], tag[2]];
-        return new_tag;
-      }
-      return tag;
-    });
+    if (changed_tags.length > 0) {
+      let filter_tags = tags.map((tag) => {
+        if (tag.changed) {
+          let new_tag = { ...tag };
+          new_tag.changed = false;
+          return new_tag;
+        }
+        return tag;
+      });
 
-    setTags(filter_tags);
-    if (changed_tags.length > 0)
-      toast.success(`${changed_tags.length} tag(s) alterada(s)!`, {
+      setTags(filter_tags);
+
+      await axios({
+        method: "post",
+        url: "http://127.0.0.1:8000/api/admin/tags/edit",
+        data: changed_tags,
+        headers: { Authorization: `Bearer ${bearerToken}` },
+      })
+        .then(function (response) {
+          toast.success(response.data.success, {
+            className:
+              theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
+          });
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+    } else
+      toast.warn(`Nenhuma tag para ser alterada!`, {
         className:
           theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
       });
-    else
-      toast.warn(`Nenhuma tag alterada!`, {
-        className:
-          theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
-      });
-    console.log(changed_tags);
   };
 
   useTitle("Gerenciar Tags");
@@ -144,124 +175,167 @@ export default function TagsManagement() {
         title={"Gerenciar Tags"}
         description={"Crie, edite ou exclua tags de pesquisa"}
       />
-      <Formik
-        initialValues={{
-          new_tag: "",
-        }}
-        validationSchema={Yup.object().shape({
-          new_tag: Yup.string().required("Você precisa preencher este campo"),
-        })}
-        onSubmit={(values) => {
-          setTags([...tags, [Math.random() * 10, values.new_tag, false]]);
-          // fazer envio para o banco e colocar toast
-          toast.success(`Tag Adicionada: ${values.new_tag}`, {
-            className:
-              theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-        }}
+      <ReactPlaceholder
+        ready={isReady}
+        customPlaceholder={<TagsButtonsPlaceholder />}
       >
-        {({ errors, touched }) => (
-          <Form autoComplete="off">
-            <div className="tags">
-              <Name>Tags de pesquisa</Name>
-              <StyledTagsToSelect>
-                {tags.map((tag, index) => (
-                  <Label key={index} htmlFor={index}>
-                    <Field
-                      type="checkbox"
-                      id={index}
-                      name="tags"
-                      className="input"
-                      value={tag[0]}
-                      onChange={() => {
-                        let newTag = tag.map((t) => t);
-                        newTag[2] = !tag[2];
+        <Formik
+          initialValues={{
+            new_tag: "",
+          }}
+          validationSchema={Yup.object().shape({
+            new_tag: Yup.string().required(
+              "Você precisa preencher este campo para adicionar uma tag"
+            ),
+          })}
+          onSubmit={async (values) => {
+            // fazer envio para o banco e colocar toast
+            axios({
+              method: "post",
+              url: "http://127.0.0.1:8000/api/admin/tags",
+              data: { name: values.new_tag },
+              headers: { Authorization: `Bearer ${bearerToken}` },
+            })
+              .then(function (response) {
+                toast.success(`Tag Adicionada: ${values.new_tag}`, {
+                  className:
+                    theme[1] === "light"
+                      ? "toast-theme--light"
+                      : "toast-theme--dark",
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                });
+                values.new_tag = "";
+                setTags([...tags, response.data.tag]);
+              })
+              .catch(() => {
+                toast.error(
+                  `Algum erro aconteceu, tente novamente mais tarde`,
+                  {
+                    className:
+                      theme[1] === "light"
+                        ? "toast-theme--light"
+                        : "toast-theme--dark",
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                  }
+                );
+              });
+          }}
+        >
+          {({ errors, touched }) => (
+            <Form autoComplete="off">
+              <div className="tags">
+                <Name>Tags de pesquisa</Name>
+                <StyledTagsToSelect>
+                  {tags.map((tag, index) => (
+                    <Label key={index} htmlFor={index}>
+                      <Field
+                        type="checkbox"
+                        id={index}
+                        name="tags"
+                        className="input"
+                        value={tag.id}
+                        onChange={() => {
+                          let newTag = tag;
+                          newTag.selected = !tag.selected;
 
-                        let newTags = tags.map((t, i) => {
-                          if (i === index) return newTag;
-                          return t;
-                        });
-                        setTags(newTags);
-                      }}
-                      checked={tag[2]}
-                    />
-                    <CheckSpan dontChange={true} theme={theme[1]}>
-                      <StyledIcon viewBox="0 0 9 9">
-                        <path
-                          d="M8.29232 1.472L7.52857 0.708252L4.50065 3.73617L1.47273 0.708252L0.708984 1.472L3.7369 4.49992L0.708984 7.52784L1.47273 8.29159L4.50065 5.26367L7.52857 8.29159L8.29232 7.52784L5.2644 4.49992L8.29232 1.472Z"
-                          fill="#C98A7D"
-                        />
-                      </StyledIcon>
-                    </CheckSpan>
-                    <input
-                      className="input-search-tags"
-                      onChange={(e) => onTagChange(e, tag)}
-                      value={tag[1]}
-                    />
-                  </Label>
-                ))}
-              </StyledTagsToSelect>
+                          let newTags = tags.map((t, i) => {
+                            if (i === index) return newTag;
+                            return t;
+                          });
 
+                          setTags(newTags);
+                        }}
+                        checked={tag.selected}
+                      />
+                      <CheckSpan dontChange={true} theme={theme[1]}>
+                        <StyledIcon viewBox="0 0 9 9">
+                          <path
+                            d="M8.29232 1.472L7.52857 0.708252L4.50065 3.73617L1.47273 0.708252L0.708984 1.472L3.7369 4.49992L0.708984 7.52784L1.47273 8.29159L4.50065 5.26367L7.52857 8.29159L8.29232 7.52784L5.2644 4.49992L8.29232 1.472Z"
+                            fill="#C98A7D"
+                          />
+                        </StyledIcon>
+                      </CheckSpan>
+                      <input
+                        className="input-search-tags"
+                        onChange={(e) => onTagChange(e, tag)}
+                        value={tag.name}
+                      />
+                    </Label>
+                  ))}
+                </StyledTagsToSelect>
+
+                <div className="form-error">
+                  {errors.tags && touched.tags ? (
+                    <div>{errors.tags}</div>
+                  ) : null}
+                </div>
+              </div>
+              <div className="field floating">
+                <Field
+                  placeholder="Placeholder"
+                  className="floating__input"
+                  name="new_tag"
+                  type="text"
+                  id="new_tag"
+                />
+                <label
+                  htmlFor="new_tag"
+                  className="floating__label"
+                  data-content="NOVA TAG"
+                >
+                  <span className="hidden--visually"></span>
+                </label>
+              </div>
               <div className="form-error">
-                {errors.tags && touched.tags ? <div>{errors.tags}</div> : null}
+                {errors.new_tag && touched.new_tag ? (
+                  <div>{errors.new_tag}</div>
+                ) : null}
               </div>
-            </div>
-            <div className="field floating">
-              <Field
-                placeholder="Placeholder"
-                className="floating__input"
-                name="new_tag"
-                type="text"
-                id="new_tag"
-              />
-              <label
-                htmlFor="new_tag"
-                className="floating__label"
-                data-content="NOVA TAG"
-              >
-                <span className="hidden--visually"></span>
-              </label>
-            </div>
-            <div className="form-error">
-              {errors.new_tag && touched.new_tag ? (
-                <div>{errors.new_tag}</div>
-              ) : null}
-            </div>
-            <div className="form-button form-button-multiple flip">
-              <button
-                className={`btn text-${theme[1] === "dark" ? "dark" : "light"}`}
-                type="submit"
-              >
-                Adicionar Tag
-              </button>
-              <div
-                className={`btn btn-danger text-${
-                  theme[1] === "dark" ? "dark" : "light"
-                }`}
-                type="nothing"
-                onClick={deleteTags}
-              >
-                Deletar Tags
-              </div>
+              <div className="form-button form-button-multiple flip">
+                <button
+                  className={`btn text-${
+                    theme[1] === "dark" ? "dark" : "light"
+                  }`}
+                  type="submit"
+                >
+                  Adicionar Tag
+                </button>
+                <div
+                  className={`btn btn-danger text-${
+                    theme[1] === "dark" ? "dark" : "light"
+                  }`}
+                  type="nothing"
+                  onClick={deleteTags}
+                >
+                  Deletar Tags
+                </div>
 
-              <div
-                className={`btn text-${theme[1] === "dark" ? "dark" : "light"}`}
-                type="nothing"
-                onClick={saveTags}
-              >
-                Salvar Alterações
+                <div
+                  className={`btn text-${
+                    theme[1] === "dark" ? "dark" : "light"
+                  }`}
+                  type="nothing"
+                  onClick={saveTags}
+                >
+                  Salvar Alterações
+                </div>
               </div>
-            </div>
-          </Form>
-        )}
-      </Formik>
+            </Form>
+          )}
+        </Formik>
+      </ReactPlaceholder>
     </Wrapper>
   );
 }
