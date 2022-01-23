@@ -3,27 +3,43 @@ import Title from "../../../../components/Title";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import styled from "styled-components";
+import "react-toastify/dist/ReactToastify.min.css";
 import useTheme from "../../../../states/Theme";
+import { Context } from "../../../../Contexts/GlobalContext";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 
 export default function PasswordReset() {
   const [theme] = useTheme(false, true);
+  const { setHideNavbar, setHideSidebar } = useContext(Context);
 
   const StyledForm = styled(Form)`
     width: 100%;
   `;
 
   const required = "É necessário preencher este campo";
+  let { token } = useParams();
+
+  useEffect(() => {
+    console.log(token);
+    setHideSidebar(true);
+    setHideNavbar(true);
+  }, []);
+
   return (
     <>
       <Logo />
       <Title title="Recuperação de Senha" />
+      <ToastContainer />
       <StyledWrapper items="start" justify="start" direction="column">
         <Formik
           initialValues={{
-            firstName: "",
-            lastName: "",
             new_password: "",
+            confirm_password: "",
           }}
           validationSchema={Yup.object().shape({
             new_password: Yup.string()
@@ -34,6 +50,36 @@ export default function PasswordReset() {
               .min(4, "Senha pequena")
               .required(required),
           })}
+          onSubmit={async (values) => {
+            await axios({
+              method: "post",
+              data: {
+                token: token,
+                new_password: values.new_password,
+              },
+              url: "http://127.0.0.1:8000/api/update-password",
+            })
+              .then((response) => {
+                if (response.data.success) {
+                  toast.success(
+                    `Conta Atualizada! Basta logar, redirecionando em 2s`,
+                    {
+                      className:
+                        theme[1] === "light"
+                          ? "toast-theme--light"
+                          : "toast-theme--dark",
+                    }
+                  );
+
+                  setTimeout(() => {
+                    window.location.href = "/account";
+                  }, 2000);
+                }
+              })
+              .catch((err) => {
+                console.log(err.response);
+              });
+          }}
         >
           {({ errors, touched }) => (
             <StyledForm autoComplete="off">
@@ -81,13 +127,9 @@ export default function PasswordReset() {
                 </div>
               </div>
               <div className="form-button flip">
-                <Link
-                  to="/account"
-                  className={`btn text-${theme[1]}`}
-                  type="submit"
-                >
+                <button type="submit" className={`btn text-${theme[1]}`}>
                   Criar Nova Senha
-                </Link>
+                </button>
               </div>
             </StyledForm>
           )}
