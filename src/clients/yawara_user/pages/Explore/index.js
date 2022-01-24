@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import History from "../../../../components/History";
 import Title from "../../../../components/Title";
 import useTitle from "../../../../states/Title";
+import axios from "axios";
+import { Context } from "../../../../Contexts/GlobalContext";
 
 const DivExplore = styled.div``;
 
@@ -10,47 +12,36 @@ const DivExplore = styled.div``;
 export default function Explore() {
   // dados estão fixos
   const [hasMore, setHasMore] = useState(true);
-  const [histories, setHistories] = useState([
-    {
-      id: 0,
-      title: "Gatos Mais Estranhos do Mundo",
-      creator: "John Doe",
-      creation_date: "11/08/2021",
-      likes: 1000,
-      dislikes: 100,
-      image:
-        "https://m.extra.globo.com/incoming/6919755-eb9-1d8/w488h275-PROP/gato-batman-1.jpg",
-    },
-    {
-      id: 110,
-      title: "Gatos Mais Estranhos do Mundo",
-      creator: "John Doe",
-      creation_date: "11/08/2021",
-      image:
-        "https://m.extra.globo.com/incoming/6919755-eb9-1d8/w488h275-PROP/gato-batman-1.jpg",
-    },
-    {
-      id: 10,
-      title: "Gatos Mais Estranhos do Mundo",
-      creator: "John Doe",
-      creation_date: "11/08/2021",
-      image:
-        "https://m.extra.globo.com/incoming/6919755-eb9-1d8/w488h275-PROP/gato-batman-1.jpg",
-    },
-  ]);
+  const [histories, setHistories] = useState([]);
+  const [page, setPage] = useState(1);
+  const [rows, setRows] = useState(-1);
+
+  const { bearerToken } = useContext(Context);
 
   const fetchMoreData = () => {
-    console.log("tem que fetchar mais data");
-    let moreHistories = {
-      id: Math.random(),
-      title: "Gatos Mais Estranhos do Mundo",
-      creator: "John Doe",
-      creation_date: "11/08/2021",
-      image:
-        "https://m.extra.globo.com/incoming/6919755-eb9-1d8/w488h275-PROP/gato-batman-1.jpg",
-    };
-    setHistories([...histories, moreHistories]);
+    setPage(page + 1);
+    // console.log("tem que fetchar mais data");
+    // setHistories([...histories]);
   };
+
+  useEffect(async () => {
+    await axios({
+      method: "post",
+      url: "http://127.0.0.1:8000/api/explore",
+      data: {
+        page: page,
+      },
+      headers: { Authorization: `Bearer ${bearerToken}` },
+    })
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.success) setHistories([...response.data.success]);
+        else setHasMore(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [page]);
 
   useTitle("Explorar");
   return (
