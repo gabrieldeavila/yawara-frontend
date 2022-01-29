@@ -4,6 +4,8 @@ import { AiFillSetting, IoExit, MdDeleteSweep } from "react-icons/all";
 import Modal from "../Modal";
 import { useState } from "react";
 import { DangerButton, ButtonsWrapper, SuccessButton } from "../Buttons";
+import { Context } from "../../Contexts/GlobalContext";
+import { useContext } from "react";
 
 const Content = styled.div`
   user-select: none;
@@ -47,7 +49,22 @@ const SuperLink = styled(Link)`
   }
 `;
 
-const Exit = styled(SuperLink)``;
+const Exit = styled.button`
+  display: flex;
+  border: none;
+  background: none;
+  font-size: 1rem;
+  gap: 0.5rem;
+  margin-left: -0.2rem;
+  cursor: pointer;
+  &:hover ${SuperAiFillSetting}, &:hover ${SuperIoExit}, &:hover ${H3} {
+    fill: var(--blue-xs);
+    color: var(--blue-xs);
+  }
+  ${SuperAiFillSetting}, ${SuperIoExit}, ${H3} {
+    transition: all 0.25s ease;
+  }
+`;
 
 const ChangeTheme = styled.div`
   display: flex;
@@ -90,6 +107,7 @@ export default function Options({ setPopup, theme, type }) {
   const [theme_option, changeCookie] = theme;
   const [svg, theme_title] = theme_option;
   const [modal, setModal] = useState(false);
+  const { setBearerToken } = useContext(Context);
 
   return (
     <Content>
@@ -102,10 +120,10 @@ export default function Options({ setPopup, theme, type }) {
 
       <Exit
         // onClick={() => setPopup(false)}
-        onClick={() =>
-          (window.location.href =
-            type === "client" ? "/account" : "/admin/account")
-        }
+        onClick={() => {
+          setBearerToken("");
+          window.location.reload();
+        }}
       >
         <SuperIoExit theme={theme_title} />
         <H3 theme={theme_title}>Sair</H3>
