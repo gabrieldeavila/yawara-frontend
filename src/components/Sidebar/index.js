@@ -27,6 +27,7 @@ export default function Sidebar({ type }) {
   return (
     <div
       ref={mobileRef}
+      style={{ marginTop: type === "admin" ? "4rem" : "1rem" }}
       className={`trans-1 sidebar ${
         showSidebar || fixedSidebar ? "show-sidebar" : "hide-sidebar"
       }`}

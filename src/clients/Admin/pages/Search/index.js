@@ -5,10 +5,18 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import SearchUser from "../../../../components/SearchUser";
 import useTitle from "../../../../states/Title";
+import axios from "axios";
+import { Context } from "../../../../Contexts/GlobalContext";
+import { useContext } from "react";
+import { useEffect } from "react";
+import { SearchUsersPlaceholder } from "../../../../components/Placeholders";
 
 const InfiniteScrollStyled = styled(InfiniteScroll)`
   margin-top: 2rem;
   padding: 1rem;
+  div {
+    gap: 7rem;
+  }
 `;
 
 const H2 = styled.h2`
@@ -17,56 +25,48 @@ const H2 = styled.h2`
   font-weight: 600;
   margin-top: 5rem;
   color: var(--green);
+  display: flex;
+  justify-content: ${(props) => (props.justify ? props.justify : "center")};
 `;
 
 export default function AdminSearch() {
   const { search_term } = useParams();
-
-  const [users, setUsers] = useState([
-    {
-      id: 0,
-      user: "John Doe",
-      profile_pic: "https://i.pravatar.cc/150?img=1",
-    },
-    {
-      id: 2,
-      user: "John Doe",
-      profile_pic: "https://i.pravatar.cc/150?img=1",
-    },
-    {
-      id: 3,
-      user: "John Doe",
-      profile_pic: "https://i.pravatar.cc/150?img=1",
-    },
-    {
-      id: 4,
-      user: "John Doe",
-      profile_pic: "https://i.pravatar.cc/150?img=1",
-    },
-    {
-      id: 7,
-      user: "John Doe",
-      profile_pic: "https://i.pravatar.cc/150?img=1",
-    },
-    {
-      id: 9,
-      user: "John Doe",
-      profile_pic: "https://i.pravatar.cc/150?img=1",
-    },
-  ]);
+  const { bearerToken } = useContext(Context);
+  const [users, setUsers] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(10);
+
+  const getData = async () => {};
+
+  useEffect(async () => {
+    axios({
+      method: "post",
+      url: "http://127.0.0.1:8000/api/admin/search-for",
+      data: {
+        search: search_term,
+        page: page,
+      },
+      headers: { Authorization: `Bearer ${bearerToken}` },
+    })
+      .then((response) => {
+        if (response.data.moreHistories) {
+          setHasMore(false);
+        }
+        setUsers(response.data.success);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  }, [page, search_term]);
+
+  useEffect(() => {
+    setHasMore(true);
+    setUsers([]);
+    setPage(10);
+  }, [search_term]);
 
   const fetchMoreData = () => {
-    let moreUsers = {
-      id: Math.random(),
-      user: "John Doe",
-      profile_pic: "https://i.pravatar.cc/150?img=1",
-    };
-
-    setUsers([...users, moreUsers]);
-    if (users.length > 3) {
-      setHasMore(false);
-    }
+    setPage(page + 10);
   };
 
   useTitle(`Resultados para "${search_term}"`);
@@ -89,7 +89,13 @@ export default function AdminSearch() {
         dataLength={users.length}
         next={fetchMoreData}
         hasMore={hasMore}
-        loader={<H2>Carregando...</H2>}
+        loader={
+          <H2 justify="space-between">
+            <SearchUsersPlaceholder />
+            <SearchUsersPlaceholder />
+            <SearchUsersPlaceholder />
+          </H2>
+        }
         endMessage={<H2>Todos os usuários foram atingidos :/</H2>}
       >
         <SearchUser data={users} />

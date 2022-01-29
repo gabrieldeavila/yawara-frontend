@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { Context } from "../../Contexts/GlobalContext";
+import { useContext } from "react";
 
 const StyledContainer = styled.div`
   display: flex;
@@ -20,6 +22,7 @@ const StyledContainer = styled.div`
   }
   img {
     width: 4rem;
+    height: 4rem;
     border-radius: 50%;
     filter: drop-shadow(0px 2px 9px rgba(0, 0, 0, 0.25));
   }
@@ -34,6 +37,8 @@ const StyledLink = styled(Link)`
   width: 14rem;
 `;
 export default function SearchUser({ data }) {
+  const { defaultURL } = useContext(Context);
+
   return (
     <StyledContainer>
       {data.map((item) => (
@@ -42,8 +47,8 @@ export default function SearchUser({ data }) {
           className="select-user-details"
           key={item.id}
         >
-          <img src={item.profile_pic} alt={item.user} />
-          <h4>{item.user}</h4>
+          <img src={defaultURL + "storage/" + item.path} alt={item.nickname} />
+          <h4>{item.nickname}</h4>
         </StyledLink>
       ))}
     </StyledContainer>

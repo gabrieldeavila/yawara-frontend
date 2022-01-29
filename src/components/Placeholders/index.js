@@ -1,7 +1,6 @@
 import React from "react";
 import {
   TextBlock,
-  MediaBlock,
   TextRow,
   RectShape,
   RoundShape,
@@ -15,6 +14,24 @@ const StyledRound = styled(RoundShape)`
   height: 1rem !important;
   margin-bottom: 4rem;
   background-color: var(--green);
+`;
+
+const UserRound = styled(RoundShape)`
+  width: 4rem !important;
+  height: 4rem !important;
+  background: var(--green);
+`;
+
+const UserText = styled(RoundShape)`
+  width: 12rem !important;
+  height: 1rem !important;
+  background: var(--green);
+`;
+
+const UserWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 `;
 
 const StyledText = styled(RoundShape)`
@@ -140,6 +157,17 @@ export const HistoriesPlaceholder = () => {
       <StyledTextBlock />
       <StyledText />
       <StyledImageBlock />
+    </div>
+  );
+};
+
+export const SearchUsersPlaceholder = () => {
+  return (
+    <div className="show-loading-animation ">
+      <UserWrapper>
+        <UserRound />
+        <UserText />
+      </UserWrapper>
     </div>
   );
 };
