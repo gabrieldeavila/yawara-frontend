@@ -34,12 +34,6 @@ const Client = () => {
   } = useContext(Context);
   const history = useHistory();
 
-  useEffect(() => {
-    if (user.admin) {
-      history.push("/admin/tags-management");
-    }
-  }, [user]);
-
   useEffect(async () => {
     if (
       (searchImage && user?.admin === null && user?.nickname !== null) ||

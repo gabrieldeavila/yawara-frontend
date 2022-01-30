@@ -1,20 +1,19 @@
 export const fakeData = {
-  title: "Do nulla ea ex esse.",
-  creator: "John Doe",
-  creation_date: "11/08/2021",
-  creator_id: 4,
-  user_type: "creator",
-  participation: "public",
-  profilePic: null,
-  user_name: "Teste",
+  title: "Do nulla ea ex esse.", //ok
+  creator: "John Doe", //ok
+  creation_date: "11/08/2021", //ok
+  creator_id: 4, //ok
+  user_type: "creator", //ok
+  participation: "public", //ok
+  user_name: "Teste", //ok
   history: [
     {
-      id: 0,
+      id: 0, //ok
       image:
-        "https://i-invdn-com.investing.com/trkd-images/LYNXMPEH8Q11O_L.jpg",
-      author: "John Doe",
-      profilePic: null,
-      time: [2021, 7, 13, 19, 55, 45],
+        "https://i-invdn-com.investing.com/trkd-images/LYNXMPEH8Q11O_L.jpg", //ok
+      author: "John Doe", //ok
+      profilePic: null, //ok
+      time: [2021, 7, 13, 19, 55, 45], //ok
       likes: 1000,
       dislikes: 0,
       didInteract: [true, 0],

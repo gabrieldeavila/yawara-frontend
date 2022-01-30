@@ -6,6 +6,8 @@ import History from "../../../../components/History";
 import { useEffect } from "react";
 import axios from "axios";
 import { Context } from "../../../../Contexts/GlobalContext";
+import _ from "lodash";
+
 export default function MyHistories() {
   const [histories, setHistories] = useState([]);
 
@@ -23,6 +25,7 @@ export default function MyHistories() {
       headers: { Authorization: `Bearer ${bearerToken}` },
     })
       .then((response) => {
+        console.log(response.data);
         if (response.data.message) {
           setHasMore(false);
           return;
@@ -30,7 +33,7 @@ export default function MyHistories() {
         setHistories(response.data.success);
       })
       .catch((err) => {
-        console.log(err.response);
+        console.log(err.response, "erro");
       });
   }, [page]);
 

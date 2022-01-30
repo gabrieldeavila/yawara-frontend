@@ -21,6 +21,10 @@ import Modal from "../Modal";
 import { useHistory } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import { Context } from "../../Contexts/GlobalContext";
+import { useContext, useEffect, useRef } from "react";
+import axios from "axios";
+import _ from "lodash";
 
 const StyledButtonsWrapper = styled.div`
   display: flex;
@@ -211,6 +215,8 @@ const timeAgo = new TimeAgo("pt-BR");
 export default function View() {
   const history = useHistory();
 
+  const { bearerToken, defaultURL } = useContext(Context);
+
   const [deleteHistory, setDeleteHistory] = useState(false);
 
   const [showPopup, setShowPopup] = useState(false);
@@ -220,9 +226,23 @@ export default function View() {
   const [left, setLeft] = useState(0);
   const [bottom, setBottom] = useState(0);
   const [deleteImage, setDeleteImage] = useState({});
+  const imageRef = useRef();
 
   let { id } = useParams();
   useTitle(selected.title);
+
+  useEffect(() => {
+    axios({
+      method: "get",
+      url: defaultURL + "api/view/" + id,
+      headers: { Authorization: `Bearer ${bearerToken}` },
+    })
+      .then((response) => {
+        // console.log(response.data.success, "OI?");
+        setSelected(response.data.success);
+      })
+      .catch((err) => console.log(err.response));
+  }, []);
 
   const handleDelete = (e, img) => {
     const pos = e.target.getBoundingClientRect();
@@ -232,74 +252,103 @@ export default function View() {
     setDeleteImage(img);
   };
 
-  const handleInteraction = (what, hist) => {
-    if (hist.didInteract[1] === 0 && what === "like") {
-      hist.didInteract = [false];
-      hist.likes -= 1;
-    } else if (hist.didInteract[1] === 1 && what === "dislike") {
-      hist.didInteract = [false];
-      hist.dislikes -= 1;
-    } else if (hist.didInteract[1] === 1 && what === "like") {
-      hist.didInteract = [true, 0];
-      hist.likes += 1;
-      hist.dislikes -= 1;
-    } else if (hist.didInteract[1] === 0 && what === "dislike") {
-      hist.didInteract = [true, 1];
-      hist.likes -= 1;
-      hist.dislikes += 1;
-    } else if (hist.didInteract[0] === false && what === "like") {
-      hist.didInteract = [true, 0];
-      hist.likes += 1;
-    } else if (hist.didInteract[0] === false && what === "dislike") {
-      hist.didInteract = [true, 1];
-      hist.dislikes += 1;
-    }
-
-    let keepHistories = [];
-    selected.history.forEach((yawa, index) => {
-      if (yawa.id !== hist.id) {
-        keepHistories.push(yawa);
-      } else keepHistories.push(hist);
-    });
-    setSelected({ ...selected, history: keepHistories });
+  const handleInteraction = async (what, hist) => {
+    await axios({
+      method: "post",
+      url: defaultURL + "api/interaction",
+      data: {
+        interaction: what === "like" ? 1 : 0,
+        history_answer_id: selected.id,
+        history_answer_history_id: hist.id,
+        image_id: hist.image_id,
+        creator_id: hist.user_id,
+      },
+      headers: { Authorization: `Bearer ${bearerToken}` },
+    })
+      .then((response) => {
+        let updatedAnswer = response.data.success;
+        let newAnswers = selected.answers.map((answer) =>
+          answer.id === hist.id ? updatedAnswer : answer
+        );
+        setSelected({ ...selected, answers: newAnswers });
+      })
+      .catch((err) => console.log(err.response));
   };
 
+  const newHistory = async () => {
+    let img = imageRef.current.returnImage();
+    if (_.isUndefined(img)) {
+      toast.error("Selecione uma imagem!", {
+        className:
+          theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
+      });
+      return;
+    }
+    await axios({
+      method: "post",
+      url: defaultURL + "api/history/answer",
+      data: {
+        img: img,
+        history_id: selected.id,
+      },
+      headers: { Authorization: `Bearer ${bearerToken}` },
+    })
+      .then((response) => {
+        console.log(response);
+        axios({
+          method: "get",
+          url: defaultURL + "api/view/" + id,
+          headers: { Authorization: `Bearer ${bearerToken}` },
+        })
+          .then((response) => {
+            // console.log(response.data.success, "OI?");
+            setSelected(response.data.success);
+          })
+          .catch((err) => console.log(err.response));
+
+        setReply(false);
+      })
+      .catch((err) => console.log(err.response));
+  };
   return (
     <Content>
       <ToastContainer />
 
       <Title justify="space-between" title={selected.title}>
-        <span>Criado por: {selected.creator}</span>
-        <span>{selected.creation_date}</span>
+        <span>Criado por: {selected.author}</span>
+        <span>{selected.time_ago}</span>
       </Title>
       <Main>
-        {selected.history.map((yawara, index) => (
+        {selected.answers?.map((answer, index) => (
           <YawaraWrapper key={index}>
             <PicWrapper>
               <Pic>
-                {yawara.profilePic ? (
-                  <img src={yawara.profilePic} alt={yawara.author} />
+                {answer.profilePic ? (
+                  <img
+                    src={defaultURL + "storage/" + answer.profilePic}
+                    alt={answer.author}
+                  />
                 ) : (
                   <UserIcon />
                 )}
               </Pic>
-              {selected.history.length !== index + 1 || reply === true ? (
+              {selected.answers.length !== index + 1 || reply === true ? (
                 <Border></Border>
               ) : null}
             </PicWrapper>
             <Rest>
               <Wrapper>
                 <InfoWrapper>
-                  <AuthorName>{yawara.author}</AuthorName>
+                  <AuthorName>{answer.author}</AuthorName>
 
-                  <Time>{timeAgo.format(new Date(...yawara.time))}</Time>
+                  <Time>{answer.time_ago}</Time>
                 </InfoWrapper>
               </Wrapper>
               <Wrapper>
                 <ImgWrapper>
                   <img
-                    src={yawara.image}
-                    alt={`${selected.title} - ${yawara.author}`}
+                    src={defaultURL + "storage/" + answer.image}
+                    alt={`${selected.title} - ${answer.author}`}
                   />
                 </ImgWrapper>
               </Wrapper>
@@ -308,48 +357,48 @@ export default function View() {
                   className="view-icons"
                   style={{
                     color:
-                      yawara.didInteract[1] === 0
+                      answer?.didInteract && parseInt(answer.interaction)
                         ? "var(--blue-xs)"
                         : "var(--green)",
                   }}
-                  onClick={() => handleInteraction("like", yawara)}
+                  onClick={() => handleInteraction("like", answer)}
                 >
                   <AiFillLike
                     style={{
                       fill:
-                        yawara.didInteract[1] === 0
+                        answer?.didInteract && parseInt(answer.interaction)
                           ? "var(--blue-xs)"
                           : "var(--green)",
                     }}
                   />
-                  {yawara.likes}
+                  {answer.likes}
                 </span>
 
                 <span
                   className="view-icons"
                   style={{
                     color:
-                      yawara.didInteract[1] === 1
+                      answer?.didInteract && !parseInt(answer.interaction)
                         ? "var(--red-xs)"
                         : "var(--green)",
                   }}
-                  onClick={() => handleInteraction("dislike", yawara)}
+                  onClick={() => handleInteraction("dislike", answer)}
                 >
                   <AiFillDislike
                     style={{
                       fill:
-                        yawara.didInteract[1] === 1
+                        answer?.didInteract && !parseInt(answer.interaction)
                           ? "var(--red-xs)"
                           : "var(--green)",
                     }}
                   />
-                  {yawara.dislikes}
+                  {answer.dislikes}
                 </span>
                 {selected.user_type === "creator" && index !== 0 && (
                   <span
                     className="view-icons"
                     onClick={(e) => {
-                      handleDelete(e, yawara);
+                      handleDelete(e, answer);
                     }}
                   >
                     <IoMdTrash
@@ -384,13 +433,16 @@ export default function View() {
                     </Time>
                   </InfoWrapper>
                 </Wrapper>
-                <StyledImageEditorHistory width={80}></StyledImageEditorHistory>
+                <StyledImageEditorHistory
+                  ref={imageRef}
+                  width={80}
+                ></StyledImageEditorHistory>
               </Rest>
             </YawaraWrapper>
 
             <StyledButtonsWrapper theme={theme}>
-              <div className="form-button flip" onClick={() => setReply(true)}>
-                <div className={`btn text-${theme}`}>Publicar História</div>
+              <div className="form-button flip" onClick={newHistory}>
+                <div className={`btn text-${theme}`}>Publicar Continuação</div>
               </div>
               <div className="form-button flip" onClick={() => setReply(false)}>
                 <div className={`btn text-${theme}`}>Cancelar</div>
@@ -401,14 +453,13 @@ export default function View() {
 
         {!reply && (
           <StyledButtonsWrapper>
-            {(selected.participation === "public" ||
-              selected.user_type === "creator") && (
+            {(selected.public || selected.is_creator) && (
               <div className="form-button flip" onClick={() => setReply(true)}>
                 <div className={`btn text-${theme}`}>Continuar História</div>
               </div>
             )}
 
-            {selected.user_type === "creator" && (
+            {selected.is_creator && (
               <>
                 <div className="form-button flip">
                   <button
@@ -418,19 +469,15 @@ export default function View() {
                     onClick={() =>
                       setSelected({
                         ...selected,
-                        participation:
-                          selected.participation === "public"
-                            ? "private"
-                            : "public",
+                        public: selected.public ? "private" : "public",
                       })
                     }
                   >
-                    {selected.participation === "public"
+                    {selected.public
                       ? "Fechar colaboração"
                       : "Abrir colaboração"}
                   </button>
                 </div>
-
                 <div className="form-button flip">
                   <button
                     className={`btn text-${theme}`}

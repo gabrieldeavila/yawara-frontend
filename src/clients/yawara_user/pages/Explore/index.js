@@ -5,6 +5,7 @@ import Title from "../../../../components/Title";
 import useTitle from "../../../../states/Title";
 import axios from "axios";
 import { Context } from "../../../../Contexts/GlobalContext";
+import _ from "lodash";
 
 const DivExplore = styled.div``;
 
@@ -35,7 +36,8 @@ export default function Explore() {
     })
       .then((response) => {
         console.log(response.data);
-        if (response.data.success) setHistories([...response.data.success]);
+        if (!_.isEmpty(response.data.success))
+          setHistories([...response.data.success]);
         else setHasMore(false);
       })
       .catch((err) => {
