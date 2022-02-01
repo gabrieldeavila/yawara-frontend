@@ -16,6 +16,7 @@ export default function GlobalContext({ children }) {
   const [image, setImage] = useState(null);
 
   const [bearerToken, setBearerToken] = useState(null);
+  const [filterChanged, setFilterChanged] = useState(false);
 
   useEffect(async () => {
     if (
@@ -52,6 +53,8 @@ export default function GlobalContext({ children }) {
         setHideNavbar,
         hideSidebar,
         setHideSidebar,
+        filterChanged,
+        setFilterChanged,
       }}
     >
       {children}

@@ -62,6 +62,11 @@ const StyledTextBlock = styled(TextBlock)`
   margin-top: 3rem;
 `;
 
+const StyledTextBlockSmall = styled(StyledTextBlock)`
+  height: 0.75rem !important;
+  margin-top: 1rem;
+`;
+
 const StyledButtonBlue = styled(StyledRound)`
   height: 1.5rem !important;
   background-color: var(--blue);
@@ -103,6 +108,17 @@ export const TagsButtonsPlaceholder = () => {
         <StyledButtonRed />
         <StyledButtonBlue />
       </WrapperButtons>
+    </div>
+  );
+};
+
+export const FilterPlaceholder = () => {
+  return (
+    <div className="show-loading-animation ">
+      <StyledTextBlockSmall />
+      <StyledTextBlockSmall />
+      <StyledTextBlockSmall />
+      <StyledTextBlockSmall />
     </div>
   );
 };
