@@ -43,13 +43,6 @@ export default function Search() {
   }, [search_term, filterChanged]);
 
   useEffect(async () => {
-    console.log({
-      data: {
-        search: search_term,
-        tags: tags,
-        hasTags: tags > 0 ? true : false,
-      },
-    });
     await axios({
       method: "post",
       url: defaultURL + "api/search-for",
