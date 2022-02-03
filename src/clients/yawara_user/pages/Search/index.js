@@ -12,7 +12,6 @@ import { Context } from "../../../../Contexts/GlobalContext";
 export default function Search() {
   const { search_term } = useParams();
 
-  // por enquanto as histórias e tags estão fixas
   const [tags, setTags] = useState([]);
   const [search, setSearch] = useState([]);
   const { bearerToken, defaultURL, filterChanged } = useContext(Context);
@@ -44,16 +43,20 @@ export default function Search() {
   }, [search_term, filterChanged]);
 
   useEffect(async () => {
+    console.log({
+      data: {
+        search: search_term,
+        tags: tags,
+        hasTags: tags > 0 ? true : false,
+      },
+    });
     await axios({
       method: "post",
       url: defaultURL + "api/search-for",
       data: {
         search: search_term,
-        tags: JSON.parse(localStorage.getItem("searchTags")),
-        hasTags:
-          JSON.parse(localStorage.getItem("searchTags"))?.length > 0
-            ? true
-            : false,
+        tags: tags,
+        hasTags: tags > 0 ? true : false,
       },
       headers: { Authorization: `Bearer ${bearerToken}` },
     })
