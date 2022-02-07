@@ -142,7 +142,7 @@ export default function Routes(props) {
                     </div>
                   </>
                 ) : (
-                  <Client></Client>
+                  <Client />
                 )}
               </>
             )}

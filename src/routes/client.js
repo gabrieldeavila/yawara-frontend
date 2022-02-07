@@ -64,10 +64,7 @@ const Client = () => {
             {!hideNavbar && (
               <Navbar
                 type="client"
-                image={
-                  image ??
-                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9mwH_BnOsUyh-rOAoTJLL1WYdVQeJJkDoWg&usqp=CAU"
-                }
+                image={image}
                 description={user?.nickname}
               />
             )}

@@ -44,6 +44,7 @@ export default function NewHistory() {
   const { bearerToken, reload, setReload } = useContext(Context);
   const [isReady, setIsReady] = useState(false);
   const imageRef = useRef();
+  const [creatingHistory, setCreatingHistory] = useState(false);
 
   useEffect(async () => {
     axios({
@@ -71,8 +72,6 @@ export default function NewHistory() {
   useTitle("Nova História");
   return (
     <Wrapper>
-      <ToastContainer />
-
       <Title
         title="Nova História"
         description="Crie uma nova história e compartilhe imagens com outras pessoas"
@@ -89,6 +88,7 @@ export default function NewHistory() {
               .max(40, "Muito longo"),
           })}
           onSubmit={async (values) => {
+            if (creatingHistory) return;
             let selected_tags = _.filter(tags, function (o) {
               return o.selected;
             });
@@ -101,6 +101,7 @@ export default function NewHistory() {
                     : "toast-theme--dark",
               });
             } else {
+              setCreatingHistory(true);
               await axios({
                 method: "post",
                 url: "http://127.0.0.1:8000/api/new-history",
@@ -114,12 +115,18 @@ export default function NewHistory() {
               })
                 .then((response) => {
                   console.log(response);
+                  toast.success("História criada com sucesso!", {
+                    className:
+                      theme[1] === "light"
+                        ? "toast-theme--light"
+                        : "toast-theme--dark",
+                  });
+                  history.push("/view/" + response.data.success.id);
+                  console.log(response);
                 })
                 .catch((err) => {
                   console.log(err.response);
                 });
-
-              history.push("/my-histories");
             }
           }}
         >
@@ -221,7 +228,7 @@ export default function NewHistory() {
                   }`}
                   type="submit"
                 >
-                  Criar História!
+                  {creatingHistory ? "Criando história.." : "Criar História!"}
                 </button>
               </div>
             </Form>

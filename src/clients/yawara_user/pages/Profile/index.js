@@ -57,8 +57,6 @@ export default function Profile() {
 
   return (
     <Wrapper>
-      <ToastContainer />
-
       <Title title="Configurar Perfil" description="Altere suas preferências" />
       {isReady ? (
         <Formik
@@ -70,8 +68,6 @@ export default function Profile() {
             nickName: Yup.string().required("Você deve ter um apelido!"),
           })}
           onSubmit={async (values) => {
-            console.log(values, password_, passwordConfirm);
-
             let selected_tags = _.filter(tags, function (o) {
               return o.selected;
             });
@@ -92,7 +88,6 @@ export default function Profile() {
               });
             } else {
               setPassword("");
-              console.log(imageRef.current.returnImage());
               await axios({
                 method: "post",
                 url: "http://127.0.0.1:8000/api/profile",

@@ -67,8 +67,6 @@ export default function ModalAcc({ theme, setModal }) {
         >
           {({ errors, touched }) => (
             <Form>
-              <ToastContainer />
-
               <div className="field floating">
                 <Field
                   placeholder="Placeholder"

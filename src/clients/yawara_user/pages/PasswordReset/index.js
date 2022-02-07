@@ -34,7 +34,6 @@ export default function PasswordReset() {
     <>
       <Logo />
       <Title title="Recuperação de Senha" />
-      <ToastContainer />
       <StyledWrapper items="start" justify="start" direction="column">
         <Formik
           initialValues={{

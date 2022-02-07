@@ -231,6 +231,17 @@ export default function View() {
   let { id } = useParams();
   useTitle(selected.title);
 
+  const removeHistory = async () => {
+    axios({
+      method: "DELETE",
+      url: defaultURL + "api/history/remove/" + selected.id,
+      headers: { Authorization: `Bearer ${bearerToken}` },
+    }).then(() => {
+      toast.success("História excluída com sucesso!");
+      history.push("/explore");
+    });
+  };
+
   useEffect(() => {
     axios({
       method: "get",
@@ -258,7 +269,7 @@ export default function View() {
       url: defaultURL + "api/interaction",
       data: {
         interaction: what === "like" ? 1 : 0,
-        history_answer_id: selected.id,
+        history_answer_id: hist.id,
         history_answer_history_id: hist.id,
         image_id: hist.image_id,
         creator_id: hist.user_id,
@@ -310,10 +321,29 @@ export default function View() {
       })
       .catch((err) => console.log(err.response));
   };
+
+  const changeVisibility = async () => {
+    await axios({
+      method: "post",
+      url: defaultURL + "api/history/update/" + selected.id,
+      data: {
+        public: selected.public ? 0 : 1,
+      },
+      headers: { Authorization: `Bearer ${bearerToken}` },
+    })
+      .then((response) => {
+        setSelected({ ...selected, public: response.data.success.public });
+        toast.success("Visibilidade alterada com sucesso!", {
+          className:
+            theme === "light" ? "toast-theme--light" : "toast-theme--dark",
+        });
+      })
+      .catch((err) => console.log(err.response));
+    console.log();
+  };
+
   return (
     <Content>
-      <ToastContainer />
-
       <Title justify="space-between" title={selected.title}>
         <span>Criado por: {selected.author}</span>
         <span>{selected.time_ago}</span>
@@ -394,7 +424,7 @@ export default function View() {
                   />
                   {answer.dislikes}
                 </span>
-                {selected.user_type === "creator" && index !== 0 && (
+                {selected.is_creator && index !== 0 && (
                   <span
                     className="view-icons"
                     onClick={(e) => {
@@ -466,12 +496,7 @@ export default function View() {
                     to="/explore"
                     className={`btn text-${theme}`}
                     type="submit"
-                    onClick={() =>
-                      setSelected({
-                        ...selected,
-                        public: selected.public ? "private" : "public",
-                      })
-                    }
+                    onClick={changeVisibility}
                   >
                     {selected.public
                       ? "Fechar colaboração"
@@ -504,14 +529,23 @@ export default function View() {
             <StyledH4 theme={theme}>Realmente Deseja Excluir?</StyledH4>
             <ButtonsWrapper theme={theme}>
               <DangerButton
-                onClick={() => {
+                onClick={async () => {
                   let keepHistories = [];
-                  selected.history.forEach((hist, index) => {
+
+                  await axios({
+                    method: "delete",
+                    url: `${defaultURL}api/history/${deleteImage.id}`,
+                    headers: {
+                      Authorization: `Bearer ${bearerToken}`,
+                    },
+                  });
+
+                  selected.answers.forEach((hist, index) => {
                     if (hist.id !== deleteImage.id) {
                       keepHistories.push(hist);
                     }
                   });
-                  setSelected({ ...selected, history: keepHistories });
+                  setSelected({ ...selected, answers: keepHistories });
                   toast.success("Imagem excluída com sucesso da história!", {
                     className:
                       theme === "light"
@@ -539,7 +573,7 @@ export default function View() {
             <ModalContent>
               <p>Uma vez que essa ação é realizada, não pode ser desfeita.</p>
               <ButtonsWrapper theme={theme}>
-                <DangerButton onClick={() => history.push("/explore")}>
+                <DangerButton onClick={removeHistory}>
                   Sim, quero deletar
                 </DangerButton>
                 <SuccessButton onClick={() => setDeleteHistory(false)}>

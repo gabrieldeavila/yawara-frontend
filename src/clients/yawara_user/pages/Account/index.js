@@ -50,7 +50,7 @@ export default function Account() {
 
           history.push("/finish-register");
 
-          toast.success("Conta criada, basta logar  🥳 ", {
+          toast.success("Conta criada, basta terminar o registro  🥳 ", {
             className:
               theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
           });
@@ -85,7 +85,7 @@ export default function Account() {
         })
         // erro
         .catch((error) => {
-          toast.error(`${error.response.data.data.error} 😖`, {
+          toast.error(`${error.response?.data?.data?.error} 😖`, {
             className:
               theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
           });
@@ -95,7 +95,6 @@ export default function Account() {
 
   return (
     <div className="account">
-      <ToastContainer />
       <div className="bg-green account-greeting">
         <h2 className={`trans-1 text-${theme[1]}`}>
           {accountAction ? "Acesse sua Yawa!" : "Crie sua Yawa!"}

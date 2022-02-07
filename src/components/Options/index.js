@@ -5,7 +5,8 @@ import Modal from "../Modal";
 import { useState } from "react";
 import { DangerButton, ButtonsWrapper, SuccessButton } from "../Buttons";
 import { Context } from "../../Contexts/GlobalContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import axios from "axios";
 
 const Content = styled.div`
   user-select: none;
@@ -107,7 +108,24 @@ export default function Options({ setPopup, theme, type }) {
   const [theme_option, changeCookie] = theme;
   const [svg, theme_title] = theme_option;
   const [modal, setModal] = useState(false);
-  const { setBearerToken } = useContext(Context);
+  const { setBearerToken, bearerToken, defaultURL, user } = useContext(Context);
+
+  useEffect(() => {
+    console.log(user);
+    return () => {};
+  }, []);
+
+  const deleteAccount = () => {
+    axios({
+      method: "delete",
+      url: `${defaultURL}api/users/delete/${user.id}`,
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+      },
+    }).then(() => {
+      setBearerToken(null);
+    });
+  };
 
   return (
     <Content>
@@ -153,7 +171,9 @@ export default function Options({ setPopup, theme, type }) {
                 histórias? Saiba que uma vez realizada essa ação não pode ser
                 revertida!
                 <ButtonsWrapper theme={theme_title}>
-                  <DangerButton>Sim, quero deletar</DangerButton>
+                  <DangerButton onClick={deleteAccount}>
+                    Sim, quero deletar
+                  </DangerButton>
                   <SuccessButton onClick={() => setModal(false)}>
                     Não, foi um engano
                   </SuccessButton>

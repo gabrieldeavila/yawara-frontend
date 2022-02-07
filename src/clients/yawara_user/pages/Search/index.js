@@ -13,6 +13,7 @@ export default function Search() {
   const { search_term } = useParams();
 
   const [tags, setTags] = useState([]);
+  const [tagsId, setTagsId] = useState([]);
   const [search, setSearch] = useState([]);
   const { bearerToken, defaultURL, filterChanged } = useContext(Context);
   const [hasMore, setHasMore] = useState(true);
@@ -29,12 +30,16 @@ export default function Search() {
         let searchTags = JSON.parse(localStorage.getItem("searchTags")) || [];
 
         let tags = [];
-
+        let tagsId = [];
         response.data.tags.forEach((item) => {
-          if (searchTags.includes(item.id)) tags.push(item.name);
+          if (searchTags.includes(item.id)) {
+            tags.push(item.name);
+            tagsId.push(item.id);
+          }
         });
         setHasMore(true);
         setTags(tags);
+        setTagsId(tagsId);
         setSearch(!search);
       })
       .catch((err) => {
@@ -43,13 +48,14 @@ export default function Search() {
   }, [search_term, filterChanged]);
 
   useEffect(async () => {
+    console.log(tags);
     await axios({
       method: "post",
       url: defaultURL + "api/search-for",
       data: {
         search: search_term,
-        tags: tags,
-        hasTags: tags > 0 ? true : false,
+        tags: tagsId,
+        hasTags: tagsId.length > 0 ? true : false,
       },
       headers: { Authorization: `Bearer ${bearerToken}` },
     })
@@ -85,7 +91,7 @@ export default function Search() {
               {tags.map((tag, index) => {
                 let end = ", ";
                 if (tags.length - 2 === index) {
-                  end = " e ";
+                  end = " ou ";
                 } else if (tags.length - 1 === index) {
                   end = ".";
                 }

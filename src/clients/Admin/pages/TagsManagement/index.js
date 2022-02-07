@@ -170,7 +170,6 @@ export default function TagsManagement() {
   useTitle("Gerenciar Tags");
   return (
     <Wrapper>
-      <ToastContainer />
       <Title
         title={"Gerenciar Tags"}
         description={"Crie, edite ou exclua tags de pesquisa"}

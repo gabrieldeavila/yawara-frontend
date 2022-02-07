@@ -161,8 +161,6 @@ const ImageEditorHistory = forwardRef((props, ref) => {
 
   return (
     <Container>
-      <ToastContainer />
-
       {!img ? (
         <ImageEditorContainer>
           <div {...getRootProps()}>

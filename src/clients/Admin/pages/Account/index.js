@@ -36,7 +36,6 @@ export default function AdminAccount() {
   useTitle("Entrar");
   return (
     <div className="account">
-      <ToastContainer />
       <div className="bg-green account-greeting">
         <h2
           style={{ textAlign: "center" }}

@@ -124,6 +124,7 @@ export default function History({
     >
       {histories.map((his, index) => (
         <HistoryWrapper key={index} to={`/view/${his.id}`}>
+          {console.log(his)}
           <H2>{his.name}</H2>
           <Infos>
             <span className="header_info">Criado por: {his.nickname}</span>

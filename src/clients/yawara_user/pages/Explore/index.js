@@ -20,7 +20,7 @@ export default function Explore() {
   const { bearerToken } = useContext(Context);
 
   const fetchMoreData = () => {
-    setPage(page + 1);
+    setPage(page + 2);
     // console.log("tem que fetchar mais data");
     // setHistories([...histories]);
   };
@@ -36,7 +36,10 @@ export default function Explore() {
     })
       .then((response) => {
         console.log(response.data);
-        if (!_.isEmpty(response.data.success))
+        if (
+          !_.isEmpty(response.data.success) &&
+          response.data.success.length !== histories.length
+        )
           setHistories([...response.data.success]);
         else setHasMore(false);
       })

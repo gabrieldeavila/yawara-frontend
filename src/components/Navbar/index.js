@@ -10,6 +10,24 @@ import Popup from "../Popup";
 import useMobile from "../../states/Mobile";
 import { AiFillSetting, AiOutlineClose } from "react-icons/ai";
 import { useHistory } from "react-router";
+import { FaUserAlt } from "react-icons/fa";
+import styled from "styled-components";
+
+const User = styled(FaUserAlt)`
+  fill: var(--green);
+  transform: scale(1.5);
+`;
+
+const UserWrapper = styled.div`
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: white;
+`;
 
 export default function Navbar({
   placeholder = "Digite Algo",
@@ -133,12 +151,22 @@ export default function Navbar({
                 }`}
               >
                 {type === "client" ? (
-                  <img
-                    onClick={(e) => setShowPopup(!showPopup)}
-                    className="navbar-right-user-img"
-                    src={image}
-                    alt={description}
-                  />
+                  image ? (
+                    <img
+                      onClick={(e) => setShowPopup(!showPopup)}
+                      className="navbar-right-user-img"
+                      src={image}
+                      alt={description}
+                    />
+                  ) : (
+                    <UserWrapper>
+                      <User
+                        onClick={(e) => {
+                          setShowPopup(!showPopup);
+                        }}
+                      />
+                    </UserWrapper>
+                  )
                 ) : !showPopup ? (
                   <AiFillSetting onClick={(e) => setShowPopup(!showPopup)} />
                 ) : (

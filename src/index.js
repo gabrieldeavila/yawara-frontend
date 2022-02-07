@@ -3,9 +3,11 @@ import Routes from "./routes/routes";
 import GlobalContext from "./Contexts/GlobalContext";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
+import { ToastContainer } from "react-toastify";
 
 ReactDOM.render(
   <GlobalContext>
+    <ToastContainer />
     <Routes />
   </GlobalContext>,
   document.getElementById("root")

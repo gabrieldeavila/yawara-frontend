@@ -82,7 +82,6 @@ export default function FinishRegistration() {
 
   return (
     <>
-      <ToastContainer />
       <Logo />
       <StyledWrapper items="start" justify="start" direction="column">
         <Title

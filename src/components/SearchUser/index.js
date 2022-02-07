@@ -2,6 +2,22 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { Context } from "../../Contexts/GlobalContext";
 import { useContext } from "react";
+import { FaUserAlt } from "react-icons/all";
+
+const User = styled(FaUserAlt)`
+  fill: var(--green);
+  transform: scale(1.75);
+`;
+
+const UserWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+`;
 
 const StyledContainer = styled.div`
   display: flex;
@@ -47,7 +63,16 @@ export default function SearchUser({ data }) {
           className="select-user-details"
           key={item.id}
         >
-          <img src={defaultURL + "storage/" + item.path} alt={item.nickname} />
+          {item.path ? (
+            <img
+              src={defaultURL + "storage/" + item.path}
+              alt={item.nickname}
+            />
+          ) : (
+            <UserWrapper>
+              <User />
+            </UserWrapper>
+          )}
           <h4>{item.nickname}</h4>
         </StyledLink>
       ))}
