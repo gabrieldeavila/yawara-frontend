@@ -24,7 +24,7 @@ const StyledContainer = styled.div`
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem 5rem;
+  gap: 2.5rem 5rem;
 
   .select-user-details {
     display: flex;
@@ -44,13 +44,14 @@ const StyledContainer = styled.div`
   }
 
   h4 {
+    width: 10rem;
     font-weight: 600;
     color: var(--green);
   }
 `;
 
 const StyledLink = styled(Link)`
-  width: 14rem;
+  /* width: 14rem; */
 `;
 export default function SearchUser({ data }) {
   const { defaultURL } = useContext(Context);

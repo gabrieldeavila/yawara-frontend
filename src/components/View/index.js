@@ -25,6 +25,7 @@ import { Context } from "../../Contexts/GlobalContext";
 import { useContext, useEffect, useRef } from "react";
 import axios from "axios";
 import _ from "lodash";
+import { ViewHistoryPlaceholder } from "../Placeholders";
 
 const StyledButtonsWrapper = styled.div`
   display: flex;
@@ -226,6 +227,7 @@ export default function View() {
   const [left, setLeft] = useState(0);
   const [bottom, setBottom] = useState(0);
   const [deleteImage, setDeleteImage] = useState({});
+  const isReady = useRef(false);
   const imageRef = useRef();
 
   let { id } = useParams();
@@ -249,6 +251,7 @@ export default function View() {
       headers: { Authorization: `Bearer ${bearerToken}` },
     })
       .then((response) => {
+        if (!isReady.current) isReady.current = true;
         // console.log(response.data.success, "OI?");
         setSelected(response.data.success);
       })
@@ -344,246 +347,272 @@ export default function View() {
 
   return (
     <Content>
-      <Title justify="space-between" title={selected.title}>
-        <span>Criado por: {selected.author}</span>
-        <span>{selected.time_ago}</span>
-      </Title>
-      <Main>
-        {selected.answers?.map((answer, index) => (
-          <YawaraWrapper key={index}>
-            <PicWrapper>
-              <Pic>
-                {answer.profilePic ? (
-                  <img
-                    src={defaultURL + "storage/" + answer.profilePic}
-                    alt={answer.author}
-                  />
-                ) : (
-                  <UserIcon />
-                )}
-              </Pic>
-              {selected.answers.length !== index + 1 || reply === true ? (
-                <Border></Border>
-              ) : null}
-            </PicWrapper>
-            <Rest>
-              <Wrapper>
-                <InfoWrapper>
-                  <AuthorName>{answer.author}</AuthorName>
+      {isReady.current ? (
+        <>
+          <Title justify="space-between" title={selected.title}>
+            <span>Criado por: {selected.author}</span>
+            <span>{selected.time_ago}</span>
+          </Title>
+          <Main>
+            {selected.answers?.map((answer, index) => (
+              <YawaraWrapper key={index}>
+                <PicWrapper>
+                  <Pic>
+                    {answer.profilePic ? (
+                      <img
+                        src={defaultURL + "storage/" + answer.profilePic}
+                        alt={answer.author}
+                      />
+                    ) : (
+                      <UserIcon />
+                    )}
+                  </Pic>
+                  {selected.answers.length !== index + 1 || reply === true ? (
+                    <Border></Border>
+                  ) : null}
+                </PicWrapper>
+                <Rest>
+                  <Wrapper>
+                    <InfoWrapper>
+                      <AuthorName>{answer.author}</AuthorName>
 
-                  <Time>{answer.time_ago}</Time>
-                </InfoWrapper>
-              </Wrapper>
-              <Wrapper>
-                <ImgWrapper>
-                  <img
-                    src={defaultURL + "storage/" + answer.image}
-                    alt={`${selected.title} - ${answer.author}`}
-                  />
-                </ImgWrapper>
-              </Wrapper>
-              <OptionsWrapper>
-                <span
-                  className="view-icons"
-                  style={{
-                    color:
-                      answer?.didInteract && parseInt(answer.interaction)
-                        ? "var(--blue-xs)"
-                        : "var(--green)",
-                  }}
-                  onClick={() => handleInteraction("like", answer)}
-                >
-                  <AiFillLike
-                    style={{
-                      fill:
-                        answer?.didInteract && parseInt(answer.interaction)
-                          ? "var(--blue-xs)"
-                          : "var(--green)",
-                    }}
-                  />
-                  {answer.likes}
-                </span>
-
-                <span
-                  className="view-icons"
-                  style={{
-                    color:
-                      answer?.didInteract && !parseInt(answer.interaction)
-                        ? "var(--red-xs)"
-                        : "var(--green)",
-                  }}
-                  onClick={() => handleInteraction("dislike", answer)}
-                >
-                  <AiFillDislike
-                    style={{
-                      fill:
-                        answer?.didInteract && !parseInt(answer.interaction)
-                          ? "var(--red-xs)"
-                          : "var(--green)",
-                    }}
-                  />
-                  {answer.dislikes}
-                </span>
-                {selected.is_creator && index !== 0 && (
-                  <span
-                    className="view-icons"
-                    onClick={(e) => {
-                      handleDelete(e, answer);
-                    }}
-                  >
-                    <IoMdTrash
+                      <Time>{answer.time_ago}</Time>
+                    </InfoWrapper>
+                  </Wrapper>
+                  <Wrapper>
+                    <ImgWrapper>
+                      <img
+                        src={defaultURL + "storage/" + answer.image}
+                        alt={`${selected.title} - ${answer.author}`}
+                      />
+                    </ImgWrapper>
+                  </Wrapper>
+                  <OptionsWrapper>
+                    <span
+                      className="view-icons"
                       style={{
-                        fill: "var(--red)",
+                        color:
+                          answer?.didInteract && parseInt(answer.interaction)
+                            ? "var(--blue-xs)"
+                            : "var(--green)",
                       }}
-                    />
-                  </span>
-                )}
-              </OptionsWrapper>
-            </Rest>
-          </YawaraWrapper>
-        ))}
-        {reply && (
-          <>
-            <YawaraWrapper>
-              <PicWrapper>
-                <Pic>
-                  {selected.profilePic ? (
-                    <img src={selected.profilePic} alt={selected.user_name} />
-                  ) : (
-                    <UserIcon />
-                  )}
-                </Pic>
-              </PicWrapper>
-              <Rest>
-                <Wrapper>
-                  <InfoWrapper>
-                    <AuthorName>{selected.userName}</AuthorName>
-                    <Time>
-                      <span className="mobile-time">agora</span>
-                    </Time>
-                  </InfoWrapper>
-                </Wrapper>
-                <StyledImageEditorHistory
-                  ref={imageRef}
-                  width={80}
-                ></StyledImageEditorHistory>
-              </Rest>
-            </YawaraWrapper>
+                      onClick={() => handleInteraction("like", answer)}
+                    >
+                      <AiFillLike
+                        style={{
+                          fill:
+                            answer?.didInteract && parseInt(answer.interaction)
+                              ? "var(--blue-xs)"
+                              : "var(--green)",
+                        }}
+                      />
+                      {answer.likes}
+                    </span>
 
-            <StyledButtonsWrapper theme={theme}>
-              <div className="form-button flip" onClick={newHistory}>
-                <div className={`btn text-${theme}`}>Publicar Continuação</div>
-              </div>
-              <div className="form-button flip" onClick={() => setReply(false)}>
-                <div className={`btn text-${theme}`}>Cancelar</div>
-              </div>
-            </StyledButtonsWrapper>
-          </>
-        )}
-
-        {!reply && (
-          <StyledButtonsWrapper>
-            {(selected.public || selected.is_creator) && (
-              <div className="form-button flip" onClick={() => setReply(true)}>
-                <div className={`btn text-${theme}`}>Continuar História</div>
-              </div>
-            )}
-
-            {selected.is_creator && (
+                    <span
+                      className="view-icons"
+                      style={{
+                        color:
+                          answer?.didInteract && !parseInt(answer.interaction)
+                            ? "var(--red-xs)"
+                            : "var(--green)",
+                      }}
+                      onClick={() => handleInteraction("dislike", answer)}
+                    >
+                      <AiFillDislike
+                        style={{
+                          fill:
+                            answer?.didInteract && !parseInt(answer.interaction)
+                              ? "var(--red-xs)"
+                              : "var(--green)",
+                        }}
+                      />
+                      {answer.dislikes}
+                    </span>
+                    {selected.is_creator && index !== 0 && (
+                      <span
+                        className="view-icons"
+                        onClick={(e) => {
+                          handleDelete(e, answer);
+                        }}
+                      >
+                        <IoMdTrash
+                          style={{
+                            fill: "var(--red)",
+                          }}
+                        />
+                      </span>
+                    )}
+                  </OptionsWrapper>
+                </Rest>
+              </YawaraWrapper>
+            ))}
+            {reply && (
               <>
-                <div className="form-button flip">
-                  <button
-                    to="/explore"
-                    className={`btn text-${theme}`}
-                    type="submit"
-                    onClick={changeVisibility}
+                <YawaraWrapper>
+                  <PicWrapper>
+                    <Pic>
+                      {selected.profilePic ? (
+                        <img
+                          src={selected.profilePic}
+                          alt={selected.user_name}
+                        />
+                      ) : (
+                        <UserIcon />
+                      )}
+                    </Pic>
+                  </PicWrapper>
+                  <Rest>
+                    <Wrapper>
+                      <InfoWrapper>
+                        <AuthorName>{selected.userName}</AuthorName>
+                        <Time>
+                          <span className="mobile-time">agora</span>
+                        </Time>
+                      </InfoWrapper>
+                    </Wrapper>
+                    <StyledImageEditorHistory
+                      ref={imageRef}
+                      width={80}
+                    ></StyledImageEditorHistory>
+                  </Rest>
+                </YawaraWrapper>
+
+                <StyledButtonsWrapper theme={theme}>
+                  <div className="form-button flip" onClick={newHistory}>
+                    <div className={`btn text-${theme}`}>
+                      Publicar Continuação
+                    </div>
+                  </div>
+                  <div
+                    className="form-button flip"
+                    onClick={() => setReply(false)}
                   >
-                    {selected.public
-                      ? "Fechar colaboração"
-                      : "Abrir colaboração"}
-                  </button>
-                </div>
-                <div className="form-button flip">
-                  <button
-                    className={`btn text-${theme}`}
-                    onClick={() => setDeleteHistory(true)}
-                    type="submit"
-                  >
-                    Deletar História
-                  </button>
-                </div>
+                    <div className={`btn text-${theme}`}>Cancelar</div>
+                  </div>
+                </StyledButtonsWrapper>
               </>
             )}
-          </StyledButtonsWrapper>
-        )}
-        {showPopup && (
-          <Popup
-            bottom={bottom}
-            left={left}
-            colorVar={"green"}
-            colorClose={theme === "light" ? "white" : "black"}
-            width="20rem"
-            svgMarginLeft="12rem"
-            setPopup={setShowPopup}
-          >
-            <StyledH4 theme={theme}>Realmente Deseja Excluir?</StyledH4>
-            <ButtonsWrapper theme={theme}>
-              <DangerButton
-                onClick={async () => {
-                  let keepHistories = [];
 
-                  await axios({
-                    method: "delete",
-                    url: `${defaultURL}api/history/${deleteImage.id}`,
-                    headers: {
-                      Authorization: `Bearer ${bearerToken}`,
-                    },
-                  });
+            {!reply && (
+              <StyledButtonsWrapper>
+                {(selected.public || selected.is_creator) && (
+                  <div
+                    className="form-button flip"
+                    onClick={() => setReply(true)}
+                  >
+                    <div className={`btn text-${theme}`}>
+                      Continuar História
+                    </div>
+                  </div>
+                )}
 
-                  selected.answers.forEach((hist, index) => {
-                    if (hist.id !== deleteImage.id) {
-                      keepHistories.push(hist);
-                    }
-                  });
-                  setSelected({ ...selected, answers: keepHistories });
-                  toast.success("Imagem excluída com sucesso da história!", {
-                    className:
-                      theme === "light"
-                        ? "toast-theme--light"
-                        : "toast-theme--dark",
-                  });
-                }}
+                {selected.is_creator && (
+                  <>
+                    <div className="form-button flip">
+                      <button
+                        to="/explore"
+                        className={`btn text-${theme}`}
+                        type="submit"
+                        onClick={changeVisibility}
+                      >
+                        {selected.public
+                          ? "Fechar colaboração"
+                          : "Abrir colaboração"}
+                      </button>
+                    </div>
+                    <div className="form-button flip">
+                      <button
+                        className={`btn text-${theme}`}
+                        onClick={() => setDeleteHistory(true)}
+                        type="submit"
+                      >
+                        Deletar História
+                      </button>
+                    </div>
+                  </>
+                )}
+              </StyledButtonsWrapper>
+            )}
+            {showPopup && (
+              <Popup
+                bottom={bottom}
+                left={left}
+                colorVar={"green"}
+                colorClose={theme === "light" ? "white" : "black"}
+                width="20rem"
+                svgMarginLeft="12rem"
+                setPopup={setShowPopup}
               >
-                Sim
-              </DangerButton>
-              <SuccessButton onClick={() => setShowPopup(false)}>
-                Não
-              </SuccessButton>
-            </ButtonsWrapper>
-          </Popup>
-        )}
+                <StyledH4 theme={theme}>Realmente Deseja Excluir?</StyledH4>
+                <ButtonsWrapper theme={theme}>
+                  <DangerButton
+                    onClick={async () => {
+                      let keepHistories = [];
 
-        {deleteHistory && (
-          <Modal
-            setModal={setDeleteHistory}
-            theme={theme}
-            titlePosition={"left"}
-            title={"Deletar toda essa história?"}
-          >
-            <ModalContent>
-              <p>Uma vez que essa ação é realizada, não pode ser desfeita.</p>
-              <ButtonsWrapper theme={theme}>
-                <DangerButton onClick={removeHistory}>
-                  Sim, quero deletar
-                </DangerButton>
-                <SuccessButton onClick={() => setDeleteHistory(false)}>
-                  Opa, melhor não
-                </SuccessButton>
-              </ButtonsWrapper>
-            </ModalContent>
-          </Modal>
-        )}
-      </Main>
+                      await axios({
+                        method: "delete",
+                        url: `${defaultURL}api/history/${deleteImage.id}`,
+                        headers: {
+                          Authorization: `Bearer ${bearerToken}`,
+                        },
+                      });
+
+                      selected.answers.forEach((hist, index) => {
+                        if (hist.id !== deleteImage.id) {
+                          keepHistories.push(hist);
+                        }
+                      });
+                      setSelected({ ...selected, answers: keepHistories });
+                      toast.success(
+                        "Imagem excluída com sucesso da história!",
+                        {
+                          className:
+                            theme === "light"
+                              ? "toast-theme--light"
+                              : "toast-theme--dark",
+                        }
+                      );
+                    }}
+                  >
+                    Sim
+                  </DangerButton>
+                  <SuccessButton onClick={() => setShowPopup(false)}>
+                    Não
+                  </SuccessButton>
+                </ButtonsWrapper>
+              </Popup>
+            )}
+
+            {deleteHistory && (
+              <Modal
+                setModal={setDeleteHistory}
+                theme={theme}
+                titlePosition={"left"}
+                title={"Deletar toda essa história?"}
+              >
+                <ModalContent>
+                  <p>
+                    Uma vez que essa ação é realizada, não pode ser desfeita.
+                  </p>
+                  <ButtonsWrapper theme={theme}>
+                    <DangerButton onClick={removeHistory}>
+                      Sim, quero deletar
+                    </DangerButton>
+                    <SuccessButton onClick={() => setDeleteHistory(false)}>
+                      Opa, melhor não
+                    </SuccessButton>
+                  </ButtonsWrapper>
+                </ModalContent>
+              </Modal>
+            )}
+          </Main>
+        </>
+      ) : (
+        <>
+          <ViewHistoryPlaceholder />
+        </>
+      )}
     </Content>
   );
 }

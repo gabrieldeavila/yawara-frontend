@@ -39,6 +39,7 @@ import SelectUser from "../clients/Admin/pages/SelectUser";
 import ViewUser from "../clients/Admin/pages/ViewUser";
 
 import Client from "./client";
+import NotFound from "./../components/404/index";
 
 export default function Routes(props) {
   const { showModal, setUser, setSearchImage } = useContext(Context);
@@ -119,25 +120,30 @@ export default function Routes(props) {
                       } ${showModal ? "yawara-expanded" : ""}`}
                     >
                       <div className="yawara-content">
-                        <Route path="/admin/tags-management">
-                          <TagsManagement />
-                        </Route>
+                        <Switch>
+                          <Route path="/admin/tags-management">
+                            <TagsManagement />
+                          </Route>
 
-                        <Route path="/admin/keep-users">
-                          <KeepUsers />
-                        </Route>
+                          <Route path="/admin/keep-users">
+                            <KeepUsers />
+                          </Route>
 
-                        <Route path="/admin/search/:search_term">
-                          <AdminSearch />
-                        </Route>
+                          <Route path="/admin/search/:search_term">
+                            <AdminSearch />
+                          </Route>
 
-                        <Route path="/admin/view/:id">
-                          <ViewUser />
-                        </Route>
+                          <Route path="/admin/view/:id">
+                            <ViewUser />
+                          </Route>
 
-                        <Route exact path="/admin/select-user">
-                          <SelectUser />
-                        </Route>
+                          <Route exact path="/admin/select-user">
+                            <SelectUser />
+                          </Route>
+                          <Route path="*">
+                            <NotFound />
+                          </Route>
+                        </Switch>
                       </div>
                     </div>
                   </>

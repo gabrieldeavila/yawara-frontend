@@ -13,12 +13,12 @@ export default function MyHistories() {
 
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const { bearerToken, reload, setReload } = useContext(Context);
+  const { bearerToken, reload, setReload, defaultURL } = useContext(Context);
 
   useEffect(async () => {
     await axios({
       method: "post",
-      url: "http://127.0.0.1:8000/api/my-histories",
+      url: defaultURL + "api/my-histories",
       data: {
         page: page,
       },

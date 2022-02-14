@@ -7,6 +7,7 @@ import {
 } from "react-placeholder/lib/placeholders";
 import "react-placeholder/lib/reactPlaceholder.css";
 import styled from "styled-components";
+import { ButtonsWrapper } from "../Buttons";
 import "./style.css";
 
 const StyledRound = styled(RoundShape)`
@@ -34,6 +35,13 @@ const UserWrapper = styled.div`
   gap: 1rem;
 `;
 
+const History = styled(RectShape)`
+  width: ${(props) => (props.width ? props.width : "30rem")} !important;
+  border-radius: 0.5rem;
+  height: ${(props) => (props.height ? props.height : "50rem")} !important;
+  background: var(--green);
+`;
+
 const StyledText = styled(RoundShape)`
   width: 10rem !important;
   height: 1rem !important;
@@ -43,7 +51,11 @@ const Wrapper = styled.div`
   gap: 1rem;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: ${(props) =>
+    props.justify ? props.justify : "space-around"};
+  align-items: ${(props) => (props.align ? props.align : "center")};
+  width: ${(props) => (props.width ? props.width : "unset")};
+  flex-direction: ${(props) => (props.direction ? props.direction : "row")};
 `;
 
 const WrapperButtons = styled(Wrapper)`
@@ -184,6 +196,100 @@ export const SearchUsersPlaceholder = () => {
         <UserRound />
         <UserText />
       </UserWrapper>
+    </div>
+  );
+};
+
+export const ViewHistoryPlaceholder = () => {
+  return (
+    <div className="show-loading-animation" style={{ width: "100%" }}>
+      <Wrapper>
+        <Wrapper width="10%">
+          <StyledTextBlock />
+          <StyledText />
+        </Wrapper>
+      </Wrapper>
+      <Wrapper justify={"space-between"}>
+        <Wrapper width="10%">
+          <StyledTextBlock />
+          <StyledText />
+        </Wrapper>
+        <Wrapper width="10%">
+          <StyledTextBlock />
+          <StyledText />
+        </Wrapper>
+      </Wrapper>
+
+      <Wrapper justify={"start"} align={"center"} style={{ marginTop: "1rem" }}>
+        <UserRound />
+        <Wrapper width="90%" justify={"space-between"} align="center">
+          <Wrapper width="10%">
+            <StyledTextBlock />
+            <StyledText />
+          </Wrapper>
+          <Wrapper width="10%">
+            <StyledTextBlock />
+            <StyledText />
+          </Wrapper>
+        </Wrapper>
+      </Wrapper>
+
+      <Wrapper>
+        <History />
+      </Wrapper>
+    </div>
+  );
+};
+
+export const ViewUserPlaceholder = () => {
+  return (
+    <div className="show-loading-animation" style={{ width: "100%" }}>
+      <Wrapper justify="space-between" align="center">
+        <Wrapper width="20%">
+          <UserRound />
+          <Wrapper width="40%">
+            <StyledTextBlock />
+            <StyledText />
+          </Wrapper>
+        </Wrapper>
+        <ButtonsWrapper>
+          <StyledButtonRed />
+        </ButtonsWrapper>
+      </Wrapper>
+      <br />
+      <Wrapper justify="space-between">
+        <Wrapper width="20%">
+          <StyledTextBlock />
+        </Wrapper>
+        <Wrapper width="20%">
+          <StyledTextBlock />
+        </Wrapper>
+      </Wrapper>
+      <br />
+      <Wrapper justify="space-between" width="15%">
+        <StyledTextBlock />
+      </Wrapper>
+      <br />
+      <Wrapper justify="space-around">
+        <Wrapper width="30%" direction="column">
+          <Wrapper width="30%">
+            <StyledTextBlock />
+          </Wrapper>
+          <Wrapper width="60%" style={{ marginTop: "-3rem" }}>
+            <StyledTextBlock />
+          </Wrapper>
+          <History width="20rem" height="10rem" />
+        </Wrapper>
+        <Wrapper width="30%" direction="column">
+          <Wrapper width="30%">
+            <StyledTextBlock />
+          </Wrapper>
+          <Wrapper width="60%" style={{ marginTop: "-3rem" }}>
+            <StyledTextBlock />
+          </Wrapper>
+          <History width="20rem" height="10rem" />
+        </Wrapper>
+      </Wrapper>
     </div>
   );
 };

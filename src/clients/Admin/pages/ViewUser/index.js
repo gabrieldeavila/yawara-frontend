@@ -1,7 +1,7 @@
 import { AiFillDelete } from "react-icons/ai";
 import { useParams } from "react-router";
 import { Wrapper } from "../../../../components/Forms";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { FaUserAlt } from "react-icons/all";
 import {
   ButtonsWrapper,
@@ -19,6 +19,7 @@ import axios from "axios";
 import { Context } from "../../../../Contexts/GlobalContext";
 import { useHistory } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import { ViewUserPlaceholder } from "../../../../components/Placeholders";
 
 const StyledButtonsWrapper = styled(ButtonsWrapper)`
   margin-top: 0;
@@ -56,6 +57,7 @@ export default function ViewUser() {
   const [left, setLeft] = useState(0);
   const [bottom, setBottom] = useState(0);
   const history = useHistory();
+  const isReady = useRef(false);
 
   const handleDelete = (e, hist) => {
     const pos = e.getBoundingClientRect();
@@ -90,7 +92,7 @@ export default function ViewUser() {
       headers: { Authorization: `Bearer ${bearerToken}` },
     })
       .then((response) => {
-        console.log(response);
+        isReady.current = true;
         setUser(response.data.success);
       })
       .catch((err) => {
@@ -114,55 +116,63 @@ export default function ViewUser() {
 
   return (
     <Wrapper>
-      <div className="admin-view-header">
-        <div className="admin-view-header-user">
-          {user.image ? (
-            <img
-              className="admin-view-header-user_img"
-              src={defaultURL + "storage/" + user.image}
-            />
-          ) : (
-            <User />
-          )}
-          <h3 className="admin-view-header-user_name">{user.nickname}</h3>
-        </div>
-        <StyledButtonsWrapper theme={theme[1]}>
-          <DangerButton onClick={() => setModal(true)}>
-            Deletar Conta
-          </DangerButton>
-        </StyledButtonsWrapper>
-      </div>
-      <div className="admin-view-sub_header">
-        <p>Criado em: {user.creation_date}</p>
-        <p>Última edição em: {user.last_update}</p>
-      </div>
-      <div className="admin-view-content">
-        <h2>Histórias</h2>
-        <div className="admin-view-content-histories-wrapper">
-          {user?.histories?.length === 0 && <H2>Nenhuma história publicada</H2>}
-          {user?.histories?.map((hist, i) => (
-            <div className="history">
-              <div className="history-header">
-                <h3>{hist.name}</h3>
-                <p>Data de publicação: {hist.creation_date}</p>
-              </div>
-              <div className="history-image">
-                <img src={defaultURL + "storage/" + hist.image} />
-              </div>
-              <div className="history-buttons">
-                <span>Likes: {hist.likes}</span>
-                <AiFillDelete
-                  onClick={(e) => {
-                    handleDelete(e.target, hist);
-                  }}
-                  className="history-buttons-delete trans-1"
+      {isReady.current ? (
+        <>
+          <div className="admin-view-header">
+            <div className="admin-view-header-user">
+              {user.image ? (
+                <img
+                  className="admin-view-header-user_img"
+                  src={defaultURL + "storage/" + user.image}
                 />
-                <span>Deslikes: {hist.dislikes}</span>
-              </div>
+              ) : (
+                <User />
+              )}
+              <h3 className="admin-view-header-user_name">{user.nickname}</h3>
             </div>
-          ))}
-        </div>
-      </div>
+            <StyledButtonsWrapper theme={theme[1]}>
+              <DangerButton onClick={() => setModal(true)}>
+                Deletar Conta
+              </DangerButton>
+            </StyledButtonsWrapper>
+          </div>
+          <div className="admin-view-sub_header">
+            <p>Criado em: {user.creation_date}</p>
+            <p>Última edição em: {user.last_update}</p>
+          </div>
+          <div className="admin-view-content">
+            <h2>Histórias</h2>
+            <div className="admin-view-content-histories-wrapper">
+              {user?.histories?.length === 0 && (
+                <H2>Nenhuma história publicada</H2>
+              )}
+              {user?.histories?.map((hist, i) => (
+                <div className="history">
+                  <div className="history-header">
+                    <h3>{hist.name}</h3>
+                    <p>Data de publicação: {hist.creation_date}</p>
+                  </div>
+                  <div className="history-image">
+                    <img src={defaultURL + "storage/" + hist.image} />
+                  </div>
+                  <div className="history-buttons">
+                    <span>Likes: {hist.likes}</span>
+                    <AiFillDelete
+                      onClick={(e) => {
+                        handleDelete(e.target, hist);
+                      }}
+                      className="history-buttons-delete trans-1"
+                    />
+                    <span>Dislikes: {hist.dislikes}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      ) : (
+        <ViewUserPlaceholder></ViewUserPlaceholder>
+      )}
       {modal && (
         <Modal
           theme={theme[1]}

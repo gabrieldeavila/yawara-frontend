@@ -8,6 +8,7 @@ import useTheme from "../states/Theme";
 import Explore from "../clients/yawara_user/pages/Explore";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import NotFound from "../components/404";
 import { Context } from "../Contexts/GlobalContext";
 import {
   BrowserRouter as Router,
@@ -35,6 +36,11 @@ const Client = () => {
   const history = useHistory();
 
   useEffect(async () => {
+    if (user?.admin) {
+      history.push("/admin/");
+      window.location.reload();
+    }
+
     if (
       (searchImage && user?.admin === null && user?.nickname !== null) ||
       reload === "atualizou"
@@ -76,24 +82,29 @@ const Client = () => {
               } ${showModal ? "yawara-expanded" : ""}`}
             >
               <div className="yawara-content">
-                <Route path="/explore">
-                  <Explore />
-                </Route>
-                <Route path="/view/:id">
-                  <View />
-                </Route>
-                <Route path="/search/:search_term">
-                  <Search />
-                </Route>
-                <Route path="/new-history">
-                  <NewHistory />
-                </Route>
-                <Route path="/profile">
-                  <Profile />
-                </Route>
-                <Route path="/my-histories">
-                  <MyHistories />
-                </Route>
+                <Switch>
+                  <Route exact path="/explore">
+                    <Explore />
+                  </Route>
+                  <Route exact path="/view/:id">
+                    <View />
+                  </Route>
+                  <Route exact path="/search/:search_term">
+                    <Search />
+                  </Route>
+                  <Route exact path="/new-history">
+                    <NewHistory />
+                  </Route>
+                  <Route exact path="/profile">
+                    <Profile />
+                  </Route>
+                  <Route exact path="/my-histories">
+                    <MyHistories />
+                  </Route>
+                  <Route path="*">
+                    <NotFound />
+                  </Route>
+                </Switch>
               </div>
             </div>
           </>

@@ -25,7 +25,6 @@ export default function PasswordReset() {
   let { token } = useParams();
 
   useEffect(() => {
-    console.log(token);
     setHideSidebar(true);
     setHideNavbar(true);
   }, []);
