@@ -255,7 +255,6 @@ export default function View() {
     })
       .then((response) => {
         if (!isReady.current) isReady.current = true;
-        // console.log(response.data.success, "OI?");
         setSelected(response.data.success);
       })
       .catch((err) => history.push("/explore"));
