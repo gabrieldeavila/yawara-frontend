@@ -239,7 +239,10 @@ export default function View() {
       url: defaultURL + "api/history/remove/" + selected.id,
       headers: { Authorization: `Bearer ${bearerToken}` },
     }).then(() => {
-      toast.success("História excluída com sucesso!");
+      toast.success("História excluída com sucesso!", {
+        className:
+          theme[1] === "light" ? "toast-theme--light" : "toast-theme--dark",
+      });
       history.push("/explore");
     });
   };
@@ -255,7 +258,7 @@ export default function View() {
         // console.log(response.data.success, "OI?");
         setSelected(response.data.success);
       })
-      .catch((err) => console.log(err.response));
+      .catch((err) => history.push("/explore"));
   }, []);
 
   const handleDelete = (e, img) => {

@@ -110,11 +110,6 @@ export default function Options({ setPopup, theme, type }) {
   const [modal, setModal] = useState(false);
   const { setBearerToken, bearerToken, defaultURL, user } = useContext(Context);
 
-  useEffect(() => {
-    console.log(user);
-    return () => {};
-  }, []);
-
   const deleteAccount = () => {
     axios({
       method: "delete",
@@ -122,9 +117,14 @@ export default function Options({ setPopup, theme, type }) {
       headers: {
         Authorization: `Bearer ${bearerToken}`,
       },
-    }).then(() => {
-      setBearerToken(null);
-    });
+    })
+      .then(() => {
+        setBearerToken(null);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

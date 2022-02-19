@@ -302,7 +302,10 @@ export default function TagsManagement() {
                   <div>{errors.new_tag}</div>
                 ) : null}
               </div>
-              <div className="form-button form-button-multiple flip">
+              <div
+                style={{ marginBottom: "10px" }}
+                className="form-button form-button-multiple flip"
+              >
                 <button
                   className={`btn text-${
                     theme[1] === "dark" ? "dark" : "light"
@@ -315,7 +318,6 @@ export default function TagsManagement() {
                   className={`btn btn-danger text-${
                     theme[1] === "dark" ? "dark" : "light"
                   }`}
-                  type="nothing"
                   onClick={deleteTags}
                 >
                   Deletar Tags
@@ -325,8 +327,8 @@ export default function TagsManagement() {
                   className={`btn text-${
                     theme[1] === "dark" ? "dark" : "light"
                   }`}
-                  type="nothing"
                   onClick={saveTags}
+                  style={{ textAlign: "center" }}
                 >
                   Salvar Alterações
                 </div>
